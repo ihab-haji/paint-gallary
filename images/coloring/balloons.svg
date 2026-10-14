@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="800" viewBox="0 0 1000 800">
+<rect width="1000" height="800" fill="#fff"/>
+<g fill="#fff" stroke="#222" stroke-width="10" stroke-linejoin="round" stroke-linecap="round">
+
+<path d="M350 415 Q420 560 500 700 M650 395 Q580 560 500 700 M500 335 Q480 520 500 700" fill="none"/>
+<ellipse cx="500" cy="200" rx="105" ry="130"/>
+<ellipse cx="340" cy="280" rx="110" ry="135"/>
+<ellipse cx="660" cy="260" rx="110" ry="135"/>
+<polygon points="340,415 325,440 355,440"/><polygon points="660,395 645,420 675,420"/><polygon points="500,330 485,355 515,355"/>
+<ellipse cx="300" cy="230" rx="18" ry="35"/><ellipse cx="620" cy="210" rx="18" ry="35"/><ellipse cx="465" cy="140" rx="16" ry="30"/>
+<path d="M500 700 L440 670 L440 730 Z M500 700 L560 670 L560 730 Z"/><circle cx="500" cy="700" r="16"/>
+<polygon points="150,555 162,584 193,586 169,606 176,636 150,620 124,636 131,606 107,586 138,584"/><polygon points="860,570 873,602 908,605 881,627 889,660 860,642 831,660 839,627 812,605 847,602"/><polygon points="150,90 158,109 179,111 163,124 168,144 150,134 132,144 137,124 121,111 142,109"/><polygon points="870,80 878,99 899,101 883,114 888,134 870,124 852,134 857,114 841,101 862,99"/>
+</g>
+</svg>

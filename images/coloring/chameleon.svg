@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="800" viewBox="0 0 1000 800">
+<rect width="1000" height="800" fill="#fff"/>
+<g fill="#fff" stroke="#222" stroke-width="10" stroke-linejoin="round" stroke-linecap="round">
+
+<defs><clipPath id="ch"><path d="M300 430 Q330 300 520 300 Q700 300 720 430 Q600 500 420 480 Q330 470 300 430 Z"/></clipPath></defs>
+<path d="M40 560 Q500 520 960 560 L960 600 Q500 560 40 600 Z"/>
+<ellipse cx="160" cy="530" rx="45" ry="20" transform="rotate(-30 160 530)"/><ellipse cx="850" cy="520" rx="45" ry="20" transform="rotate(30 850 520)"/>
+<path d="M650 450 Q760 470 760 560 Q760 650 680 650 Q610 650 610 580 Q610 530 660 530 Q700 530 700 575 Q700 605 672 605" fill="none" stroke-width="40"/>
+<path d="M650 450 Q760 470 760 560 Q760 650 680 650 Q610 650 610 580 Q610 530 660 530 Q700 530 700 575 Q700 605 672 605" fill="none" stroke="#fff" stroke-width="22"/>
+<rect x="400" y="460" width="34" height="90" rx="14"/><rect x="580" y="460" width="34" height="90" rx="14"/>
+<path d="M300 430 Q330 300 520 300 Q700 300 720 430 Q600 500 420 480 Q330 470 300 430 Z"/>
+<g clip-path="url(#ch)" fill="none"><path d="M420 290 Q400 400 430 500 M500 290 Q480 400 510 500 M580 290 Q560 400 590 500 M660 290 Q640 400 670 500"/></g>
+<path d="M300 430 Q330 300 520 300 Q700 300 720 430 Q600 500 420 480 Q330 470 300 430 Z" fill="none"/>
+<path d="M330 400 Q240 400 200 360 Q220 290 320 300 Z"/>
+<path d="M240 300 Q270 250 320 270" fill="none"/>
+<circle cx="270" cy="340" r="34"/>
+<path d="M205 365 Q230 380 260 372" fill="none"/>
+<circle cx="275" cy="340" r="13" fill="#222" stroke="none"/><circle cx="120" cy="120" r="55"/><polygon points="850,115 862,144 893,146 869,166 876,196 850,180 824,196 831,166 807,146 838,144"/>
+</g>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+	<defs>
+		<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd6e7"/><stop offset="1" stop-color="#ffe9c7"/></linearGradient>
+		<linearGradient id="hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9be3a4"/><stop offset="1" stop-color="#5cc274"/></linearGradient>
+		<linearGradient id="cam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7a6b"/><stop offset="1" stop-color="#e2483a"/></linearGradient>
+		<radialGradient id="lens" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#7fd3ff"/><stop offset="0.55" stop-color="#2b6fb5"/><stop offset="1" stop-color="#16324f"/></radialGradient>
+	</defs>
+	<rect width="800" height="600" fill="url(#sky)"/>
+	<circle cx="680" cy="110" r="60" fill="#ffd23f"/><circle cx="680" cy="110" r="85" fill="#ffd23f" opacity="0.25"/>
+	<path d="M0 470 Q200 400 400 450 T800 430 V600 H0 Z" fill="url(#hill)"/>
+	<!-- photo 1 -->
+	<g transform="rotate(-12 230 250)">
+		<rect x="110" y="120" width="240" height="270" rx="14" fill="#fff" filter="drop-shadow(0 10px 12px rgba(0,0,0,.18))"/>
+		<rect x="130" y="140" width="200" height="190" rx="8" fill="#8fd3ff"/>
+		<path d="M130 330 L195 240 L240 290 L275 250 L330 330 Z" fill="#4cae5b"/>
+		<circle cx="290" cy="185" r="24" fill="#ffd23f"/>
+	</g>
+	<!-- photo 2 -->
+	<g transform="rotate(10 520 240)">
+		<rect x="400" y="110" width="240" height="270" rx="14" fill="#fff" filter="drop-shadow(0 10px 12px rgba(0,0,0,.18))"/>
+		<rect x="420" y="130" width="200" height="190" rx="8" fill="#ffe08a"/>
+		<circle cx="520" cy="225" r="62" fill="#ffb98a"/>
+		<circle cx="498" cy="210" r="8" fill="#3a2a1a"/><circle cx="542" cy="210" r="8" fill="#3a2a1a"/>
+		<path d="M495 245 Q520 268 545 245" fill="none" stroke="#3a2a1a" stroke-width="7" stroke-linecap="round"/>
+		<path d="M458 200 Q470 140 520 150 Q575 145 582 200 Q560 170 520 172 Q480 170 458 200 Z" fill="#6b3f22"/>
+		<circle cx="480" cy="240" r="9" fill="#ff8fab" opacity="0.8"/><circle cx="560" cy="240" r="9" fill="#ff8fab" opacity="0.8"/>
+	</g>
+	<!-- camera -->
+	<g filter="drop-shadow(0 14px 14px rgba(0,0,0,.22))">
+		<rect x="300" y="355" width="70" height="40" rx="10" fill="#e2483a"/>
+		<rect x="240" y="375" width="320" height="190" rx="36" fill="url(#cam)"/>
+		<rect x="240" y="425" width="320" height="34" fill="#c93a2e" opacity="0.5"/>
+		<circle cx="400" cy="470" r="72" fill="#fff"/>
+		<circle cx="400" cy="470" r="58" fill="url(#lens)"/>
+		<circle cx="380" cy="448" r="14" fill="#fff" opacity="0.85"/>
+		<rect x="480" y="395" width="50" height="28" rx="8" fill="#ffd23f"/>
+		<circle cx="280" cy="410" r="12" fill="#fff" opacity="0.9"/>
+	</g>
+	<!-- hearts & sparkles -->
+	<path d="M120 470 C120 440 160 440 160 470 C160 440 200 440 200 470 C200 500 160 520 160 535 C160 520 120 500 120 470 Z" fill="#ff5fa2"/>
+	<path d="M640 300 C640 280 668 280 668 300 C668 280 696 280 696 300 C696 322 668 335 668 346 C668 335 640 322 640 300 Z" fill="#ff5fa2"/>
+	<path d="M90 120 L100 95 L110 120 L135 130 L110 140 L100 165 L90 140 L65 130 Z" fill="#fff"/>
+	<path d="M610 470 L618 450 L626 470 L646 478 L626 486 L618 506 L610 486 L590 478 Z" fill="#fff"/>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="800" viewBox="0 0 1000 800">
+<rect width="1000" height="800" fill="#fff"/>
+<g fill="#fff" stroke="#222" stroke-width="10" stroke-linejoin="round" stroke-linecap="round">
+
+<polygon points="430,600 390,700 480,660 570,700 530,600"/>
+<path d="M440 640 L420 690 M520 640 L540 690" fill="none"/>
+<path d="M560 420 Q720 230 850 260 Q800 300 830 330 Q760 340 790 380 Q720 390 740 430 Q660 440 600 470 Z"/>
+<path d="M400 420 Q260 300 170 330 Q220 360 190 390 Q260 400 240 440 Q320 440 360 480 Z"/>
+<ellipse cx="480" cy="480" rx="120" ry="160"/>
+<path d="M430 520 Q450 545 470 520 M490 560 Q510 585 530 560 M450 590 Q470 615 490 590" fill="none"/>
+<path d="M440 640 L430 700 M520 640 L530 700" fill="none"/>
+<ellipse cx="480" cy="290" rx="95" ry="85"/>
+<path d="M540 290 Q620 285 610 345 Q595 365 570 345 Q560 320 535 320 Z"/>
+<path d="M430 360 Q480 390 530 360" fill="none"/>
+<rect x="150" y="700" width="700" height="40" rx="20"/>
+<circle cx="500" cy="270" r="13" fill="#222" stroke="none"/><circle cx="120" cy="120" r="55"/><path d="M710 640 Q700 580 760 580 Q780 520 840 540 Q900 500 930 570 Q980 580 960 640 Z"/>
+</g>
+</svg>

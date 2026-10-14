@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="800" viewBox="0 0 1000 800">
+<rect width="1000" height="800" fill="#fff"/>
+<g fill="#fff" stroke="#222" stroke-width="10" stroke-linejoin="round" stroke-linecap="round">
+
+<defs><clipPath id="whale"><path d="M150 450 Q150 260 420 255 Q640 255 790 420 Q700 560 420 560 Q170 560 150 450 Z"/></clipPath></defs>
+<path d="M760 410 Q820 300 905 280 Q872 362 925 425 Q842 432 792 462 Z"/>
+<path d="M420 255 Q395 150 335 125 M420 255 Q445 150 505 125 M420 255 L420 140" fill="none"/>
+<path d="M150 450 Q150 260 420 255 Q640 255 790 420 Q700 560 420 560 Q170 560 150 450 Z"/>
+<g clip-path="url(#whale)" fill="none"><path d="M100 470 Q420 560 820 440"/></g>
+<path d="M150 450 Q150 260 420 255 Q640 255 790 420 Q700 560 420 560 Q170 560 150 450 Z" fill="none"/>
+<path d="M440 470 Q500 580 570 490 Z"/>
+<path d="M210 430 Q240 455 270 432" fill="none"/>
+<circle cx="335" cy="105" r="16"/><circle cx="505" cy="105" r="16"/><circle cx="420" cy="115" r="16"/>
+<circle cx="290" cy="385" r="16" fill="#222" stroke="none"/><path d="M0 690 Q62 655 125 690 T250 690 T375 690 T500 690 T625 690 T750 690 T875 690 T1000 690" fill="none"/><path d="M0 760 Q62 725 125 760 T250 760 T375 760 T500 760 T625 760 T750 760 T875 760 T1000 760" fill="none"/><polygon points="860,95 872,124 903,126 879,146 886,176 860,160 834,176 841,146 817,126 848,124"/><circle cx="140" cy="140" r="50"/>
+</g>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="800" viewBox="0 0 1000 800">
+<rect width="1000" height="800" fill="#fff"/>
+<g fill="#fff" stroke="#222" stroke-width="10" stroke-linejoin="round" stroke-linecap="round">
+<circle cx="120" cy="120" r="55"/><path d="M100 690 Q90 630 150 630 Q170 570 230 590 Q290 550 320 620 Q370 630 350 690 Z"/><path d="M700 190 Q690 130 750 130 Q770 70 830 90 Q890 50 920 120 Q970 130 950 190 Z"/><path d="M660 720 Q650 660 710 660 Q730 600 790 620 Q850 580 880 650 Q930 660 910 720 Z"/>
+<polygon points="430,375 560,375 470,180 405,180"/>
+<polygon points="205,350 265,350 190,225 150,225"/>
+<path d="M150 400 Q150 340 230 340 L780 340 Q880 350 905 400 Q880 452 780 460 L230 460 Q150 460 150 400 Z"/>
+<path d="M800 350 Q860 360 880 395 L800 395 Z"/>
+<polygon points="430,425 560,425 470,640 400,640"/>
+<circle cx="600" cy="390" r="18"/><circle cx="650" cy="390" r="18"/><circle cx="700" cy="390" r="18"/><circle cx="350" cy="390" r="18"/><circle cx="300" cy="390" r="18"/>
+<polygon points="380,70 388,89 409,91 393,104 398,124 380,114 362,124 367,104 351,91 372,89"/>
+</g>
+</svg>

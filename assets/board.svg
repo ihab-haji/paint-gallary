@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+	<defs>
+		<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9ecff"/><stop offset="1" stop-color="#d9f7e3"/></linearGradient>
+		<linearGradient id="wood" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c98a4e"/><stop offset="1" stop-color="#a8672f"/></linearGradient>
+	</defs>
+	<rect width="800" height="600" fill="url(#bg)"/>
+	<circle cx="90" cy="90" r="120" fill="#fff" opacity="0.35"/><circle cx="720" cy="520" r="150" fill="#fff" opacity="0.3"/>
+	<!-- easel -->
+	<path d="M300 560 L370 120 L400 120 L340 560 Z" fill="url(#wood)"/>
+	<path d="M500 560 L430 120 L400 120 L460 560 Z" fill="url(#wood)"/>
+	<path d="M392 140 L412 140 L420 520 L384 520 Z" fill="#b97a40"/>
+	<!-- board -->
+	<g filter="drop-shadow(0 14px 16px rgba(0,0,0,.2))">
+		<rect x="170" y="70" width="460" height="330" rx="26" fill="#c98a4e"/>
+		<rect x="188" y="88" width="424" height="294" rx="16" fill="#fff"/>
+	</g>
+	<rect x="200" y="395" width="400" height="22" rx="10" fill="#a8672f"/>
+	<!-- doodles -->
+	<g fill="none" stroke-linecap="round" stroke-width="16">
+		<path d="M245 330 A110 110 0 0 1 465 330" stroke="#ef4444"/>
+		<path d="M268 330 A87 87 0 0 1 442 330" stroke="#f5c242"/>
+		<path d="M291 330 A64 64 0 0 1 419 330" stroke="#3ddc84"/>
+		<path d="M314 330 A41 41 0 0 1 396 330" stroke="#3bb2ff"/>
+	</g>
+	<circle cx="540" cy="160" r="38" fill="#ffd23f"/>
+	<g stroke="#ffb020" stroke-width="9" stroke-linecap="round">
+		<path d="M540 100 V112 M540 208 V220 M480 160 H492 M588 160 H600 M498 118 L506 126 M574 194 L582 202 M582 118 L574 126 M498 202 L506 194"/>
+	</g>
+	<path d="M480 300 Q510 250 540 300 T600 300" fill="none" stroke="#9b5cff" stroke-width="12" stroke-linecap="round"/>
+	<path d="M230 150 Q260 110 290 150 Q320 190 350 150" fill="none" stroke="#ff5fa2" stroke-width="12" stroke-linecap="round"/>
+	<!-- crayons -->
+	<g transform="rotate(-18 150 520)">
+		<rect x="70" y="500" width="150" height="40" rx="8" fill="#3bb2ff"/><polygon points="220,500 262,520 220,540" fill="#3bb2ff"/>
+		<rect x="100" y="500" width="22" height="40" fill="#fff" opacity="0.5"/>
+	</g>
+	<g transform="rotate(12 640 520)">
+		<rect x="560" y="500" width="150" height="40" rx="8" fill="#ff5fa2"/><polygon points="710,500 752,520 710,540" fill="#ff5fa2"/>
+		<rect x="590" y="500" width="22" height="40" fill="#fff" opacity="0.5"/>
+	</g>
+	<!-- magic wand -->
+	<g transform="rotate(30 680 200)">
+		<rect x="670" y="170" width="20" height="200" rx="10" fill="#1d3b2a"/>
+		<rect x="670" y="170" width="20" height="40" rx="8" fill="#fff"/>
+	</g>
+	<path d="M705 100 L722 140 L765 145 L732 172 L742 215 L705 192 L668 215 L678 172 L645 145 L688 140 Z" fill="#ffd23f" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+	<path d="M90 300 L98 280 L106 300 L126 308 L106 316 L98 336 L90 316 L70 308 Z" fill="#fff"/>
+	<path d="M650 330 L656 316 L662 330 L676 336 L662 342 L656 356 L650 342 L636 336 Z" fill="#fff"/>
+</svg>

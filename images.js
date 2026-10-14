@@ -1,0 +1,70 @@
+/*
+ * 👉 Adding pictures: put them in the "images" folder and double-click "update-pictures.command".
+ *    You do NOT need to edit this file for that.
+ *
+ * This file is only for the app title and (optional) nicer picture names:
+ *    {file: 'images/coloring/lion.png', name: {en: 'Brave Lion', ar: 'الأسد الشجاع'}}
+ */
+window.PAINT_CONFIG = {
+	title: {en: 'My Paint Studio', ar: 'مرسمي الصغير'},
+	album: [
+		{file: 'images/my-photos/Boy Riding Horse in a Scenic Arena.png', name: {en: 'Horse Ride', ar: 'ركوب الخيل'}},
+		{file: 'images/my-photos/boy-01-on-the-rocks.png', name: {en: 'On the Rocks', ar: 'على الصخور'}},
+		{file: 'images/my-photos/boy-02-fidget-spinner.png', name: {en: 'Fidget Spinner', ar: 'السبينر'}},
+		{file: 'images/my-photos/boy-03-with-hulk.png', name: {en: 'With Hulk', ar: 'مع هالك'}},
+		{file: 'images/my-photos/boy-04-watermelon.png', name: {en: 'Yummy Watermelon', ar: 'البطيخ اللذيذ'}},
+		{file: 'images/my-photos/boy-05-at-the-gate.png', name: {en: 'At the Gate', ar: 'عند البوابة'}},
+		{file: 'images/my-photos/boy-06-swimming.png', name: {en: 'Swimming Fun', ar: 'متعة السباحة'}},
+		{file: 'images/my-photos/boy-07-furry-friend.png', name: {en: 'My Furry Friend', ar: 'صديقي الفروي'}},
+		{file: 'images/my-photos/boy-08-tom-and-jerry.png', name: {en: 'Tom & Jerry', ar: 'توم وجيري'}},
+		{file: 'images/my-photos/boy-09-big-ball.png', name: {en: 'Big Ball', ar: 'الكرة الكبيرة'}}
+	],
+	coloring: [
+		{file: 'images/coloring/sun.svg', name: {en: 'Happy Sun', ar: 'الشمس السعيدة'}},
+		{file: 'images/coloring/fish.svg', name: {en: 'Little Fish', ar: 'السمكة الصغيرة'}},
+		{file: 'images/coloring/house.svg', name: {en: 'Cozy House', ar: 'البيت الجميل'}},
+		{file: 'images/coloring/butterfly.svg', name: {en: 'Butterfly', ar: 'الفراشة'}},
+		{file: 'images/coloring/cat.svg', name: {en: 'Kitty Cat', ar: 'القطة'}},
+		{file: 'images/coloring/dog.svg', name: {en: 'Happy Puppy', ar: 'الجرو السعيد'}},
+		{file: 'images/coloring/car.svg', name: {en: 'Red Car', ar: 'السيارة'}},
+		{file: 'images/coloring/rocket.svg', name: {en: 'Space Rocket', ar: 'الصاروخ'}},
+		{file: 'images/coloring/flower.svg', name: {en: 'Smiley Flower', ar: 'الزهرة'}},
+		{file: 'images/coloring/tree.svg', name: {en: 'Apple Tree', ar: 'شجرة التفاح'}},
+		{file: 'images/coloring/apple.svg', name: {en: 'Yummy Apple', ar: 'التفاحة'}},
+		{file: 'images/coloring/ice-cream.svg', name: {en: 'Ice Cream', ar: 'الآيس كريم'}},
+		{file: 'images/coloring/balloons.svg', name: {en: 'Balloons', ar: 'البالونات'}},
+		{file: 'images/coloring/turtle.svg', name: {en: 'Slow Turtle', ar: 'السلحفاة'}},
+		{file: 'images/coloring/owl.svg', name: {en: 'Wise Owl', ar: 'البومة'}},
+		{file: 'images/coloring/boat.svg', name: {en: 'Sail Boat', ar: 'القارب'}},
+		{file: 'images/coloring/cake.svg', name: {en: 'Birthday Cake', ar: 'كعكة العيد'}},
+		{file: 'images/coloring/mosque.svg', name: {en: 'Mosque', ar: 'المسجد'}},
+		{file: 'images/coloring/whale.svg', name: {en: 'Big Whale', ar: 'الحوت الكبير'}},
+		{file: 'images/coloring/lion.svg', name: {en: 'Brave Lion', ar: 'الأسد الشجاع'}},
+		{file: 'images/coloring/elephant.svg', name: {en: 'Elephant', ar: 'الفيل'}},
+		{file: 'images/coloring/bunny.svg', name: {en: 'Bunny', ar: 'الأرنب'}},
+		{file: 'images/coloring/teddy-bear.svg', name: {en: 'Teddy Bear', ar: 'الدبدوب'}},
+		{file: 'images/coloring/duck.svg', name: {en: 'Little Duck', ar: 'البطة الصغيرة'}},
+		{file: 'images/coloring/frog.svg', name: {en: 'Funny Frog', ar: 'الضفدع'}},
+		{file: 'images/coloring/ladybug.svg', name: {en: 'Ladybug', ar: 'الدعسوقة'}},
+		{file: 'images/coloring/snail.svg', name: {en: 'Snail', ar: 'الحلزون'}},
+		{file: 'images/coloring/penguin.svg', name: {en: 'Penguin', ar: 'البطريق'}},
+		{file: 'images/coloring/octopus.svg', name: {en: 'Octopus', ar: 'الأخطبوط'}},
+		{file: 'images/coloring/dinosaur.svg', name: {en: 'Dinosaur', ar: 'الديناصور'}},
+		{file: 'images/coloring/train.svg', name: {en: 'Choo-Choo Train', ar: 'القطار'}},
+		{file: 'images/coloring/airplane.svg', name: {en: 'Airplane', ar: 'الطائرة'}},
+		{file: 'images/coloring/rainbow.svg', name: {en: 'Rainbow', ar: 'قوس قزح'}},
+		{file: 'images/coloring/lantern.svg', name: {en: 'Ramadan Lantern', ar: 'فانوس رمضان'}},
+		{file: 'images/coloring/tiger.svg', name: {en: 'Tiger', ar: 'النمر'}},
+		{file: 'images/coloring/snake.svg', name: {en: 'Snake', ar: 'الثعبان'}},
+		{file: 'images/coloring/gazelle.svg', name: {en: 'Gazelle', ar: 'الغزال'}},
+		{file: 'images/coloring/vulture.svg', name: {en: 'Vulture', ar: 'النسر الأصلع'}},
+		{file: 'images/coloring/giraffe.svg', name: {en: 'Giraffe', ar: 'الزرافة'}},
+		{file: 'images/coloring/monkey.svg', name: {en: 'Monkey', ar: 'القرد'}},
+		{file: 'images/coloring/eagle.svg', name: {en: 'Eagle', ar: 'العقاب'}},
+		{file: 'images/coloring/crocodile.svg', name: {en: 'Crocodile', ar: 'التمساح'}},
+		{file: 'images/coloring/polar-bear.svg', name: {en: 'Sleepy Polar Bear', ar: 'الدب القطبي النائم'}},
+		{file: 'images/coloring/cougar.svg', name: {en: 'Cougar', ar: 'أسد الجبال'}},
+		{file: 'images/coloring/chameleon.svg', name: {en: 'Chameleon', ar: 'الحرباء'}},
+		{file: 'images/coloring/kangaroo.svg', name: {en: 'Kangaroo', ar: 'الكنغر'}}
+	]
+};

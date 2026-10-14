@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="800" viewBox="0 0 1000 800">
+<rect width="1000" height="800" fill="#fff"/>
+<g fill="#fff" stroke="#222" stroke-width="10" stroke-linejoin="round" stroke-linecap="round">
+
+<defs><clipPath id="shell"><path d="M250 560 Q260 300 500 290 Q740 300 750 560 Z"/></clipPath></defs>
+<circle cx="790" cy="470" r="62"/>
+<ellipse cx="340" cy="600" rx="55" ry="40"/><ellipse cx="660" cy="600" rx="55" ry="40"/>
+<polygon points="250,540 175,575 255,580"/>
+<path d="M250 560 Q260 300 500 290 Q740 300 750 560 Z"/>
+<g clip-path="url(#shell)" fill="none">
+<polygon points="440,370 560,370 610,460 560,550 440,550 390,460"/>
+<path d="M440 370 L380 250 M560 370 L620 250 M610 460 L800 460 M390 460 L200 460 M440 550 L420 600 M560 550 L580 600"/>
+</g>
+<path d="M250 560 Q260 300 500 290 Q740 300 750 560 Z" fill="none"/>
+<rect x="230" y="545" width="540" height="40" rx="20"/>
+<path d="M770 495 Q795 515 820 495" fill="none"/>
+<path d="M0 660 H1000" fill="none"/>
+<circle cx="805" cy="455" r="11" fill="#222" stroke="none"/><circle cx="120" cy="120" r="55"/><polygon points="870,105 882,134 913,136 889,156 896,186 870,170 844,186 851,156 827,136 858,134"/>
+</g>
+</svg>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="theme-color" content="#d8eef8">
+	<!-- "Add to Home Screen" on iPhone / iPad opens it full screen, like an app -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-title" content="Paint Studio">
+	<title>My Paint Studio 🎨</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎨</text></svg>">
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<!-- Decorative sky: sun glow, moon, stars, clouds -->
+	<div class="sky" aria-hidden="true">
+		<div class="sun-glow"></div>
+		<span class="moon">🌙</span>
+		<span class="star s1">✦</span>
+		<span class="star s2">✦</span>
+		<span class="star s3">★</span>
+		<span class="star s4">✦</span>
+		<div class="cloud c1"></div>
+		<div class="cloud c2"></div>
+	</div>
+
+	<!-- ============ GALLERY SCREEN ============ -->
+	<main id="gallery" class="screen active">
+		<nav class="navbar">
+			<div class="brand">
+				<span class="brand-logo">🎨</span>
+				<span class="brand-name" id="brandName">My Paint Studio</span>
+			</div>
+			<div class="nav-actions">
+			<button class="pill-btn fs-btn fs-pill" type="button"><svg class="fs-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><svg class="fs-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg><span class="fs-label"></span></button>
+			<button class="pill-btn" id="langBtn" type="button">
+				<span id="langLabel">عربي</span> <span aria-hidden="true">🌐</span>
+			</button>
+			</div>
+		</nav>
+
+		<header class="hero">
+			<div class="badge"><span class="badge-icon">✨</span><span data-i18n="badge"></span></div>
+			<h1 class="hero-title">
+				<span class="line1" data-i18n="heroLine1"></span>
+				<span class="line2" data-i18n="heroLine2"></span>
+			</h1>
+			<p class="subtitle" data-i18n="subtitle"></p>
+		</header>
+
+		<!-- the 3 sections: My Album · Magic Board · Coloring Book -->
+		<section id="sections" class="sections" aria-label="Sections"></section>
+
+		<!-- inside a section -->
+		<div id="listHeader" class="list-header hidden">
+			<button class="pill-btn" id="sectionsBtn" type="button"><span class="ico">🏠</span></button>
+			<h2 class="list-title"><span id="sectionIcon"></span><span id="sectionTitle"></span></h2>
+		</div>
+		<div id="emptyAlbum" class="empty-album hidden">
+			<div class="empty-art"><span>📸</span><span>🖼️</span><span>💖</span></div>
+			<p data-i18n="emptyAlbum"></p>
+			<button class="add-photo-btn" id="emptyAddBtn" type="button"><span class="plus">+</span><span>📷</span><span data-i18n="addPhoto"></span></button>
+		</div>
+		<section id="grid" class="grid hidden" aria-label="Pictures"></section>
+
+		<svg class="hills" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
+			<path d="M0 120 Q240 40 480 110 T960 100 T1440 90 V220 H0 Z" fill="#cfe9d4"/>
+			<path d="M0 160 Q300 100 620 160 T1440 150 V220 H0 Z" fill="#b5dcbd"/>
+		</svg>
+	</main>
+
+	<!-- ============ PAINT STUDIO SCREEN ============ -->
+	<main id="studio" class="screen">
+		<header class="topbar">
+			<button class="pill-btn home" id="homeBtn" type="button">
+				<span class="ico">🏠</span><span data-i18n="back"></span>
+			</button>
+			<h2 id="pictureName" class="pic-name"></h2>
+			<div class="actions">
+				<button class="act-btn" id="undoBtn" type="button"><span class="ico">↩️</span><small data-i18n="undo"></small></button>
+				<button class="act-btn" id="clearBtn" type="button"><span class="ico">🧹</span><small data-i18n="clear"></small></button>
+				<button class="act-btn save" id="saveBtn" type="button"><span class="ico">💾</span><small data-i18n="save"></small></button>
+				<button class="act-btn fs-btn" type="button"><svg class="fs-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><svg class="fs-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg><small class="fs-label"></small></button>
+				<button class="round-btn" id="soundBtn" type="button" aria-label="Sound">🔊</button>
+			</div>
+		</header>
+
+		<nav class="tools" id="tools">
+			<button class="tool" data-tool="pen" type="button"><span class="ico">✏️</span><small data-i18n="pen"></small></button>
+			<button class="tool active" data-tool="brush" type="button"><span class="ico">🖌️</span><small data-i18n="brush"></small></button>
+			<button class="tool" data-tool="rainbow" type="button"><span class="ico">🌈</span><small data-i18n="rainbow"></small></button>
+			<button class="tool" data-tool="fill" type="button"><span class="ico">🪣</span><small data-i18n="fill"></small></button>
+			<button class="tool" data-tool="sticker" type="button"><span class="ico">⭐</span><small data-i18n="stickers"></small></button>
+			<button class="tool" data-tool="eraser" type="button"><span class="ico">🧽</span><small data-i18n="eraser"></small></button>
+		</nav>
+
+		<section class="stage" id="stage">
+			<div class="canvas-wrap" id="canvasWrap">
+				<canvas id="photoCanvas"></canvas>
+				<canvas id="paintCanvas" class="multiply"></canvas>
+				<canvas id="stickerCanvas"></canvas>
+			</div>
+			<div class="brush-cursor" id="brushCursor"></div>
+			<div class="tool-icon" id="toolIcon" aria-hidden="true"></div>
+			<div class="sticker-preview" id="stickerPreview"><span></span></div>
+		</section>
+
+		<footer class="dock">
+			<div class="palette" id="palette"></div>
+			<div class="sizes" id="sizes"></div>
+			<div class="stickers hidden" id="stickers"></div>
+			<button class="pill-btn lines-btn on" id="linesBtn" type="button">
+				<span class="ico">〰️</span><span data-i18n="lines"></span>
+			</button>
+		</footer>
+	</main>
+
+	<div id="toast" class="toast" role="status"></div>
+	<div id="confetti" class="confetti" aria-hidden="true"></div>
+	<input type="file" id="fileInput" accept="image/*" multiple hidden>
+
+	<script src="images.js"></script>
+	<script src="images-list.js"></script>
+	<script src="app.js"></script>
+</body>
+</html>
