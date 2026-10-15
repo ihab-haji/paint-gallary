@@ -80,7 +80,8 @@
 			guideStep1: 'Tap the Share button in Safari',
 			guideStep2: 'Choose “Add to Home Screen”',
 			guideStep3: 'Open “مرسمي” from the home screen',
-			guideOk: 'Got it 👍'
+			guideOk: 'Got it 👍',
+			offlineReady: 'Ready to use without internet ✅'
 		},
 		ar: {
 			badge: 'وقت التلوين للفنانين الصغار',
@@ -122,7 +123,8 @@
 			guideStep1: 'اضغط زر المشاركة في سفاري',
 			guideStep2: 'اختر «إضافة إلى الشاشة الرئيسية»',
 			guideStep3: 'افتح «مرسمي» من الشاشة الرئيسية',
-			guideOk: 'فهمت 👍'
+			guideOk: 'فهمت 👍',
+			offlineReady: 'جاهز للعمل بدون إنترنت ✅'
 		}
 	};
 
@@ -1277,6 +1279,9 @@
 		document.documentElement.classList.toggle('installed-app', isInstalledApp());
 		// works offline once installed (only when served from a web address, e.g. GitHub Pages)
 		if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+			navigator.serviceWorker.addEventListener('message', (e) => {
+				if (e.data === 'offline-ready') toast(t('offlineReady'));
+			});
 			navigator.serviceWorker.register('sw.js').catch(() => {});
 		}
 		// show the iPad / iPhone guide once, so the parent sees how to make it a real app
