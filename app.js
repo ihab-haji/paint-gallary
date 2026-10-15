@@ -935,6 +935,7 @@
 		let region = light(x0, y0) ? regionAt(x0, y0) : null;
 		if (!region || region.count < MIN_SHAPE) {
 			const tried = region ? [region] : [];
+			const distance = new Map(); // how far from the tap each shape was found
 			const inside = (x, y) => x >= 0 && y >= 0 && x < w && y < h;
 			const directions = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]];
 			directions.forEach(([dx, dy]) => {
@@ -945,13 +946,20 @@
 					if (tried.some((r) => r.mask[y * w + x])) continue;
 					// three light pixels in a row, so tiny gaps inside a line do not count
 					if (light(x, y) && light(x + dx, y + dy) && light(x + dx * 2, y + dy * 2)) {
-						tried.push(regionAt(x, y));
+						const found = regionAt(x, y);
+						tried.push(found);
+						distance.set(found, k);
 
 						return;
 					}
 				}
 			});
-			region = tried.reduce((best, r) => (!best || r.count > best.count ? r : best), null);
+			// fill the NEAREST real shape (what the child aimed at, even a tiny one);
+			// hairline gaps inside the line are skipped, and if nothing else is near, take the biggest
+			const real = tried.filter((r) => r.count >= MIN_SHAPE && distance.has(r));
+			region = real.length
+				? real.reduce((best, r) => (distance.get(r) < distance.get(best) || (distance.get(r) === distance.get(best) && r.count > best.count) ? r : best))
+				: tried.reduce((best, r) => (!best || r.count > best.count ? r : best), null);
 		}
 		if (!region) return false;
 

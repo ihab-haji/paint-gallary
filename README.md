@@ -43,8 +43,11 @@ The chosen tool's icon follows the mouse or finger.
 
 ## Tips
 
-- Press the **⛶ full screen** button (home screen or painting screen) to hide the browser bars; press it again to leave.
-- On iPhone (no full screen button there) and iPad: in Safari choose Share → **Add to Home Screen** — it then always opens full screen, like an app.
+- **Install it as an app (best for kids):** it then opens full screen with no browser bars and nothing to exit by accident, and works offline.
+  - **iPad / iPhone:** open your GitHub Pages link in Safari → Share → **Add to Home Screen** → open **مرسمي** from the home screen.
+    (The ⛶ full screen button shows these steps — Safari's own full screen closes as soon as a child swipes or writes.)
+  - **Android:** press the green **📲 Install the app** button on the home screen.
+- On a computer, the **⛶ full screen** button hides the browser bars; press it again to leave.
 - **Lines on top** keeps the black outlines visible while painting. Turn it off to paint over everything.
 - Paintings are kept while the page is open (🎨 badge on the card). Press **Save** to download a PNG.
 - Keyboard: `Ctrl/⌘ + Z` = undo, `Esc` = back to pictures.
