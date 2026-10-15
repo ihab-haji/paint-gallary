@@ -81,7 +81,8 @@
 			guideStep2: 'Choose “Add to Home Screen”',
 			guideStep3: 'Open “مرسمي” from the home screen',
 			guideOk: 'Got it 👍',
-			offlineReady: 'Ready to use without internet ✅'
+			offlineReady: 'Ready to use without internet ✅',
+			hint: 'Hint'
 		},
 		ar: {
 			badge: 'وقت التلوين للفنانين الصغار',
@@ -124,7 +125,8 @@
 			guideStep2: 'اختر «إضافة إلى الشاشة الرئيسية»',
 			guideStep3: 'افتح «مرسمي» من الشاشة الرئيسية',
 			guideOk: 'فهمت 👍',
-			offlineReady: 'جاهز للعمل بدون إنترنت ✅'
+			offlineReady: 'جاهز للعمل بدون إنترنت ✅',
+			hint: 'تلميح'
 		}
 	};
 
@@ -157,6 +159,8 @@
 		photo: $('photoCanvas'),
 		paint: $('paintCanvas'),
 		stickerLayer: $('stickerCanvas'),
+		hint: $('hintCanvas'),
+		hintBtn: $('hintBtn'),
 		cursor: $('brushCursor'),
 		stickerPreview: $('stickerPreview'),
 		palette: $('palette'),
@@ -186,6 +190,8 @@
 		stickerDrag: null, // a new sticker being placed (and grown)
 		stickerItems: [], // stickers on the picture: {emoji, x, y, size, rotation} in canvas pixels
 		moving: null, // a sticker the child picked up and is dragging
+		hintOn: false, // the 💡 lamp: a see-through colored example over the parts not painted yet
+		hints: new Map(), // picture file -> {canvas, colors}
 		stickerHintShown: false,
 		pointerId: null,
 		last: null,
@@ -520,6 +526,8 @@
 			state.item = item;
 			els.picName.textContent = localized(item.name);
 			els.lines.classList.toggle('hidden', item.section === 'board');
+			els.hintBtn.classList.toggle('hidden', item.section === 'board');
+			setHint({on: false, silent: true});
 			showScreen({name: 'studio'});
 		};
 		img.onerror = () => toast(t('openFail'));
@@ -534,7 +542,7 @@
 		const w = Math.round(nw * k);
 		const h = Math.round(nh * k);
 
-		[els.photo, els.paint, els.stickerLayer].forEach((c) => {
+		[els.photo, els.paint, els.stickerLayer, els.hint].forEach((c) => {
 			c.width = w;
 			c.height = h;
 		});
@@ -1049,7 +1057,10 @@
 			void els.toolIcon.offsetWidth; // restart the "pour" wiggle
 			els.toolIcon.classList.add('pour');
 			pushHistory();
-			if (floodFill({p})) beep({freq: 500, duration: 0.18, type: 'triangle'});
+			if (floodFill({p})) {
+				beep({freq: 500, duration: 0.18, type: 'triangle'});
+				refreshHint();
+			}
 			else dropLastHistory();
 			if (e.pointerType !== 'mouse') setTimeout(hideCursor, 450);
 
@@ -1097,10 +1108,12 @@
 			drawSegment({from: state.last, to: p});
 			state.last = p;
 		});
+		refreshHint({soon: true});
 	});
 
 	const stopDrawing = (e) => {
 		if (e.pointerId !== state.pointerId) return;
+		refreshHint();
 		state.drawing = false;
 		state.pointerId = null;
 		if (e.pointerType !== 'mouse') hideCursor();
@@ -1119,6 +1132,163 @@
 	els.paint.addEventListener('pointerleave', () => {
 		if (!state.drawing) hideCursor();
 	});
+
+	// ---------------- 💡 Hint lamp ----------------
+	/* A colored example of the picture, shown see-through ONLY on the parts the child has not painted yet.
+	   It never changes the child's painting; as the child paints, the hint under the new paint disappears. */
+	const hintCtx = els.hint.getContext('2d');
+	const HINT_COLORS = [
+		'#ef4444', '#ff8c42', '#f5c242', '#3ddc84', '#3bb2ff', '#9b5cff', '#ff5fa2',
+		'#22c3c3', '#fde047', '#a0522d', '#4a5cff', '#f5c9a0', '#84cc16', '#d946ef'
+	];
+	const HINT_SKY = '#bae6fd';
+	const HINT_GROUND = '#bbf7d0';
+
+	function hashText(text) {
+		let h = 7;
+		for (let i = 0; i < text.length; i++) h = (h * 31 + text.charCodeAt(i)) >>> 0;
+
+		return h;
+	}
+
+	// find every shape of the picture (light areas between the lines) and give each one a nice color
+	function buildHint() {
+		const w = els.photo.width;
+		const h = els.photo.height;
+		const total = w * h;
+		const data = photoCtx.getImageData(0, 0, w, h).data;
+		const light = (n) => data[n * 4] + data[n * 4 + 1] + data[n * 4 + 2] > 420;
+		const labels = new Int32Array(total);
+		const stack = new Int32Array(total);
+		const sizes = [0];
+		const middleY = [0];
+		const touchesEdge = [false];
+		let next = 1;
+		for (let s = 0; s < total; s++) {
+			if (labels[s] || !light(s)) continue;
+			let sp = 0;
+			let size = 0;
+			let sumY = 0;
+			let edge = false;
+			labels[s] = next;
+			stack[sp++] = s;
+			while (sp > 0) {
+				const i = stack[--sp];
+				const x = i % w;
+				const y = (i - x) / w;
+				size++;
+				sumY += y;
+				if (x === 0 || y === 0 || x === w - 1 || y === h - 1) edge = true;
+				if (x > 0 && !labels[i - 1] && light(i - 1)) { labels[i - 1] = next; stack[sp++] = i - 1; }
+				if (x < w - 1 && !labels[i + 1] && light(i + 1)) { labels[i + 1] = next; stack[sp++] = i + 1; }
+				if (y > 0 && !labels[i - w] && light(i - w)) { labels[i - w] = next; stack[sp++] = i - w; }
+				if (y < h - 1 && !labels[i + w] && light(i + w)) { labels[i + w] = next; stack[sp++] = i + w; }
+			}
+			sizes.push(size);
+			middleY.push(sumY / size);
+			touchesEdge.push(edge);
+			next++;
+		}
+
+		const minSize = Math.max(80, total * 0.0002); // tiny bits (hatching, gaps) stay white
+		const order = Array.from({length: next - 1}, (_, i) => i + 1).sort((a, b) => sizes[b] - sizes[a]);
+		const start = hashText((state.item && state.item.file) || '');
+		const regionColor = new Array(next).fill(null);
+		const used = new Set();
+		order.forEach((r, index) => {
+			if (sizes[r] < minSize) return;
+			let color;
+			const background = touchesEdge[r] && sizes[r] > total * 0.04;
+			if (background && middleY[r] < h * 0.4) color = HINT_SKY; // big area at the top = sky
+			else if (background && middleY[r] > h * 0.7) color = HINT_GROUND; // big area at the bottom = grass
+			else color = HINT_COLORS[(start + index) % HINT_COLORS.length];
+			regionColor[r] = hexToRgb(color);
+			used.add(color);
+		});
+
+		const image = new ImageData(w, h);
+		const px = image.data;
+		for (let i = 0; i < total; i++) {
+			const rgb = regionColor[labels[i]];
+			if (!rgb) continue;
+			px[i * 4] = rgb[0];
+			px[i * 4 + 1] = rgb[1];
+			px[i * 4 + 2] = rgb[2];
+			px[i * 4 + 3] = 255;
+		}
+		const canvas = document.createElement('canvas');
+		canvas.width = w;
+		canvas.height = h;
+		const ctx = canvas.getContext('2d');
+		ctx.putImageData(image, 0, 0);
+		// spread the colors under the lines a little, so no white halo is left
+		ctx.globalCompositeOperation = 'destination-over';
+		[[1, 0], [-1, 0], [0, 1], [0, -1], [2, 0], [-2, 0], [0, 2], [0, -2]].forEach(([dx, dy]) => ctx.drawImage(canvas, dx, dy));
+
+		// soft diagonal stripes, so the hint never looks like real paint: it says "color here"
+		const gap = Math.max(12, Math.round(w / 70));
+		ctx.globalCompositeOperation = 'destination-out';
+		ctx.strokeStyle = '#000';
+		ctx.lineWidth = gap * 0.42;
+		ctx.beginPath();
+		for (let x = -h; x < w; x += gap) {
+			ctx.moveTo(x, h);
+			ctx.lineTo(x + h, 0);
+		}
+		ctx.stroke();
+		ctx.globalCompositeOperation = 'source-over';
+
+		return {canvas, colors: used};
+	}
+
+	let hintFrame = 0;
+
+	function refreshHint({soon = false} = {}) {
+		if (!state.hintOn) return;
+		if (soon) {
+			if (!hintFrame) hintFrame = requestAnimationFrame(() => {
+				hintFrame = 0;
+				refreshHint();
+			});
+
+			return;
+		}
+		const hint = state.item && state.hints.get(state.item.file);
+		if (!hint) return;
+		hintCtx.globalCompositeOperation = 'source-over';
+		hintCtx.clearRect(0, 0, els.hint.width, els.hint.height);
+		hintCtx.drawImage(hint.canvas, 0, 0);
+		hintCtx.globalCompositeOperation = 'destination-out'; // remove the hint wherever the child has painted
+		hintCtx.drawImage(els.paint, 0, 0);
+		hintCtx.globalCompositeOperation = 'source-over';
+	}
+
+	function markHintColors({colors}) {
+		els.palette.querySelectorAll('.swatch[data-color]').forEach((swatch) => {
+			swatch.classList.toggle('hinted', colors.has(swatch.dataset.color));
+		});
+	}
+
+	function setHint({on, silent = false}) {
+		if (on && state.item && !state.hints.has(state.item.file)) {
+			try {
+				state.hints.set(state.item.file, buildHint());
+			} catch (err) {
+				toast(t('fillOffline'));
+
+				return;
+			}
+		}
+		state.hintOn = on;
+		els.hintBtn.classList.toggle('on', on);
+		els.hint.classList.toggle('show', on);
+		const hint = on && state.item ? state.hints.get(state.item.file) : null;
+		markHintColors({colors: hint ? hint.colors : new Set()});
+		if (on) refreshHint();
+		if (!silent) on ? melody([660, 880, 1320]) : beep({freq: 440});
+	}
+
+	els.hintBtn.addEventListener('click', () => setHint({on: !state.hintOn}));
 
 	// ---------------- Undo / clean / save ----------------
 	function pushHistory() {
@@ -1150,6 +1320,7 @@
 			return;
 		}
 		paintCtx.putImageData(snapshot.paint, 0, 0);
+		refreshHint();
 		state.stickerItems = snapshot.stickers;
 		renderStickers();
 		updateUndo();
@@ -1159,6 +1330,7 @@
 	function clean() {
 		pushHistory();
 		paintCtx.clearRect(0, 0, els.paint.width, els.paint.height);
+		refreshHint();
 		state.stickerItems = [];
 		renderStickers();
 		melody([660, 520, 400]);

@@ -86,6 +86,7 @@
 			</button>
 			<h2 id="pictureName" class="pic-name"></h2>
 			<div class="actions">
+				<button class="act-btn hint-btn" id="hintBtn" type="button"><span class="ico">💡</span><small data-i18n="hint"></small></button>
 				<button class="act-btn" id="undoBtn" type="button"><span class="ico">↩️</span><small data-i18n="undo"></small></button>
 				<button class="act-btn" id="clearBtn" type="button"><span class="ico">🧹</span><small data-i18n="clear"></small></button>
 				<button class="act-btn save" id="saveBtn" type="button"><span class="ico">💾</span><small data-i18n="save"></small></button>
@@ -107,6 +108,7 @@
 			<div class="canvas-wrap" id="canvasWrap">
 				<canvas id="photoCanvas"></canvas>
 				<canvas id="paintCanvas" class="multiply"></canvas>
+				<canvas id="hintCanvas" class="hint-layer"></canvas>
 				<canvas id="stickerCanvas"></canvas>
 			</div>
 			<div class="brush-cursor" id="brushCursor"></div>

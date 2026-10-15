@@ -2,7 +2,7 @@
    - The first time it opens online, it saves the whole app: pages, code, every picture, your photos and the fonts.
    - Pages, code and styles: always try the newest version first, fall back to the saved copy when offline.
    - Pictures and fonts: use the saved copy (they rarely change). */
-const CACHE = 'paint-studio-v2';
+const CACHE = 'paint-studio-39117da3fd';
 const CORE = ['./', 'index.html', 'style.css', 'app.js', 'images.js', 'images-list.js', 'manifest.webmanifest',
 	'assets/album.svg', 'assets/board.svg', 'assets/coloring.svg',
 	'assets/icons/apple-touch-icon.png', 'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/icon-maskable-512.png'];
@@ -39,9 +39,11 @@ async function saveFonts(cache) {
 self.addEventListener('install', (event) => {
 	event.waitUntil(
 		caches.open(CACHE).then(async (cache) => {
-			await cache.addAll(CORE);
+			// "reload" = always download a fresh copy from the website, never an old one the browser kept
+			const fresh = (file) => new Request(file, {cache: 'reload'});
+			await cache.addAll(CORE.map(fresh));
 			// one missing picture must not stop the rest from being saved
-			await Promise.all(allPictures().map((file) => cache.add(file).catch(() => {})));
+			await Promise.all(allPictures().map((file) => cache.add(fresh(file)).catch(() => {})));
 			await saveFonts(cache);
 			// tell the open page that everything is saved
 			const pages = await self.clients.matchAll({includeUncontrolled: true});
@@ -75,8 +77,9 @@ self.addEventListener('fetch', (event) => {
 		return response;
 	};
 	const savedFirst = () => caches.match(request).then((saved) => saved || fetch(request).then(save));
+	// "no-cache" = ask the website if there is something newer (cheap when nothing changed)
 	const networkFirst = () =>
-		fetch(request)
+		fetch(request, {cache: 'no-cache'})
 			.then(save)
 			.catch(() => caches.match(request, {ignoreSearch: true}).then((saved) => saved || caches.match('index.html')));
 

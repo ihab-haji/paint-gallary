@@ -777,6 +777,42 @@ button {
 
 #paintCanvas.multiply { mix-blend-mode: multiply; }
 #stickerCanvas { pointer-events: none; }
+
+/* 💡 hint: a see-through colored example; the black lines and the child's paint stay visible */
+.hint-layer {
+	pointer-events: none;
+	mix-blend-mode: multiply;
+	opacity: 0;
+	transition: opacity 0.35s ease;
+}
+
+.hint-layer.show { opacity: 0.62; }
+
+/* the lamp button glows while the hint is on */
+.hint-btn.on {
+	background: #fff3b0;
+	box-shadow: 0 5px 0 var(--gold-dark), 0 0 22px 6px rgba(255, 210, 63, 0.75);
+}
+
+.hint-btn.on .ico { animation: lamp-glow 1.6s ease-in-out infinite; }
+
+@keyframes lamp-glow {
+	50% { transform: scale(1.18); filter: drop-shadow(0 0 8px #ffd23f); }
+}
+
+/* palette colors used by the hint get a little gold dot */
+.swatch.hinted::after {
+	content: '';
+	position: absolute;
+	top: -7px;
+	inset-inline-end: -7px;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background: var(--gold);
+	border: 3px solid #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
 #paintCanvas { cursor: none; } /* the real tool icon is shown instead */
 
 /* the pen / brush / bucket / sponge that follows the mouse or finger */

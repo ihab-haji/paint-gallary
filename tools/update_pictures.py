@@ -7,7 +7,9 @@ Writes:
                      when index.html is opened by double-clicking it
 """
 import base64
+import hashlib
 import json
+import re
 import mimetypes
 import os
 import shutil
@@ -59,7 +61,32 @@ def main():
     with open(os.path.join(ROOT, 'images-data.js'), 'w', encoding='utf-8') as f:
         f.write(header + 'window.PAINT_IMAGE_DATA = ' + json.dumps(data, ensure_ascii=False) + ';\n')
 
+    stamp_app_version()
     print('\n✅ %d pictures ready! You can close this window.' % len(paths))
+
+
+def stamp_app_version():
+    """Give the installed app a new version whenever any picture or the picture list changes,
+    so tablets throw away their old saved copies and save the new ones (even if a file kept its name)."""
+    digest = hashlib.sha1()
+    for base in ('images', 'assets'):
+        for folder, _dirs, names in sorted(os.walk(os.path.join(ROOT, base))):
+            for name in sorted(names):
+                if name.startswith('.'):
+                    continue
+                full = os.path.join(folder, name)
+                digest.update(os.path.relpath(full, ROOT).encode('utf-8'))
+                with open(full, 'rb') as f:
+                    digest.update(f.read())
+    for name in ('images.js', 'images-list.js'):
+        with open(os.path.join(ROOT, name), 'rb') as f:
+            digest.update(f.read())
+    worker = os.path.join(ROOT, 'sw.js')
+    with open(worker, encoding='utf-8') as f:
+        code = f.read()
+    code = re.sub(r"const CACHE = 'paint-studio-[^']*';", "const CACHE = 'paint-studio-%s';" % digest.hexdigest()[:10], code)
+    with open(worker, 'w', encoding='utf-8') as f:
+        f.write(code)
 
 
 if __name__ == '__main__':
