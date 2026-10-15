@@ -34,6 +34,11 @@ html[lang='ar'] {
 html,
 body {
 	height: 100%;
+	/* tablets & phones: no pull-to-refresh, no rubber-band bounce, no double-tap zoom, no font resizing on rotate */
+	overscroll-behavior: none;
+	touch-action: pan-x pan-y;
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
 }
 
 body {
@@ -44,6 +49,20 @@ body {
 	-webkit-tap-highlight-color: transparent;
 	-webkit-user-select: none;
 	user-select: none;
+	-webkit-touch-callout: none; /* no "save image / copy" menu on long press */
+}
+
+img {
+	-webkit-user-drag: none;
+	user-drag: none;
+}
+
+/* buttons react instantly to taps (no double-tap zoom delay) */
+button,
+label,
+.card,
+.section-tile {
+	touch-action: manipulation;
 }
 
 button {

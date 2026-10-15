@@ -1354,7 +1354,45 @@
 		return {group, update};
 	}
 
+	/* Keep the page still on tablets & phones: no pinch / double-tap zoom, no long-press menus, no dragging pictures.
+	   (iPhone & iPad Safari ignore "user-scalable=no", so the zoom gestures are stopped here too.) */
+	function lockPageSize() {
+		['gesturestart', 'gesturechange', 'gestureend'].forEach((name) =>
+			document.addEventListener(name, (e) => e.preventDefault(), {passive: false})
+		);
+		document.addEventListener(
+			'touchmove',
+			(e) => {
+				if (e.touches.length > 1) e.preventDefault(); // two fingers = pinch zoom
+			},
+			{passive: false}
+		);
+		let lastTouchEnd = 0;
+		document.addEventListener(
+			'touchend',
+			(e) => {
+				const now = Date.now();
+				if (now - lastTouchEnd < 320 && !e.target.closest('button, label, input')) e.preventDefault(); // double-tap zoom
+				lastTouchEnd = now;
+			},
+			{passive: false}
+		);
+		// trackpad pinch / ctrl + mouse wheel zoom on laptops
+		document.addEventListener(
+			'wheel',
+			(e) => {
+				if (e.ctrlKey) e.preventDefault();
+			},
+			{passive: false}
+		);
+		document.addEventListener('contextmenu', (e) => {
+			if (!e.target.closest('input')) e.preventDefault();
+		});
+		document.addEventListener('dragstart', (e) => e.preventDefault());
+	}
+
 	// ---------------- Start ----------------
+	lockPageSize();
 	buildPalette();
 	makeKidScroller(els.palette);
 	makeKidScroller(els.stickers);
