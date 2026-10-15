@@ -3,7 +3,7 @@
    - Pages, code and styles: always try the newest version first, fall back to the saved copy when offline.
    - Pictures and fonts: use the saved copy (they rarely change). */
 const CACHE = 'paint-studio-39117da3fd';
-const CORE = ['./', 'index.html', 'style.css', 'app.js', 'images.js', 'images-list.js', 'manifest.webmanifest',
+const CORE = ['./', 'index.html', 'style.css', 'magic.js', 'app.js', 'images.js', 'images-list.js', 'manifest.webmanifest',
 	'assets/album.svg', 'assets/board.svg', 'assets/coloring.svg',
 	'assets/icons/apple-touch-icon.png', 'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/icon-maskable-512.png'];
 const FONTS_CSS = 'https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=Fredoka:wght@500;600;700&display=swap';

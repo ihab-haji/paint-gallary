@@ -832,9 +832,52 @@ button {
 /* Apple's ✏️ points down-right: mirror it so the tip touches the drawing point, like the brush */
 .tool-icon[data-tool='pen'] { transform: translate(-6px, calc(-100% + 6px)) scaleX(-1); }
 
-.tool-icon[data-tool='rainbow'] {
-	filter: hue-rotate(0deg) drop-shadow(0 4px 4px rgba(29, 59, 42, 0.3));
-	animation: rainbow-hue 1.2s linear infinite;
+/* 🪄 the wand's sparkly tip (top-right of the picture) sits on the pointer, and it shimmers */
+.tool-icon[data-tool='magic'] {
+	transform: translate(calc(-100% + 8px), -8px);
+	animation: wand-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes wand-shimmer {
+	50% { filter: drop-shadow(0 0 8px #ffd23f) drop-shadow(0 4px 4px rgba(29, 59, 42, 0.3)); }
+}
+
+/* the magic tool button has a rainbow glow, so it looks special */
+.tool-magic.active {
+	background: linear-gradient(135deg, #ffd6e0, #fff3b0, #c9f7d4, #cfe8ff, #e9d5ff);
+	box-shadow: 0 5px 0 var(--gold-dark), 0 0 16px rgba(155, 92, 255, 0.45);
+}
+
+/* effects layer: pop-in decorations & flying sparkles (never blocks painting) */
+.fx-layer { pointer-events: none; }
+
+/* the 6 magic kinds */
+.magic-kinds {
+	display: flex;
+	flex: 1 1 100%;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+	padding: 4px;
+}
+
+.magic-kind {
+	display: grid;
+	place-items: center;
+	width: 64px;
+	height: 58px;
+	border-radius: 20px;
+	background: #f1f7f2;
+	border: 3px solid transparent;
+	font-size: 2rem;
+	transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.magic-kind.active {
+	background: linear-gradient(135deg, #ffd6e0, #fff3b0, #c9f7d4, #cfe8ff, #e9d5ff);
+	border-color: #fff;
+	box-shadow: 0 4px 0 #b9a5e6, 0 0 14px rgba(155, 92, 255, 0.4);
+	transform: scale(1.1);
 }
 /* the bucket floats just above the pin (so it never hides small spots) and tips toward the pin to pour */
 .tool-icon[data-tool='fill'] {
@@ -1257,7 +1300,6 @@ button {
 @keyframes drift { from { translate: -40vw 0; } to { translate: 60vw 0; } }
 @keyframes pop-in { from { opacity: 0; transform: scale(0.6) rotate(var(--tilt, 0deg)); } }
 @keyframes sticker-pop { from { transform: rotate(var(--rot)) scale(0.3); } }
-@keyframes rainbow-hue { to { filter: hue-rotate(360deg) drop-shadow(0 4px 4px rgba(29, 59, 42, 0.3)); } }
 @keyframes pour {
 	35%,
 	65% { transform: translate(10px, calc(-100% - 10px)) rotate(-95deg); }
@@ -1320,6 +1362,8 @@ button {
 
 /* phones: buttons become big icons only, so nothing wraps or falls off the screen */
 @media (max-width: 600px) {
+	.magic-kinds { flex-wrap: nowrap; gap: 6px; }
+	.magic-kind { width: 50px; height: 48px; font-size: 1.6rem; border-radius: 16px; }
 	.navbar { padding: 14px 16px; }
 	.brand-name { display: none; }
 	.fs-pill .fs-label,

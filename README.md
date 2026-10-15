@@ -30,7 +30,8 @@ Pictures not listed there get their name from the file name.
 
 ## Tools
 
-✏️ Pen (thin lines) · 🖌️ Brush (thick soft paint) · 🌈 Rainbow brush · 🪣 Fill bucket ·
+✏️ Pen (thin lines) · 🖌️ Brush (thick soft paint) · 🪄 Magic brush (🌈 rainbow ribbon, 🫧 bubbles, 🌸 flowers,
+⭐ stars, ✨ fireflies, 🐾 tiny animals — each pops in with sparkles and music) · 🪣 Fill bucket ·
 ⭐ Stickers (tap, or press and drag to make them bigger) · 🧽 Eraser.
 The chosen tool's icon follows the mouse or finger.
 

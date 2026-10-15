@@ -98,7 +98,7 @@
 		<nav class="tools" id="tools">
 			<button class="tool" data-tool="pen" type="button"><span class="ico">✏️</span><small data-i18n="pen"></small></button>
 			<button class="tool active" data-tool="brush" type="button"><span class="ico">🖌️</span><small data-i18n="brush"></small></button>
-			<button class="tool" data-tool="rainbow" type="button"><span class="ico">🌈</span><small data-i18n="rainbow"></small></button>
+			<button class="tool tool-magic" data-tool="magic" type="button"><span class="ico">🪄</span><small data-i18n="magic"></small></button>
 			<button class="tool" data-tool="fill" type="button"><span class="ico">🪣</span><small data-i18n="fill"></small></button>
 			<button class="tool" data-tool="sticker" type="button"><span class="ico">⭐</span><small data-i18n="stickers"></small></button>
 			<button class="tool" data-tool="eraser" type="button"><span class="ico">🧽</span><small data-i18n="eraser"></small></button>
@@ -110,6 +110,7 @@
 				<canvas id="paintCanvas" class="multiply"></canvas>
 				<canvas id="hintCanvas" class="hint-layer"></canvas>
 				<canvas id="stickerCanvas"></canvas>
+				<canvas id="fxCanvas" class="fx-layer"></canvas>
 			</div>
 			<div class="brush-cursor" id="brushCursor"></div>
 			<div class="tool-icon" id="toolIcon" aria-hidden="true"></div>
@@ -120,6 +121,7 @@
 			<div class="palette" id="palette"></div>
 			<div class="sizes" id="sizes"></div>
 			<div class="stickers hidden" id="stickers"></div>
+			<div class="magic-kinds hidden" id="magicKinds"></div>
 			<button class="pill-btn lines-btn on" id="linesBtn" type="button">
 				<span class="ico">〰️</span><span data-i18n="lines"></span>
 			</button>
@@ -149,6 +151,7 @@
 
 	<script src="images.js"></script>
 	<script src="images-list.js"></script>
+	<script src="magic.js"></script>
 	<script src="app.js"></script>
 </body>
 </html>

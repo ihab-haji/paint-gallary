@@ -22,7 +22,8 @@
 	const SIZES = [8, 18, 32, 54];
 	const STICKER_SIZES = [40, 70, 110, 160]; // the same 4 size buttons, used for stickers
 	const PEN_SIZES = [3, 6, 10, 16]; // the pen draws thin lines
-	const TOOL_ICONS = {pen: '✏️', brush: '🖌️', rainbow: '🖌️', fill: '🪣', eraser: '🧽'};
+	const TOOL_ICONS = {pen: '✏️', brush: '🖌️', magic: '🪄', fill: '🪣', eraser: '🧽'};
+	const MAGIC_SIZES = [22, 34, 50, 72]; // the 4 size buttons, used by the magic brush
 	const BOARD_FILE = 'magic-board';
 	const SECTIONS = [
 		{id: 'album', cover: 'assets/album.svg', icon: '📸'},
@@ -59,7 +60,7 @@
 			addPhoto: 'Add a photo',
 			back: 'Back',
 			brush: 'Brush',
-			rainbow: 'Rainbow',
+			magic: 'Magic',
 			fill: 'Fill',
 			eraser: 'Eraser',
 			undo: 'Undo',
@@ -103,7 +104,7 @@
 			addPhoto: 'أضف صورة',
 			back: 'رجوع',
 			brush: 'فرشاة',
-			rainbow: 'قوس قزح',
+			magic: 'سحرية',
 			fill: 'تعبئة',
 			eraser: 'ممحاة',
 			undo: 'تراجع',
@@ -159,6 +160,8 @@
 		photo: $('photoCanvas'),
 		paint: $('paintCanvas'),
 		stickerLayer: $('stickerCanvas'),
+		fx: $('fxCanvas'),
+		magicKinds: $('magicKinds'),
 		hint: $('hintCanvas'),
 		hintBtn: $('hintBtn'),
 		cursor: $('brushCursor'),
@@ -185,11 +188,11 @@
 		sticker: STICKERS[0],
 		linesOnTop: true,
 		sound: localStorage.getItem('paint-sound') !== 'off',
-		hue: 0,
 		drawing: false,
 		stickerDrag: null, // a new sticker being placed (and grown)
 		stickerItems: [], // stickers on the picture: {emoji, x, y, size, rotation} in canvas pixels
 		moving: null, // a sticker the child picked up and is dragging
+		magicKind: 'rainbow',
 		hintOn: false, // the 💡 lamp: a see-through colored example over the parts not painted yet
 		hints: new Map(), // picture file -> {canvas, colors}
 		stickerHintShown: false,
@@ -497,6 +500,7 @@
 	}
 
 	function rememberPainting() {
+		magic.flush();
 		if (!state.item || !els.paint.width) return;
 		const copyOf = (canvas) => {
 			const copy = document.createElement('canvas');
@@ -542,7 +546,8 @@
 		const w = Math.round(nw * k);
 		const h = Math.round(nh * k);
 
-		[els.photo, els.paint, els.stickerLayer, els.hint].forEach((c) => {
+		magic.clear();
+		[els.photo, els.paint, els.stickerLayer, els.hint, els.fx].forEach((c) => {
 			c.width = w;
 			c.height = h;
 		});
@@ -603,7 +608,8 @@
 		button.scrollIntoView({behavior: 'smooth', inline: 'center', block: 'nearest'}); // glide the chosen color to the middle
 		state.color = color;
 		els.palette.querySelectorAll('.swatch').forEach((s) => s.classList.toggle('active', s === button));
-		if (['eraser', 'rainbow', 'sticker'].includes(state.tool)) setTool({tool: 'brush'});
+		if (['eraser', 'sticker'].includes(state.tool)) setTool({tool: 'brush'});
+		if (state.tool === 'magic' && !magic.usesColor(state.magicKind)) setMagicKind({kind: 'flowers'}); // a color means: paint with it
 		refreshToolIcon();
 		beep({freq: 660 + Math.random() * 300, type: 'triangle'});
 	}
@@ -644,6 +650,38 @@
 		});
 	}
 
+	// ---------------- 🪄 Magic brush ----------------
+	const magic = window.createMagicBrush({
+		paintCtx,
+		fxCanvas: els.fx,
+		play: (freq) => beep({freq, duration: 0.09, type: 'triangle', volume: 0.05}),
+		onChange: ({soon = false} = {}) => refreshHint({soon})
+	});
+
+	function refreshPaletteDim() {
+		const colorless = ['eraser', 'sticker'].includes(state.tool) || (state.tool === 'magic' && !magic.usesColor(state.magicKind));
+		els.palette.classList.toggle('dim', colorless);
+	}
+
+	function buildMagicKinds() {
+		magic.kinds.forEach((kind) => {
+			const b = document.createElement('button');
+			b.type = 'button';
+			b.className = 'magic-kind' + (kind.id === state.magicKind ? ' active' : '');
+			b.dataset.kind = kind.id;
+			b.textContent = kind.icon;
+			b.addEventListener('click', () => setMagicKind({kind: kind.id}));
+			els.magicKinds.appendChild(b);
+		});
+	}
+
+	function setMagicKind({kind}) {
+		state.magicKind = kind;
+		els.magicKinds.querySelectorAll('.magic-kind').forEach((b) => b.classList.toggle('active', b.dataset.kind === kind));
+		refreshPaletteDim();
+		melody([784, 1047]);
+	}
+
 	function setTool({tool, silent = false}) {
 		state.tool = tool;
 		els.tools.querySelectorAll('.tool').forEach((b) => b.classList.toggle('active', b.dataset.tool === tool));
@@ -656,7 +694,8 @@
 			state.stickerHintShown = true;
 			toast('👆 ↔️ ⭐');
 		}
-		els.palette.classList.toggle('dim', ['eraser', 'rainbow', 'sticker'].includes(tool));
+		els.magicKinds.classList.toggle('hidden', tool !== 'magic');
+		refreshPaletteDim();
 		els.paint.dataset.tool = tool;
 		refreshToolIcon();
 		if (!silent) beep({freq: 720});
@@ -685,11 +724,7 @@
 		ctx.lineWidth = lineSize() * scale;
 		ctx.lineCap = 'round';
 		ctx.lineJoin = 'round';
-		let color = state.color;
-		if (state.tool === 'rainbow') {
-			state.hue = (state.hue + 2) % 360;
-			color = `hsl(${state.hue}, 95%, 58%)`;
-		}
+		const color = state.color;
 		ctx.strokeStyle = color;
 		ctx.fillStyle = color;
 		ctx.shadowColor = color;
@@ -1021,7 +1056,7 @@
 		const y = `${e.clientY - r.top}px`;
 		const isMouse = e.pointerType === 'mouse';
 		const isFill = state.tool === 'fill';
-		const showRing = (isMouse && ['pen', 'brush', 'rainbow', 'eraser'].includes(state.tool)) || (isFill && (isMouse || pressed));
+		const showRing = (isMouse && ['pen', 'brush', 'eraser'].includes(state.tool)) || (isFill && (isMouse || pressed));
 		const showIcon = (isMouse || pressed || state.drawing) && !state.stickerDrag && !state.moving;
 
 		els.cursor.style.display = showRing ? 'block' : 'none';
@@ -1081,6 +1116,12 @@
 		state.last = p;
 		els.paint.setPointerCapture(e.pointerId);
 		updateCursor(e, {pressed: true});
+		if (state.tool === 'magic') {
+			const index = Math.max(0, SIZES.indexOf(state.size));
+			magic.start({p, kind: state.magicKind, color: state.color, size: MAGIC_SIZES[index]});
+
+			return;
+		}
 		drawDot({p});
 	});
 
@@ -1105,7 +1146,8 @@
 		const events = coalesced.length ? coalesced : [e];
 		events.forEach((ev) => {
 			const p = toCanvasPoint(ev);
-			drawSegment({from: state.last, to: p});
+			if (state.tool === 'magic') magic.move({p});
+			else drawSegment({from: state.last, to: p});
 			state.last = p;
 		});
 		refreshHint({soon: true});
@@ -1113,6 +1155,7 @@
 
 	const stopDrawing = (e) => {
 		if (e.pointerId !== state.pointerId) return;
+		if (state.tool === 'magic') magic.end();
 		refreshHint();
 		state.drawing = false;
 		state.pointerId = null;
@@ -1292,6 +1335,7 @@
 
 	// ---------------- Undo / clean / save ----------------
 	function pushHistory() {
+		magic.flush(); // decorations still popping in belong to the previous step
 		try {
 			const w = els.paint.width;
 			const h = els.paint.height;
@@ -1313,6 +1357,7 @@
 	}
 
 	function undo() {
+		magic.flush();
 		const snapshot = state.history.pop();
 		if (!snapshot) {
 			toast(t('nothingToUndo'));
@@ -1338,6 +1383,7 @@
 	}
 
 	function save() {
+		magic.flush();
 		const out = document.createElement('canvas');
 		out.width = els.photo.width;
 		out.height = els.photo.height;
@@ -1672,6 +1718,7 @@
 	makeKidScroller(els.stickers);
 	buildSizes();
 	buildStickers();
+	buildMagicKinds();
 	setTool({tool: 'brush', silent: true});
 	renderSoundButton();
 	startAppMode();
