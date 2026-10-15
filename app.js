@@ -5,16 +5,18 @@
 	const CONFIG = window.PAINT_CONFIG || {title: 'My Paint Studio', images: []};
 	// rainbow order, each color dark → bright → light, then skin & browns, then black / grays / white
 	const COLORS = [
-		'#b91c1c', '#ef4444', '#fca5a5', // reds
-		'#c2410c', '#ff8c42', '#fed7aa', // oranges
-		'#d49b14', '#f5c242', '#fde047', '#fef3a0', // yellows
-		'#166534', '#2f8a3c', '#3ddc84', '#bbf7d0', // greens
-		'#0f766e', '#22c3c3', '#a5f3fc', // teals
-		'#1e3a8a', '#4a5cff', '#3bb2ff', '#bae6fd', // blues
-		'#6b21a8', '#9b5cff', '#ddd6fe', // purples
-		'#be185d', '#ff5fa2', '#fbcfe8', // pinks
-		'#5b3a1e', '#a0522d', '#d2a679', '#f5c9a0', '#fde3cf', // browns & skin
-		'#111111', '#4b5563', '#9ca3af', '#e5e7eb', '#ffffff' // black, grays, white
+		'#7f1d1d', '#b91c1c', '#ef4444', '#ff6f61', '#fca5a5', // reds & coral
+		'#c2410c', '#ff8c42', '#ffb347', '#fed7aa', // oranges & peach
+		'#b8860b', '#d49b14', '#f5c242', '#fde047', '#fef3a0', // golds & yellows
+		'#556b2f', '#84cc16', '#bef264', // olive & limes
+		'#14532d', '#166534', '#2f8a3c', '#3ddc84', '#86efac', '#d1fae5', // greens & mint
+		'#0f766e', '#14b8a6', '#22c3c3', '#a5f3fc', // teals & aqua
+		'#0c1e5b', '#1e3a8a', '#2563eb', '#4a5cff', '#3bb2ff', '#7dd3fc', '#bae6fd', // navy & blues & sky
+		'#3b0764', '#6b21a8', '#9b5cff', '#c4b5fd', '#ddd6fe', // purples & lavender
+		'#86198f', '#d946ef', '#f0abfc', // magentas
+		'#9d174d', '#be185d', '#ff5fa2', '#f9a8d4', '#fbcfe8', // pinks
+		'#3e2412', '#5b3a1e', '#8b5a2b', '#a0522d', '#c68642', '#d2a679', '#e0ac69', '#f5c9a0', '#fde3cf', '#f5f0e1', // browns, skin, beige
+		'#111111', '#374151', '#4b5563', '#9ca3af', '#d1d5db', '#e5e7eb', '#ffffff' // black, grays, white
 	];
 	const DEFAULT_COLOR = '#ef4444';
 	const SIZES = [8, 18, 32, 54];
@@ -71,7 +73,14 @@
 			nothingToUndo: 'Nothing to undo 🙂',
 			switchLang: 'عربي',
 			fullscreen: 'Full screen',
-			exitFullscreen: 'Exit'
+			exitFullscreen: 'Exit',
+			install: 'Install the app',
+			guideTitle: 'Make it a real app',
+			guideSub: 'Full screen with nothing to tap by mistake — perfect for little hands.',
+			guideStep1: 'Tap the Share button in Safari',
+			guideStep2: 'Choose “Add to Home Screen”',
+			guideStep3: 'Open “مرسمي” from the home screen',
+			guideOk: 'Got it 👍'
 		},
 		ar: {
 			badge: 'وقت التلوين للفنانين الصغار',
@@ -106,7 +115,14 @@
 			nothingToUndo: 'لا يوجد شيء للتراجع 🙂',
 			switchLang: 'English',
 			fullscreen: 'ملء الشاشة',
-			exitFullscreen: 'خروج'
+			exitFullscreen: 'خروج',
+			install: 'ثبّت التطبيق',
+			guideTitle: 'اجعله تطبيقًا حقيقيًا',
+			guideSub: 'ملء الشاشة بدون أي شيء يُضغط بالخطأ — مثالي للأيدي الصغيرة.',
+			guideStep1: 'اضغط زر المشاركة في سفاري',
+			guideStep2: 'اختر «إضافة إلى الشاشة الرئيسية»',
+			guideStep3: 'افتح «مرسمي» من الشاشة الرئيسية',
+			guideOk: 'فهمت 👍'
 		}
 	};
 
@@ -915,7 +931,7 @@
 
 		// tapped on a black line (or a tiny gap inside one)? look a little way in 8 directions and fill the
 		// biggest shape next to it, instead of recoloring the lines themselves
-		const MIN_SHAPE = 250;
+		const MIN_SHAPE = 60; // smaller than this is just a gap inside a line; anything bigger is a real (maybe tiny) shape
 		let region = light(x0, y0) ? regionAt(x0, y0) : null;
 		if (!region || region.count < MIN_SHAPE) {
 			const tried = region ? [region] : [];
@@ -986,15 +1002,19 @@
 		const x = `${e.clientX - r.left}px`;
 		const y = `${e.clientY - r.top}px`;
 		const isMouse = e.pointerType === 'mouse';
-		const showRing = isMouse && ['pen', 'brush', 'rainbow', 'eraser'].includes(state.tool);
+		const isFill = state.tool === 'fill';
+		const showRing = (isMouse && ['pen', 'brush', 'rainbow', 'eraser'].includes(state.tool)) || (isFill && (isMouse || pressed));
 		const showIcon = (isMouse || pressed || state.drawing) && !state.stickerDrag && !state.moving;
 
 		els.cursor.style.display = showRing ? 'block' : 'none';
 		if (showRing) {
 			els.cursor.style.left = x;
 			els.cursor.style.top = y;
-			els.cursor.style.width = `${lineSize()}px`;
-			els.cursor.style.height = `${lineSize()}px`;
+			// the bucket gets a small pin in the chosen color: paint lands exactly there
+			els.cursor.classList.toggle('pin', isFill);
+			els.cursor.style.background = isFill ? state.color : 'transparent';
+			els.cursor.style.width = isFill ? '' : `${lineSize()}px`;
+			els.cursor.style.height = isFill ? '' : `${lineSize()}px`;
 		}
 		els.toolIcon.style.display = showIcon ? 'block' : 'none';
 		if (showIcon) {
@@ -1195,6 +1215,68 @@
 		beep({freq: 600});
 	});
 
+	// ---------------- Installed app (home screen) ----------------
+	// Installed, it opens full screen like a real app: no browser bars, no "exit full screen" messages.
+	function isInstalledApp() {
+		return (
+			window.matchMedia('(display-mode: fullscreen)').matches ||
+			window.matchMedia('(display-mode: standalone)').matches ||
+			window.navigator.standalone === true
+		);
+	}
+
+	function isAppleTouchDevice() {
+		const ua = navigator.userAgent;
+
+		return /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+	}
+
+	const guide = $('installGuide');
+
+	function showInstallGuide() {
+		guide.classList.remove('hidden');
+		localStorage.setItem('paint-guide-shown', 'yes');
+		beep({freq: 700, type: 'triangle'});
+	}
+
+	function hideInstallGuide() {
+		guide.classList.add('hidden');
+	}
+
+	$('guideOk').addEventListener('click', hideInstallGuide);
+	guide.addEventListener('click', (e) => {
+		if (e.target === guide) hideInstallGuide();
+	});
+
+	// Android / Chrome: offer a one-tap "Install the app" button
+	let installPrompt = null;
+	const installBtn = $('installBtn');
+	window.addEventListener('beforeinstallprompt', (e) => {
+		e.preventDefault();
+		installPrompt = e;
+		installBtn.classList.toggle('hidden', isInstalledApp());
+	});
+	installBtn.addEventListener('click', async () => {
+		if (!installPrompt) return;
+		installPrompt.prompt();
+		await installPrompt.userChoice.catch(() => null);
+		installPrompt = null;
+		installBtn.classList.add('hidden');
+	});
+	window.addEventListener('appinstalled', () => installBtn.classList.add('hidden'));
+
+	function startAppMode() {
+		document.documentElement.classList.toggle('installed-app', isInstalledApp());
+		// works offline once installed (only when served from a web address, e.g. GitHub Pages)
+		if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+			navigator.serviceWorker.register('sw.js').catch(() => {});
+		}
+		// show the iPad / iPhone guide once, so the parent sees how to make it a real app
+		if (isAppleTouchDevice() && !isInstalledApp() && !localStorage.getItem('paint-guide-shown')) {
+			setTimeout(showInstallGuide, 1500);
+		}
+	}
+
 	// ---------------- Full screen ----------------
 	const root = document.documentElement;
 	const canFullscreen = Boolean(root.requestFullscreen || root.webkitRequestFullscreen);
@@ -1205,7 +1287,8 @@
 
 	function renderFullscreenButtons() {
 		document.querySelectorAll('.fs-btn').forEach((button) => {
-			button.classList.toggle('hidden', !canFullscreen); // e.g. iPhone Safari: use "Add to Home Screen" instead
+			// opened as the installed app: it already fills the screen, so no button is needed
+			button.classList.toggle('hidden', isInstalledApp() || !(canFullscreen || isAppleTouchDevice()));
 			button.classList.toggle('on', isFullscreen());
 			const label = button.querySelector('.fs-label');
 			if (label) label.textContent = t(isFullscreen() ? 'exitFullscreen' : 'fullscreen');
@@ -1213,6 +1296,12 @@
 	}
 
 	function toggleFullscreen() {
+		// iPad / iPhone Safari drops its full screen as soon as the child swipes or writes; installing the app is the real fix
+		if (isAppleTouchDevice()) {
+			showInstallGuide();
+
+			return;
+		}
 		beep({freq: isFullscreen() ? 500 : 800, type: 'triangle'});
 		try {
 			const result = isFullscreen()
@@ -1400,6 +1489,7 @@
 	buildStickers();
 	setTool({tool: 'brush', silent: true});
 	renderSoundButton();
+	startAppMode();
 	renderFullscreenButtons();
 	applyLanguage();
 	if (location.protocol === 'file:') loadScript('images-data.js').then(buildGallery);

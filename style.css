@@ -800,13 +800,36 @@ button {
 	filter: hue-rotate(0deg) drop-shadow(0 4px 4px rgba(29, 59, 42, 0.3));
 	animation: rainbow-hue 1.2s linear infinite;
 }
-/* the bucket hangs upright with its rim at the pointer; on each tap it tips over to pour, then swings back */
+/* the bucket floats just above the pin (so it never hides small spots) and tips toward the pin to pour */
 .tool-icon[data-tool='fill'] {
-	font-size: 54px;
-	transform-origin: 18% 12%;
-	transform: translate(-18%, -12%) rotate(-12deg);
+	font-size: 50px;
+	transform-origin: 0% 100%;
+	transform: translate(10px, calc(-100% - 10px)) rotate(-8deg);
 }
+
 .tool-icon[data-tool='fill'].pour { animation: pour 0.7s ease-in-out; }
+
+/* the bucket's pin: a small dot in the chosen color, exactly where the paint lands */
+.brush-cursor.pin {
+	width: 14px;
+	height: 14px;
+	border: 3px solid #fff;
+	box-shadow: 0 0 0 2px var(--ink), 0 2px 6px rgba(0, 0, 0, 0.35);
+	z-index: 5;
+}
+
+.brush-cursor.pin::after {
+	content: '';
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 26px;
+	height: 26px;
+	transform: translate(-50%, -50%);
+	border-radius: 50%;
+	border: 2px dashed rgba(29, 59, 42, 0.55);
+}
+
 .tool-icon[data-tool='eraser'],
 .tool-icon[data-tool='sticker'] { transform: translate(-50%, -50%); }
 .tool-icon[data-tool='sticker'] { opacity: 0.65; font-size: 56px; }
@@ -1053,6 +1076,104 @@ button {
 .sizes.sticker-mode i { display: none; }
 .sizes.sticker-mode em { display: block; }
 
+/* ---------------- Installed app & install guide ---------------- */
+/* opened from the home screen: keep clear of the notch / status bar */
+.installed-app .navbar { padding-top: max(18px, env(safe-area-inset-top)); }
+.installed-app #studio.active { padding-top: max(12px, env(safe-area-inset-top)); }
+
+.install-btn {
+	background: var(--green);
+	color: #fff;
+	box-shadow: 0 5px 0 #1f6a2b, var(--soft-shadow);
+}
+
+.guide {
+	position: fixed;
+	inset: 0;
+	z-index: 70;
+	display: grid;
+	place-items: center;
+	padding: 20px;
+	background: rgba(29, 59, 42, 0.45);
+	backdrop-filter: blur(4px);
+	-webkit-backdrop-filter: blur(4px);
+}
+
+.guide.hidden { display: none; }
+
+.guide-card {
+	width: min(440px, 100%);
+	padding: 26px 24px 22px;
+	border-radius: 32px;
+	background: #fff;
+	text-align: center;
+	box-shadow: 0 24px 60px rgba(29, 59, 42, 0.3);
+	animation: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.guide-icon img {
+	width: 84px;
+	height: 84px;
+	border-radius: 22px;
+	box-shadow: var(--soft-shadow);
+}
+
+.guide-card h3 {
+	margin-top: 12px;
+	font-size: 1.6rem;
+}
+
+.guide-sub {
+	margin-top: 4px;
+	color: var(--ink-soft);
+	font-weight: 600;
+}
+
+.guide-steps {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin: 18px 0;
+	padding: 0;
+	list-style: none;
+	text-align: start;
+}
+
+.guide-steps li {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 14px;
+	border-radius: 18px;
+	background: #f1f7f2;
+	font-size: 1.1rem;
+	font-weight: 600;
+}
+
+.step-ico {
+	display: grid;
+	place-items: center;
+	flex-shrink: 0;
+	width: 44px;
+	height: 44px;
+	border-radius: 14px;
+	background: #fff;
+	color: #007aff;
+	font-size: 1.4rem;
+	box-shadow: var(--soft-shadow);
+}
+
+.step-ico svg { width: 26px; height: 26px; }
+
+.guide-ok {
+	justify-content: center;
+	width: 100%;
+	padding: 14px;
+	background: var(--gold);
+	box-shadow: 0 5px 0 var(--gold-dark), var(--soft-shadow);
+	font-size: 1.25rem;
+}
+
 /* ---------------- Toast & confetti ---------------- */
 .toast {
 	position: fixed;
@@ -1103,7 +1224,7 @@ button {
 @keyframes rainbow-hue { to { filter: hue-rotate(360deg) drop-shadow(0 4px 4px rgba(29, 59, 42, 0.3)); } }
 @keyframes pour {
 	35%,
-	65% { transform: translate(-18%, -12%) rotate(-105deg); }
+	65% { transform: translate(10px, calc(-100% - 10px)) rotate(-95deg); }
 }
 @keyframes wiggle { 25% { transform: rotate(-14deg); } 75% { transform: rotate(14deg); } }
 @keyframes fall { to { transform: translate(var(--x), 110vh) rotate(var(--r)); } }

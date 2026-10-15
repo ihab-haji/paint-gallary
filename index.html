@@ -5,10 +5,13 @@
 	<!-- no zooming: little fingers should never resize the page by accident -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 	<meta name="theme-color" content="#d8eef8">
-	<!-- "Add to Home Screen" on iPhone / iPad opens it full screen, like an app -->
+	<!-- Installed on the home screen it opens full screen like a real app (no browser bars, no "exit full screen") -->
+	<link rel="manifest" href="manifest.webmanifest">
+	<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-title" content="Paint Studio">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="apple-mobile-web-app-title" content="مرسمي">
 	<title>My Paint Studio 🎨</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,6 +41,7 @@
 			</div>
 			<div class="nav-actions">
 			<button class="pill-btn fs-btn fs-pill" type="button"><svg class="fs-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><svg class="fs-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg><span class="fs-label"></span></button>
+			<button class="pill-btn install-btn hidden" id="installBtn" type="button"><span class="ico">📲</span><span data-i18n="install"></span></button>
 			<button class="pill-btn" id="langBtn" type="button">
 				<span id="langLabel">عربي</span> <span aria-hidden="true">🌐</span>
 			</button>
@@ -119,6 +123,23 @@
 			</button>
 		</footer>
 	</main>
+
+	<!-- iPad / iPhone: how to install it as an app (shown to the parent once, from the full screen button) -->
+	<div id="installGuide" class="guide hidden" role="dialog" aria-modal="true">
+		<div class="guide-card">
+			<div class="guide-icon"><img src="assets/icons/icon-192.png" alt=""></div>
+			<h3 data-i18n="guideTitle"></h3>
+			<p class="guide-sub" data-i18n="guideSub"></p>
+			<ol class="guide-steps">
+				<li><span class="step-ico">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>
+				</span><span data-i18n="guideStep1"></span></li>
+				<li><span class="step-ico">➕</span><span data-i18n="guideStep2"></span></li>
+				<li><span class="step-ico">🎨</span><span data-i18n="guideStep3"></span></li>
+			</ol>
+			<button class="pill-btn guide-ok" id="guideOk" type="button" data-i18n="guideOk"></button>
+		</div>
+	</div>
 
 	<div id="toast" class="toast" role="status"></div>
 	<div id="confetti" class="confetti" aria-hidden="true"></div>
