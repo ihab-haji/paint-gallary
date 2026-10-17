@@ -66,5 +66,16 @@ window.PAINT_CONFIG = {
 		{file: 'images/coloring/cougar.svg', name: {en: 'Cougar', ar: 'أسد الجبال'}},
 		{file: 'images/coloring/chameleon.svg', name: {en: 'Chameleon', ar: 'الحرباء'}},
 		{file: 'images/coloring/kangaroo.svg', name: {en: 'Kangaroo', ar: 'الكنغر'}}
+	],
+	level2: [
+		{file: 'images/level-2/mario-flying.png', name: {en: 'Flying Mario', ar: 'ماريو يطير'}},
+		{file: 'images/level-2/mario-running.png', name: {en: 'Running Mario', ar: 'ماريو يركض'}},
+		{file: 'images/level-2/mario-and-yoshi.png', name: {en: 'Mario & Yoshi', ar: 'ماريو ويوشي'}},
+		{file: 'images/level-2/spider-team.png', name: {en: 'Spider Team', ar: 'فريق العنكبوت'}},
+		{file: 'images/level-2/spider-swing.png', name: {en: 'Spider Swing', ar: 'العنكبوت يتأرجح'}},
+		{file: 'images/level-2/spider-hoodie.png', name: {en: 'Spider Hoodie', ar: 'العنكبوت بالقبعة'}},
+		{file: 'images/level-2/lego-hulk.png', name: {en: 'Lego Hulk', ar: 'هالك ليغو'}},
+		{file: 'images/level-2/hulk-smash.png', name: {en: 'Hulk Smash', ar: 'هالك القوي'}},
+		{file: 'images/level-2/sonic-and-shadow.png', name: {en: 'Sonic & Shadow', ar: 'سونيك وشادو'}}
 	]
 };

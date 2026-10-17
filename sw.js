@@ -2,9 +2,9 @@
    - The first time it opens online, it saves the whole app: pages, code, every picture, your photos and the fonts.
    - Pages, code and styles: always try the newest version first, fall back to the saved copy when offline.
    - Pictures and fonts: use the saved copy (they rarely change). */
-const CACHE = 'paint-studio-39117da3fd';
+const CACHE = 'paint-studio-6a11a3657c';
 const CORE = ['./', 'index.html', 'style.css', 'magic.js', 'app.js', 'images.js', 'images-list.js', 'manifest.webmanifest',
-	'assets/album.svg', 'assets/board.svg', 'assets/coloring.svg',
+	'assets/album.svg', 'assets/board.svg', 'assets/coloring.svg', 'assets/level2.svg',
 	'assets/icons/apple-touch-icon.png', 'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/icon-maskable-512.png'];
 const FONTS_CSS = 'https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=Fredoka:wght@500;600;700&display=swap';
 
@@ -18,7 +18,7 @@ try {
 
 function allPictures() {
 	const config = self.PAINT_CONFIG || {};
-	const listed = [...(config.album || []), ...(config.coloring || config.images || [])];
+	const listed = [...(config.album || []), ...(config.coloring || config.images || []), ...(config.level2 || [])];
 	const found = self.PAINT_FOUND_IMAGES || [];
 	const files = [...listed, ...found].map((entry) => (typeof entry === 'string' ? entry : entry.file));
 

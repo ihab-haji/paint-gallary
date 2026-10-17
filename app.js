@@ -28,7 +28,8 @@
 	const SECTIONS = [
 		{id: 'album', cover: 'assets/album.svg', icon: '📸'},
 		{id: 'board', cover: 'assets/board.svg', icon: '🪄'},
-		{id: 'coloring', cover: 'assets/coloring.svg', icon: '🖍️'}
+		{id: 'coloring', cover: 'assets/coloring.svg', icon: '🖍️'},
+		{id: 'level2', cover: 'assets/level2.svg', icon: '🦸'}
 	];
 	const STICKERS = [
 		'⭐', '❤️', '🌈', '🦄', '🐶', '🐱', '🌸', '🦋', '☀️', '🌙', '🍦', '🚀', '👑', '🎈', '🍓', '🐠',
@@ -52,6 +53,8 @@
 			sec_board_sub: 'Draw anything I like',
 			sec_coloring: 'Coloring Book',
 			sec_coloring_sub: 'Color fun pictures',
+			sec_level2: 'Level 2',
+			sec_level2_sub: 'Big pictures for big artists',
 			emptyAlbum: 'No photos yet — add one with the ➕ button!',
 			pen: 'Pen',
 			pictures: 'Pictures',
@@ -96,6 +99,8 @@
 			sec_board_sub: 'ارسم ما تحب',
 			sec_coloring: 'كتاب التلوين',
 			sec_coloring_sub: 'لوّن صورًا ممتعة',
+			sec_level2: 'المستوى ٢',
+			sec_level2_sub: 'صور كبيرة للفنانين الكبار',
 			emptyAlbum: 'لا توجد صور بعد — أضف صورة بزر ➕',
 			pen: 'قلم',
 			pictures: 'صورة',
@@ -199,7 +204,7 @@
 		pointerId: null,
 		last: null,
 		item: null,
-		view: 'sections', // 'sections' | 'album' | 'coloring'
+		view: 'sections', // 'sections' | 'album' | 'coloring' | 'level2'
 		history: [],
 		uploaded: [],
 		saved: new Map() // picture file -> canvas with the child's painting (kept while the page is open)
@@ -286,7 +291,7 @@
 
 	// ---------------- Gallery ----------------
 	function itemsOf({section}) {
-		const configured = section === 'album' ? CONFIG.album : CONFIG.coloring || CONFIG.images;
+		const configured = {album: CONFIG.album, level2: CONFIG.level2}[section] || CONFIG.coloring || CONFIG.images;
 		const listed = (configured || []).map(normalizeItem);
 		const known = new Set(listed.map((item) => item.file));
 		const found = (window.PAINT_FOUND_IMAGES || [])

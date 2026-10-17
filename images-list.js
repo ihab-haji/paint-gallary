@@ -185,6 +185,42 @@ window.PAINT_FOUND_IMAGES = [
   "section": "coloring"
  },
  {
+  "file": "images/level-2/hulk-smash.png",
+  "section": "level2"
+ },
+ {
+  "file": "images/level-2/lego-hulk.png",
+  "section": "level2"
+ },
+ {
+  "file": "images/level-2/mario-and-yoshi.png",
+  "section": "level2"
+ },
+ {
+  "file": "images/level-2/mario-flying.png",
+  "section": "level2"
+ },
+ {
+  "file": "images/level-2/mario-running.png",
+  "section": "level2"
+ },
+ {
+  "file": "images/level-2/sonic-and-shadow.png",
+  "section": "level2"
+ },
+ {
+  "file": "images/level-2/spider-hoodie.png",
+  "section": "level2"
+ },
+ {
+  "file": "images/level-2/spider-swing.png",
+  "section": "level2"
+ },
+ {
+  "file": "images/level-2/spider-team.png",
+  "section": "level2"
+ },
+ {
   "file": "images/my-photos/Boy Riding Horse in a Scenic Arena.png",
   "section": "album"
  },

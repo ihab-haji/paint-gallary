@@ -337,14 +337,14 @@ button {
 }
 
 
-/* ---------------- The 3 sections (My Album · Magic Board · Coloring Book) ---------------- */
+/* ---------------- The 4 sections (My Album · Magic Board · Coloring Book · Level 2) ---------------- */
 .sections {
 	position: relative;
 	z-index: 2;
 	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 28px;
-	max-width: 1100px;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 24px;
+	max-width: 1300px;
 	margin: 0 auto;
 	padding: 0 24px;
 }

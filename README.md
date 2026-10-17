@@ -6,17 +6,18 @@ in English and Arabic.
 
 ## What's inside
 
-The home screen has 3 sections:
+The home screen has 4 sections:
 
 | Section | What it is | Pictures come from |
 |---|---|---|
 | 📸 **My Album** | your child's own photos | `images/my-photos/` |
 | 🪄 **Magic Board** | a blank white board to draw anything | — |
 | 🖍️ **Coloring Book** | coloring pages (34 included) | `images/coloring/` |
+| 🦸 **Level 2** | more detailed coloring pages for older kids | `images/level-2/` |
 
 ## Add your pictures
 
-1. Copy photos into `images/my-photos/` (or coloring pages into `images/coloring/`).
+1. Copy photos into `images/my-photos/` (or coloring pages into `images/coloring/` or `images/level-2/`).
 2. Double-click **`update-pictures.command`**. That's it — they appear in the right section.
 
 Then your child just double-clicks `index.html`. Every tool works, Fill and Save included.

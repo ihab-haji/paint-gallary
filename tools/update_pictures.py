@@ -2,7 +2,8 @@
 
 Writes:
   images-list.js  -> the list of pictures (so you never have to edit images.js by hand)
-                     images/my-photos/  -> "My Album",  everything else -> "Coloring Book"
+                     images/my-photos/  -> "My Album",  images/level-2/ -> "Level 2",
+                     everything else -> "Coloring Book"
   images-data.js  -> the pictures packed inside a script, so Fill and Save also work
                      when index.html is opened by double-clicking it
 """
@@ -37,6 +38,14 @@ def shrink(path):
             return f.read()
 
 
+def section_of(rel):
+    if rel.startswith('images/my-photos/'):
+        return 'album'
+    if rel.startswith('images/level-2/'):
+        return 'level2'
+    return 'coloring'
+
+
 def main():
     files = []
     for folder, _dirs, names in os.walk(IMAGES_DIR):
@@ -45,7 +54,7 @@ def main():
                 files.append(os.path.relpath(os.path.join(folder, name), IMAGES_DIR).replace(os.sep, '/'))
     files.sort()
     paths = ['images/' + name for name in files]
-    found = [{'file': rel, 'section': 'album' if rel.startswith('images/my-photos/') else 'coloring'} for rel in paths]
+    found = [{'file': rel, 'section': section_of(rel)} for rel in paths]
     data = {}
     for name, rel in zip(files, paths):
         full = os.path.join(IMAGES_DIR, name)

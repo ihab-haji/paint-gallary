@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+	<defs>
+		<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8e9ff"/><stop offset="1" stop-color="#b9c8ff"/></linearGradient>
+		<linearGradient id="cover" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a5cff"/><stop offset="1" stop-color="#4b32c9"/></linearGradient>
+	</defs>
+	<rect width="800" height="600" fill="url(#bg)"/>
+	<circle cx="700" cy="90" r="130" fill="#fff" opacity="0.35"/>
+	<circle cx="80" cy="540" r="140" fill="#fff" opacity="0.3"/>
+	<!-- book -->
+	<g filter="drop-shadow(0 16px 16px rgba(0,0,0,.2))">
+		<path d="M90 140 Q260 110 400 160 Q540 110 710 140 L710 480 Q540 455 400 500 Q260 455 90 480 Z" fill="url(#cover)"/>
+		<path d="M110 150 Q260 125 395 170 L395 480 Q260 445 110 465 Z" fill="#fff"/>
+		<path d="M405 170 Q540 125 690 150 L690 465 Q540 445 405 480 Z" fill="#fff"/>
+		<path d="M400 165 V495" stroke="#d9d2c0" stroke-width="6"/>
+	</g>
+	<!-- left page: big star outline -->
+	<path d="M250 200 L278 268 L350 272 L294 318 L314 390 L250 350 L186 390 L206 318 L150 272 L222 268 Z" fill="#fff" stroke="#2b2b2b" stroke-width="7" stroke-linejoin="round"/>
+	<circle cx="232" cy="300" r="7" fill="#2b2b2b"/><circle cx="268" cy="300" r="7" fill="#2b2b2b"/>
+	<path d="M232 325 Q250 342 268 325" fill="none" stroke="#2b2b2b" stroke-width="6" stroke-linecap="round"/>
+	<!-- right page: the same star, colored -->
+	<path d="M550 200 L578 268 L650 272 L594 318 L614 390 L550 350 L486 390 L506 318 L450 272 L522 268 Z" fill="#ffd23f" stroke="#2b2b2b" stroke-width="7" stroke-linejoin="round"/>
+	<circle cx="532" cy="300" r="7" fill="#2b2b2b"/><circle cx="568" cy="300" r="7" fill="#2b2b2b"/>
+	<path d="M532 325 Q550 342 568 325" fill="none" stroke="#2b2b2b" stroke-width="6" stroke-linecap="round"/>
+	<!-- big "2" badge -->
+	<g filter="drop-shadow(0 8px 8px rgba(0,0,0,.2))">
+		<circle cx="400" cy="90" r="62" fill="#ff5fa2" stroke="#fff" stroke-width="8"/>
+		<text x="400" y="118" text-anchor="middle" font-family="Arial Rounded MT Bold, Arial, sans-serif" font-weight="900" font-size="84" fill="#fff">2</text>
+	</g>
+	<!-- crayons -->
+	<g filter="drop-shadow(0 8px 8px rgba(0,0,0,.18))">
+		<g transform="rotate(-25 160 545)"><rect x="80" y="528" width="140" height="34" rx="7" fill="#ef4444"/><polygon points="220,528 256,545 220,562" fill="#ef4444"/><rect x="108" y="528" width="18" height="34" fill="#fff" opacity="0.5"/></g>
+		<g transform="rotate(-8 330 560)"><rect x="250" y="545" width="140" height="34" rx="7" fill="#3ddc84"/><polygon points="390,545 426,562 390,579" fill="#3ddc84"/><rect x="278" y="545" width="18" height="34" fill="#fff" opacity="0.5"/></g>
+		<g transform="rotate(10 560 560)"><rect x="480" y="545" width="140" height="34" rx="7" fill="#3bb2ff"/><polygon points="620,545 656,562 620,579" fill="#3bb2ff"/><rect x="508" y="545" width="18" height="34" fill="#fff" opacity="0.5"/></g>
+	</g>
+	<!-- sparkles -->
+	<path d="M640 70 L650 45 L660 70 L685 80 L660 90 L650 115 L640 90 L615 80 Z" fill="#fff"/>
+	<path d="M170 60 L177 42 L184 60 L202 67 L184 74 L177 92 L170 74 L152 67 Z" fill="#fff"/>
+</svg>
