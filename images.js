@@ -76,6 +76,9 @@ window.PAINT_CONFIG = {
 		{file: 'images/level-2/spider-hoodie.png', name: {en: 'Spider Hoodie', ar: 'العنكبوت بالقبعة'}},
 		{file: 'images/level-2/lego-hulk.png', name: {en: 'Lego Hulk', ar: 'هالك ليغو'}},
 		{file: 'images/level-2/hulk-smash.png', name: {en: 'Hulk Smash', ar: 'هالك القوي'}},
-		{file: 'images/level-2/sonic-and-shadow.png', name: {en: 'Sonic & Shadow', ar: 'سونيك وشادو'}}
+		{file: 'images/level-2/sonic-and-shadow.png', name: {en: 'Sonic & Shadow', ar: 'سونيك وشادو'}},
+		{file: 'images/level-2/super-sonic-fists.png', name: {en: 'Super Sonic', ar: 'سونيك الخارق'}},
+		{file: 'images/level-2/super-sonic-power.png', name: {en: 'Sonic Power', ar: 'قوة سونيك'}},
+		{file: 'images/level-2/deadpool.png', name: {en: 'Deadpool', ar: 'ديدبول'}}
 	]
 };

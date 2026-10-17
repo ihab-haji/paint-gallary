@@ -185,6 +185,10 @@ window.PAINT_FOUND_IMAGES = [
   "section": "coloring"
  },
  {
+  "file": "images/level-2/deadpool.png",
+  "section": "level2"
+ },
+ {
   "file": "images/level-2/hulk-smash.png",
   "section": "level2"
  },
@@ -218,6 +222,14 @@ window.PAINT_FOUND_IMAGES = [
  },
  {
   "file": "images/level-2/spider-team.png",
+  "section": "level2"
+ },
+ {
+  "file": "images/level-2/super-sonic-fists.png",
+  "section": "level2"
+ },
+ {
+  "file": "images/level-2/super-sonic-power.png",
   "section": "level2"
  },
  {
