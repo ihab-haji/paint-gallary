@@ -79,6 +79,9 @@ window.PAINT_CONFIG = {
 		{file: 'images/level-2/sonic-and-shadow.png', name: {en: 'Sonic & Shadow', ar: 'سونيك وشادو'}},
 		{file: 'images/level-2/super-sonic-fists.png', name: {en: 'Super Sonic', ar: 'سونيك الخارق'}},
 		{file: 'images/level-2/super-sonic-power.png', name: {en: 'Sonic Power', ar: 'قوة سونيك'}},
-		{file: 'images/level-2/deadpool.png', name: {en: 'Deadpool', ar: 'ديدبول'}}
+		{file: 'images/level-2/deadpool.png', name: {en: 'Deadpool', ar: 'ديدبول'}},
+		{file: 'images/level-2/minion-walk.png', name: {en: 'Happy Minion', ar: 'المينيون السعيد'}},
+		{file: 'images/level-2/minion-band.png', name: {en: 'Minion Band', ar: 'فرقة المينيونز'}},
+		{file: 'images/level-2/mowgli-and-baloo.png', name: {en: 'Mowgli & Baloo', ar: 'ماوكلي وبالو'}}
 	]
 };

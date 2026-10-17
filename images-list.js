@@ -209,6 +209,18 @@ window.PAINT_FOUND_IMAGES = [
   "section": "level2"
  },
  {
+  "file": "images/level-2/minion-band.png",
+  "section": "level2"
+ },
+ {
+  "file": "images/level-2/minion-walk.png",
+  "section": "level2"
+ },
+ {
+  "file": "images/level-2/mowgli-and-baloo.png",
+  "section": "level2"
+ },
+ {
   "file": "images/level-2/sonic-and-shadow.png",
   "section": "level2"
  },
