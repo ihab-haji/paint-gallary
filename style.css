@@ -337,7 +337,7 @@ button {
 }
 
 
-/* ---------------- The 4 sections (My Album · Magic Board · Coloring Book · Level 2) ---------------- */
+/* ---------------- The sections (Letters Adventure · My Album · Magic Board · Coloring Book · Level 2) ---------------- */
 .sections {
 	position: relative;
 	z-index: 2;

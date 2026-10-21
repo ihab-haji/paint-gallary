@@ -26,6 +26,7 @@
 	const MAGIC_SIZES = [22, 34, 50, 72]; // the 4 size buttons, used by the magic brush
 	const BOARD_FILE = 'magic-board';
 	const SECTIONS = [
+		{id: 'letters', cover: 'assets/letters.svg', icon: '🔤'},
 		{id: 'album', cover: 'assets/album.svg', icon: '📸'},
 		{id: 'board', cover: 'assets/board.svg', icon: '🪄'},
 		{id: 'coloring', cover: 'assets/coloring.svg', icon: '🖍️'},
@@ -55,6 +56,9 @@
 			sec_coloring_sub: 'Color fun pictures',
 			sec_level2: 'Level 2',
 			sec_level2_sub: 'Big pictures for big artists',
+			sec_letters: 'Letters Adventure',
+			sec_letters_sub: 'Learn the Arabic letters on a magic journey',
+			newBadge: 'New',
 			emptyAlbum: 'No photos yet — add one with the ➕ button!',
 			pen: 'Pen',
 			pictures: 'Pictures',
@@ -101,6 +105,9 @@
 			sec_coloring_sub: 'لوّن صورًا ممتعة',
 			sec_level2: 'المستوى ٢',
 			sec_level2_sub: 'صور كبيرة للفنانين الكبار',
+			sec_letters: 'رحلة الحروف',
+			sec_letters_sub: 'تعلّم الحروف في رحلة سحرية',
+			newBadge: 'جديد',
 			emptyAlbum: 'لا توجد صور بعد — أضف صورة بزر ➕',
 			pen: 'قلم',
 			pictures: 'صورة',
@@ -207,7 +214,7 @@
 		view: 'sections', // 'sections' | 'album' | 'coloring' | 'level2'
 		history: [],
 		uploaded: [],
-		saved: new Map() // picture file -> canvas with the child's painting (kept while the page is open)
+		saved: new Map() // picture file -> canvas with the child's painting (also kept on the device, see "shelf")
 	};
 
 	// ---------------- Helpers ----------------
@@ -381,7 +388,15 @@
 			img.alt = '';
 			cover.appendChild(img);
 
-			const count = section.id === 'board' ? 0 : itemsOf({section: section.id}).length;
+			if (section.id === 'letters') {
+				const stars = window.LettersAdventure ? window.LettersAdventure.stars() : 0;
+				const badge = document.createElement('span');
+				badge.className = stars ? 'section-count letters-stars' : 'section-count letters-new';
+				badge.textContent = stars ? `⭐ ${stars}` : `✨ ${t('newBadge')}`;
+				cover.appendChild(badge);
+			}
+
+			const count = section.id === 'board' || section.id === 'letters' ? 0 : itemsOf({section: section.id}).length;
 			if (count > 0) {
 				const bubble = document.createElement('span');
 				bubble.className = 'section-count';
@@ -412,6 +427,22 @@
 	function openSection({id}) {
 		if (id === 'board') {
 			openPicture({item: boardItem()});
+
+			return;
+		}
+		if (id === 'letters') {
+			if (!window.LettersAdventure || !window.gsap) return;
+			beep({freq: 560, type: 'triangle'});
+			showScreen({name: 'adventure'});
+			window.LettersAdventure.open({
+				lang: state.lang,
+				onClose: ({sound}) => {
+					state.sound = sound;
+					renderSoundButton();
+					buildGallery();
+					showScreen({name: 'gallery'});
+				}
+			});
 
 			return;
 		}
@@ -501,10 +532,79 @@
 	function showScreen({name}) {
 		els.gallery.classList.toggle('active', name === 'gallery');
 		els.studio.classList.toggle('active', name === 'studio');
+		if (name !== 'adventure') document.getElementById('adventure').classList.remove('active');
 		if (name === 'studio') requestAnimationFrame(fitCanvas);
 	}
 
+	// ---------------- Paintings kept on this device ----------------
+	// IndexedDB, not localStorage: a painting is a picture, far too big for localStorage's few MB.
+	const shelf = (() => {
+		let db = null;
+		const open = () => db || (db = new Promise((resolve, reject) => {
+			const req = indexedDB.open('paint-studio', 1);
+			req.onupgradeneeded = () => req.result.createObjectStore('paintings');
+			req.onsuccess = () => resolve(req.result);
+			req.onerror = () => reject(req.error);
+		}));
+
+		return {
+			put: (file, value) => open().then((d) => d.transaction('paintings', 'readwrite').objectStore('paintings').put(value, file)).catch(() => {}),
+			all: () => open().then((d) => new Promise((resolve) => {
+				const out = new Map();
+				const req = d.transaction('paintings').objectStore('paintings').openCursor();
+				req.onsuccess = () => {
+					const cursor = req.result;
+					if (!cursor) return resolve(out);
+					out.set(cursor.key, cursor.value);
+					cursor.continue();
+				};
+				req.onerror = () => resolve(out);
+			})).catch(() => new Map())
+		};
+	})();
+
+	function storePainting(file, {paint, stickers}) {
+		if (!window.indexedDB) return;
+		paint.toBlob((blob) => blob && shelf.put(file, {blob, stickers}), 'image/png');
+	}
+
+	// on start: bring back every painting from last time (the 🎨 badges come back too)
+	async function loadPaintings() {
+		if (!window.indexedDB) return;
+		const all = await shelf.all();
+		for (const [file, {blob, stickers}] of all) {
+			if (state.saved.has(file) || !blob) continue;
+			try {
+				const img = await createImageBitmap(blob);
+				const paint = document.createElement('canvas');
+				paint.width = img.width;
+				paint.height = img.height;
+				paint.getContext('2d').drawImage(img, 0, 0);
+				state.saved.set(file, {paint, stickers: stickers || []});
+			} catch (err) {
+				/* a broken saved painting: start that one fresh */
+			}
+		}
+		if (all.size && els.gallery.classList.contains('active')) buildGallery();
+	}
+
+	// save a few seconds after the child stops painting, and right away when the app is hidden or closed
+	let autosaveTimer = 0;
+
+	function scheduleAutosave() {
+		clearTimeout(autosaveTimer);
+		autosaveTimer = setTimeout(rememberPainting, 2500);
+	}
+
+	const saveNow = () => {
+		clearTimeout(autosaveTimer);
+		if (state.item) rememberPainting();
+	};
+	document.addEventListener('visibilitychange', () => document.visibilityState === 'hidden' && saveNow());
+	window.addEventListener('pagehide', saveNow);
+
 	function rememberPainting() {
+		clearTimeout(autosaveTimer);
 		magic.flush();
 		if (!state.item || !els.paint.width) return;
 		const copyOf = (canvas) => {
@@ -515,7 +615,9 @@
 
 			return copy;
 		};
-		state.saved.set(state.item.file, {paint: copyOf(els.paint), stickers: state.stickerItems.map((st) => ({...st}))});
+		const entry = {paint: copyOf(els.paint), stickers: state.stickerItems.map((st) => ({...st}))};
+		state.saved.set(state.item.file, entry);
+		storePainting(state.item.file, entry);
 	}
 
 	function goHome() {
@@ -1350,6 +1452,7 @@
 			/* ignore */
 		}
 		updateUndo();
+		scheduleAutosave();
 	}
 
 	function dropLastHistory() {
@@ -1374,6 +1477,7 @@
 		state.stickerItems = snapshot.stickers;
 		renderStickers();
 		updateUndo();
+		scheduleAutosave();
 		beep({freq: 380});
 	}
 
@@ -1729,5 +1833,8 @@
 	startAppMode();
 	renderFullscreenButtons();
 	applyLanguage();
+	loadPaintings();
+	// ask the browser to never clear our saved paintings and letter stars on its own
+	if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 	if (location.protocol === 'file:') loadScript('images-data.js').then(buildGallery);
 })();
