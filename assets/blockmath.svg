@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" shape-rendering="crispEdges">
+	<defs>
+		<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#c9ecff"/></linearGradient>
+		<!-- one isometric block: top, left, right faces -->
+		<g id="grass">
+			<path d="M0 -40 L70 -75 L140 -40 L70 -5 Z" fill="#6cc04a"/>
+			<path d="M0 -40 L70 -5 L70 75 L0 40 Z" fill="#8b5a2b"/>
+			<path d="M70 -5 L140 -40 L140 40 L70 75 Z" fill="#6e4521"/>
+			<path d="M0 -40 L70 -5 L70 12 L0 -23 Z" fill="#5aa83a"/>
+			<path d="M70 -5 L140 -40 L140 -23 L70 12 Z" fill="#4a8f2e"/>
+		</g>
+		<g id="stone">
+			<path d="M0 -40 L70 -75 L140 -40 L70 -5 Z" fill="#a9a9a9"/>
+			<path d="M0 -40 L70 -5 L70 75 L0 40 Z" fill="#8a8a8a"/>
+			<path d="M70 -5 L140 -40 L140 40 L70 75 Z" fill="#6f6f6f"/>
+		</g>
+		<g id="diamond">
+			<use href="#stone"/>
+			<rect x="20" y="0" width="14" height="14" fill="#5ff0e6"/><rect x="42" y="22" width="12" height="12" fill="#5ff0e6"/>
+			<rect x="95" y="-8" width="14" height="14" fill="#3fc9c0"/><rect x="110" y="18" width="12" height="12" fill="#3fc9c0"/>
+			<rect x="58" y="-48" width="14" height="10" fill="#7ffff5"/>
+		</g>
+	</defs>
+	<rect width="800" height="600" fill="url(#sky)"/>
+	<!-- pixel sun and clouds -->
+	<rect x="600" y="60" width="90" height="90" fill="#ffe14d"/>
+	<rect x="615" y="75" width="60" height="60" fill="#fff59a"/>
+	<g fill="#fff">
+		<rect x="80" y="90" width="160" height="30"/><rect x="110" y="70" width="90" height="25"/>
+		<rect x="380" y="140" width="130" height="26"/><rect x="405" y="122" width="70" height="22"/>
+	</g>
+	<!-- ground of blocks -->
+	<use href="#grass" x="-60" y="455"/>
+	<use href="#grass" x="80" y="455"/>
+	<use href="#grass" x="220" y="455"/>
+	<use href="#grass" x="360" y="455"/>
+	<use href="#grass" x="500" y="455"/>
+	<use href="#grass" x="640" y="455"/>
+	<use href="#stone" x="150" y="420"/>
+	<use href="#diamond" x="560" y="420"/>
+	<!-- the number tower: 1 + 2 = 3 -->
+	<use href="#grass" x="290" y="420"/>
+	<use href="#grass" x="290" y="340"/>
+	<use href="#grass" x="290" y="260"/>
+	<g font-family="'Baloo Bhaijaan 2', 'Fredoka', sans-serif" font-weight="800" text-anchor="middle" shape-rendering="auto">
+		<g transform="translate(400 250)">
+			<rect x="-160" y="-60" width="320" height="96" rx="6" fill="#2b2b2b" opacity=".85"/>
+			<rect x="-152" y="-52" width="304" height="80" rx="4" fill="none" stroke="#5a3fbf" stroke-width="5"/>
+			<text y="10" font-size="64" fill="#fff" direction="ltr">١ + ٢ = ٣</text>
+		</g>
+		<!-- emerald -->
+		<g transform="translate(150 300) rotate(45)">
+			<rect x="-26" y="-26" width="52" height="52" fill="#2ecc5a" stroke="#137a32" stroke-width="6"/>
+			<rect x="-12" y="-12" width="16" height="16" fill="#a6ffbf"/>
+		</g>
+		<!-- pickaxe -->
+		<g transform="translate(660 300) rotate(-30)">
+			<rect x="-6" y="-10" width="12" height="110" fill="#8b5a2b"/>
+			<path d="M-60 -20 Q0 -55 60 -20 L52 -6 Q0 -36 -52 -6 Z" fill="#5ff0e6" stroke="#1d8f88" stroke-width="5"/>
+		</g>
+	</g>
+</svg>

@@ -27,6 +27,7 @@
 	const BOARD_FILE = 'magic-board';
 	const SECTIONS = [
 		{id: 'letters', cover: 'assets/letters.svg', icon: '🔤'},
+		{id: 'blockmath', cover: 'assets/blockmath.svg', icon: '⛏️'},
 		{id: 'album', cover: 'assets/album.svg', icon: '📸'},
 		{id: 'board', cover: 'assets/board.svg', icon: '🪄'},
 		{id: 'coloring', cover: 'assets/coloring.svg', icon: '🖍️'},
@@ -58,6 +59,8 @@
 			sec_level2_sub: 'Big pictures for big artists',
 			sec_letters: 'Letters Adventure',
 			sec_letters_sub: 'Learn the Arabic letters on a magic journey',
+			sec_blockmath: 'Block Math Adventure',
+			sec_blockmath_sub: 'Count and add in a world of blocks',
 			newBadge: 'New',
 			emptyAlbum: 'No photos yet — add one with the ➕ button!',
 			pen: 'Pen',
@@ -107,6 +110,8 @@
 			sec_level2_sub: 'صور كبيرة للفنانين الكبار',
 			sec_letters: 'رحلة الحروف',
 			sec_letters_sub: 'تعلّم الحروف في رحلة سحرية',
+			sec_blockmath: 'مغامرة المكعبات',
+			sec_blockmath_sub: 'عُدّ واجمع في عالم المكعبات',
 			newBadge: 'جديد',
 			emptyAlbum: 'لا توجد صور بعد — أضف صورة بزر ➕',
 			pen: 'قلم',
@@ -388,6 +393,12 @@
 			img.alt = '';
 			cover.appendChild(img);
 
+			if (section.id === 'blockmath') {
+				const badge = document.createElement('span');
+				badge.className = 'section-count letters-new';
+				badge.textContent = `✨ ${t('newBadge')}`;
+				cover.appendChild(badge);
+			}
 			if (section.id === 'letters') {
 				const stars = window.LettersAdventure ? window.LettersAdventure.stars() : 0;
 				const badge = document.createElement('span');
@@ -396,7 +407,7 @@
 				cover.appendChild(badge);
 			}
 
-			const count = section.id === 'board' || section.id === 'letters' ? 0 : itemsOf({section: section.id}).length;
+			const count = ['board', 'letters', 'blockmath'].includes(section.id) ? 0 : itemsOf({section: section.id}).length;
 			if (count > 0) {
 				const bubble = document.createElement('span');
 				bubble.className = 'section-count';
@@ -425,6 +436,13 @@
 	}
 
 	function openSection({id}) {
+		if (id === 'blockmath') {
+			// the block game is its own page; its 🏠 button comes back here
+			beep({freq: 560, type: 'triangle'});
+			location.href = 'block-math/index.html';
+
+			return;
+		}
 		if (id === 'board') {
 			openPicture({item: boardItem()});
 
