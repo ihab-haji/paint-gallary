@@ -1,1 +1,4 @@
 .DS_Store
+block-math/.crawl_*.html
+block-math/tools/.voice_cache/
+block-math/.sweep_*.html

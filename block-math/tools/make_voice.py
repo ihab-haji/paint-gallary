@@ -3,7 +3,7 @@
 Reads the phrase list written by tools/crawl.js, synthesises every clip, trims silence,
 re-encodes to small mono MP3 files in audio/<lang>/ plus an index.js manifest (loads on GitHub Pages and file://).
 
-Usage:  python make_voice.py <ar-zariyah|ar-cartoon|ar-hamed|en> phrases.json [more.json ...]
+Usage:  python make_voice.py <ar-kid|ar-zariyah|ar-cartoon|ar-hamed|en> phrases.json [more.json ...]
 Needs:  pip install edge-tts miniaudio lameenc
 """
 import asyncio, base64, hashlib, json, os, sys, array
@@ -13,7 +13,9 @@ import edge_tts, lameenc, miniaudio
 VOICES = {
     # Arabic voices (picked in the game menu). Slower and a little higher than default: easier for 4-year-olds.
     'ar-zariyah': dict(voice='ar-SA-ZariyahNeural', rate='-10%', pitch='+12Hz'),  # cheerful
-    'ar-cartoon': dict(voice='ar-SA-ZariyahNeural', rate='-12%', pitch='+24Hz'),  # default: higher, cartoon-like
+    # default: Zariyah for 4-5 year olds. Slow and clear; only a gentle pitch lift, because big pitch shifts blur the consonants.
+    'ar-kid': dict(voice='ar-SA-ZariyahNeural', rate='-18%', pitch='+10Hz'),
+    'ar-cartoon': dict(voice='ar-SA-ZariyahNeural', rate='-12%', pitch='+24Hz'),  # higher, cartoon-like
     'ar-hamed': dict(voice='ar-SA-HamedNeural', rate='-12%', pitch='+8Hz'),       # male voice
     # English: a child voice.
     'en': dict(voice='en-US-AnaNeural', rate='-6%', pitch='+0Hz'),
@@ -50,12 +52,18 @@ def trim_and_encode(mp3_bytes):
     seg = s[max(0, first - pad):min(len(s), last + pad)]
     fade = min(len(seg) // 4, int(SR * 0.012))  # tiny fades so clips join without clicks
     seg = array.array('h', seg)
+    # same loudness for every clip (about -18 dBFS RMS), never clipping
+    if len(seg):
+        rms = (sum(v * v for v in seg) / len(seg)) ** 0.5 or 1
+        peak = max(abs(v) for v in seg) or 1
+        gain = min(4000 / rms, 31000 / peak)
+        seg = array.array('h', (max(-32767, min(32767, int(v * gain))) for v in seg))
     for i in range(fade):
         f = i / fade
         seg[i] = int(seg[i] * f)
         seg[-1 - i] = int(seg[-1 - i] * f)
     enc = lameenc.Encoder()
-    enc.set_bit_rate(40)
+    enc.set_bit_rate(64)  # clearer consonants on small speakers
     enc.set_in_sample_rate(SR)
     enc.set_channels(1)
     enc.set_quality(2)
