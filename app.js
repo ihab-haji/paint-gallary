@@ -28,6 +28,8 @@
 	const SECTIONS = [
 		{id: 'letters', cover: 'assets/letters.svg', icon: '🔤'},
 		{id: 'blockmath', cover: 'assets/blockmath.svg', icon: '⛏️'},
+		{id: 'cupball', cover: 'assets/cupball.svg', icon: '🎩'},
+		{id: 'memory', cover: 'assets/memory.svg', icon: '🐾'},
 		{id: 'album', cover: 'assets/album.svg', icon: '📸'},
 		{id: 'board', cover: 'assets/board.svg', icon: '🪄'},
 		{id: 'coloring', cover: 'assets/coloring.svg', icon: '🖍️'},
@@ -61,6 +63,10 @@
 			sec_letters_sub: 'Learn the Arabic letters on a magic journey',
 			sec_blockmath: 'Block Math Adventure',
 			sec_blockmath_sub: 'Count and add in a world of blocks',
+			sec_cupball: 'Find the Ball',
+			sec_cupball_sub: 'Watch the cups and find the hidden ball',
+			sec_memory: 'Memory Match',
+			sec_memory_sub: 'Find the matching pairs and win prizes',
 			newBadge: 'New',
 			emptyAlbum: 'No photos yet — add one with the ➕ button!',
 			pen: 'Pen',
@@ -112,6 +118,10 @@
 			sec_letters_sub: 'تعلّم الحروف في رحلة سحرية',
 			sec_blockmath: 'مغامرة المكعبات',
 			sec_blockmath_sub: 'عُدّ واجمع في عالم المكعبات',
+			sec_cupball: 'أين الكرة؟',
+			sec_cupball_sub: 'راقب الأكواب وابحث عن الكرة',
+			sec_memory: 'لعبة الذاكرة',
+			sec_memory_sub: 'جِد الصور المتشابهة واربح الجوائز',
 			newBadge: 'جديد',
 			emptyAlbum: 'لا توجد صور بعد — أضف صورة بزر ➕',
 			pen: 'قلم',
@@ -319,20 +329,34 @@
 		return {file: BOARD_FILE, name: {en: TEXT.en.sec_board, ar: TEXT.ar.sec_board}, section: 'board'};
 	}
 
-	let boardDataUrl = null;
+	// the board takes the shape of the drawing area, so it fills the whole screen
+	function boardShape() {
+		const saved = state.saved.get(BOARD_FILE);
+		if (saved) return {w: saved.paint.width, h: saved.paint.height}; // keep an old drawing unstretched
+
+		// peek at the studio's size: hidden screens have no size, and nothing is painted in between
+		const wasActive = els.studio.classList.contains('active');
+		els.studio.classList.add('active');
+		const border = 20;
+		const sw = els.stage.clientWidth - border;
+		const sh = els.stage.clientHeight - border;
+		if (!wasActive) els.studio.classList.remove('active');
+		if (sw < 100 || sh < 100) return {w: 1400, h: 1000};
+		const k = MAX_SIDE / Math.max(sw, sh);
+
+		return {w: Math.round(sw * k), h: Math.round(sh * k)};
+	}
 
 	function blankBoard() {
-		if (!boardDataUrl) {
-			const c = document.createElement('canvas');
-			c.width = 1400;
-			c.height = 1000;
-			const ctx = c.getContext('2d');
-			ctx.fillStyle = '#fff';
-			ctx.fillRect(0, 0, c.width, c.height);
-			boardDataUrl = c.toDataURL('image/png');
-		}
+		const {w, h} = boardShape();
+		const c = document.createElement('canvas');
+		c.width = w;
+		c.height = h;
+		const ctx = c.getContext('2d');
+		ctx.fillStyle = '#fff';
+		ctx.fillRect(0, 0, w, h);
 
-		return boardDataUrl;
+		return c.toDataURL('image/png');
 	}
 
 	/* Pictures packed by update-pictures.command, so Fill & Save work even when opened by double-click. */
@@ -393,10 +417,23 @@
 			img.alt = '';
 			cover.appendChild(img);
 
-			if (section.id === 'blockmath') {
+			if (section.id === 'blockmath' || section.id === 'cupball') {
 				const badge = document.createElement('span');
 				badge.className = 'section-count letters-new';
 				badge.textContent = `✨ ${t('newBadge')}`;
+				cover.appendChild(badge);
+			}
+			if (section.id === 'memory') {
+				// 🎁 = stickers won in the memory game (saved by memory-game/index.html)
+				let stickers = 0;
+				try {
+					stickers = (JSON.parse(localStorage.getItem('memory-game-v1') || '{}').stickers || []).length;
+				} catch (err) {
+					/* nothing saved yet */
+				}
+				const badge = document.createElement('span');
+				badge.className = stickers ? 'section-count letters-stars' : 'section-count letters-new';
+				badge.textContent = stickers ? `🎁 ${stickers}` : `✨ ${t('newBadge')}`;
 				cover.appendChild(badge);
 			}
 			if (section.id === 'letters') {
@@ -407,7 +444,7 @@
 				cover.appendChild(badge);
 			}
 
-			const count = ['board', 'letters', 'blockmath'].includes(section.id) ? 0 : itemsOf({section: section.id}).length;
+			const count = ['board', 'letters', 'blockmath', 'cupball', 'memory'].includes(section.id) ? 0 : itemsOf({section: section.id}).length;
 			if (count > 0) {
 				const bubble = document.createElement('span');
 				bubble.className = 'section-count';
@@ -440,6 +477,20 @@
 			// the block game is its own page; its 🏠 button comes back here
 			beep({freq: 560, type: 'triangle'});
 			location.href = 'block-math/index.html';
+
+			return;
+		}
+		if (id === 'memory') {
+			// the memory card game is its own page too
+			beep({freq: 560, type: 'triangle'});
+			location.href = 'memory-game/index.html';
+
+			return;
+		}
+		if (id === 'cupball') {
+			// the cup and ball game is its own page too
+			beep({freq: 560, type: 'triangle'});
+			location.href = 'cup-ball/index.html';
 
 			return;
 		}
