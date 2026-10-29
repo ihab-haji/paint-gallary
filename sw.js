@@ -2,7 +2,7 @@
    - The first time it opens online, it saves the whole app: pages, code, every picture, your photos and the fonts.
    - Pages, code and styles: always try the newest version first, fall back to the saved copy when offline.
    - Pictures and fonts: use the saved copy (they rarely change). */
-const CACHE = 'paint-studio-players-01';
+const CACHE = 'paint-studio-players-02';
 const CORE = ['./', 'index.html', 'style.css', 'letters.css', 'magic.js', 'letters-art.js', 'letters.js', 'app.js', 'images.js', 'images-list.js', 'manifest.webmanifest',
 	'assets/album.svg', 'assets/board.svg', 'assets/coloring.svg', 'assets/level2.svg', 'assets/letters.svg', 'assets/blockmath.svg', 'block-math/index.html', 'block-math/vendor/three.min.js',
 	'assets/cupball.svg', 'cup-ball/index.html', 'cup-ball/cup-ball.css', 'cup-ball/cup-ball.js', 'cup-ball/words.js', 'cup-ball/audio/ar/index.js', 'cup-ball/audio/en/index.js',

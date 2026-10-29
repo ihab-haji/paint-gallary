@@ -17,10 +17,18 @@
 	};
 	// all cups share one color, picked at random every round: [main, dark, light]
 	const CUP_COLORS = {
-		ocean: ['#006199', '#003f66', '#5aa9d6'],
-		amber: ['#fcad38', '#d9860f', '#ffe0a8'],
+		red: ['#f2272f', '#c81824', '#ff6b6b'],
+		orange: ['#ff8a1f', '#d9650a', '#ffb66b'],
+		yellow: ['#ffd21f', '#e0a800', '#fff08a'],
+		lime: ['#8ed61f', '#62a80f', '#c3f27a'],
+		green: ['#1fbf4a', '#128a33', '#7ae69a'],
 		mint: ['#06d6a0', '#03a379', '#a3f5df'],
-		lemon: ['#ffea88', '#e3c13e', '#fff8d4']
+		teal: ['#14b8c4', '#0c8791', '#7ee3ea'],
+		sky: ['#2ea8ff', '#1478d0', '#8fd2ff'],
+		blue: ['#2d5bff', '#1a3cc4', '#8aa4ff'],
+		purple: ['#8a3ffc', '#6224c9', '#c4a0ff'],
+		pink: ['#ff4fa3', '#d12a7e', '#ff9ccb'],
+		brown: ['#b5652a', '#86461a', '#e3a272']
 	};
 	const COLOR_NAMES = Object.keys(CUP_COLORS);
 
@@ -341,13 +349,21 @@
 	}
 
 	/* ================= drawing: cups and ball ================= */
-	// a glossy modern cup: smooth rounded body, one soft band, a long shine
-	// a plain cup: one flat color, no shine, band or shading
+	// a cartoon cup upside down: bold outline, shiny top, light left edge, shaded right edge, white rim
 	function cupSvg(color) {
-		const [main] = CUP_COLORS[color];
+		const [main, dark, light] = CUP_COLORS[color];
+		const ink = '#2b1210';
 
 		return `<svg viewBox="0 0 120 150" aria-hidden="true">
-			<path d="M16 134 C20 100 26 52 30 28 Q32 15 46 14 L74 14 Q88 15 90 28 C94 52 100 100 104 134 Q60 146 16 134 Z" fill="${main}"/>
+			<ellipse cx="60" cy="131" rx="54" ry="14" fill="#fff" stroke="${ink}" stroke-width="3.5"/>
+			<path d="M8 133 Q60 156 112 133 Q60 150 8 133 Z" fill="#e4e4e4"/>
+			<path d="M30 26 L14 128 Q60 146 106 128 L90 26 Z" fill="${main}"/>
+			<path d="M79 36 L91 30 L104 128 Q99 131 93 133 Z" fill="${dark}" opacity=".55"/>
+			<path d="M27 44 Q30 40 34 44 L27 123 Q24 128 20 124 Z" fill="${light}" opacity=".7"/>
+			<path d="M30 26 L14 128 Q60 146 106 128 L90 26" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linejoin="round"/>
+			<ellipse cx="60" cy="26" rx="30" ry="12" fill="${main}" stroke="${ink}" stroke-width="3.5"/>
+			<ellipse cx="60" cy="25" rx="27" ry="9.5" fill="${light}" opacity=".35"/>
+			<path d="M37 25 Q41 17 53 15" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>
 		</svg>`;
 	}
 
