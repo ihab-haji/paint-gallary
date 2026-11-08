@@ -16,6 +16,7 @@ The home screen has 4 sections:
 | 🦸 **Level 2** | more detailed coloring pages for older kids | `images/level-2/` |
 | 🎩 **Find the Ball** | a cup and ball memory game (`cup-ball/`) | — |
 | 🐾 **Memory Match** | a flip-the-cards pairs game (`memory-game/`) | — |
+| 🐒 **Monkey Mischief** | a 1–4 player banana party game on one screen (`monkey-mischief/`) | — |
 
 ## Add your pictures
 
@@ -83,12 +84,46 @@ python memory-game/tools/make_voice.py     # checks every letter has its harakah
 node memory-game/tools/make_cover.js       # redraws the home-screen cover (assets/memory.svg)
 ```
 
+## 🐒 Monkey Mischief (banana party game)
+
+Up to 4 children play at the same time on one iPad lying flat, one per corner. Each corner is a player's
+wooden deck: their joystick, their trick button, their face sticker, their banana count and their basket.
+With 1 player, Coco the computer monkey joins in. Built with Phaser 3 (`assets/vendor/phaser.min.js`).
+
+- **Goal:** grab bananas (up to 5 on your head), carry them to your basket. Most bananas in the basket wins.
+- **Steal:** stand at someone else's basket to sneak bananas away (2 per visit, then it snaps shut for a moment).
+  The owner hears an alarm and an arrow points at the thief; touch the thief to get them all back.
+- **Trick button:** drops a banana peel behind you (3, they come back). Others slip and drop 2 bananas; your own peels are safe.
+- **Power-up bubbles:** ⚡ speed · 🛡️ shield (blocks one trap) · 🧲 magnet · 🦘 super jump (button = jump over water and rocks)
+  · 💣 slippery bomb (button = throw a big slippery puddle).
+- **The match** (2 or 3 minutes) has three parts: *Banana Hunt* → *Jungle Chaos* (golden banana +5, coconut rain
+  with red warning targets, the big gorilla who chases whoever carries the most) → *Banana Frenzy* (banana rain,
+  the last 20 seconds speed up). Nobody ever loses their basket: traps only knock bananas off your head.
+- **Controls:** joystick (default) or "follow my finger", chosen before the match. Keyboard for testing:
+  P1 WASD + E · P2 arrows + Enter · P3 IJKL + O · P4 TFGH + Y.
+- **Voice:** every announcement is recorded (Arabic Zariyah, English Ana). After changing a spoken line in
+  `monkey-mischief/words.js`, run `pip install edge-tts miniaudio lameenc` once, then `python3 monkey-mischief/tools/make_voice.py`.
+
 ## Tools
 
 ✏️ Pen (thin lines) · 🖌️ Brush (thick soft paint) · 🪄 Magic brush (🌈 rainbow ribbon, 🫧 bubbles, 🌸 flowers,
 ⭐ stars, ✨ fireflies, 🐾 tiny animals — each pops in with sparkles and music) · 🪣 Fill bucket ·
 ⭐ Stickers (tap, or press and drag to make them bigger) · 🧽 Eraser.
 The chosen tool's icon follows the mouse or finger.
+
+## Libraries for new games
+
+Shared libraries live in `assets/vendor/` and are loaded with a plain `<script>` tag (no install, no build step):
+
+| File | What it's for |
+|---|---|
+| `phaser.min.js` | [Phaser 3.90.0](https://phaser.io), a 2D game engine (physics, sprites, scenes, touch input, sound) |
+| `gsap.min.js` | smooth animations |
+| `confetti.js` | win confetti |
+
+A new game in its own folder (for example `my-game/index.html`) loads Phaser with
+`<script src="../assets/vendor/phaser.min.js"></script>` (see `monkey-mischief/` for a complete example).
+List the new game's files in `CORE` in `sw.js` so it works offline.
 
 ## Publish on GitHub Pages
 

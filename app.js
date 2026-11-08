@@ -30,6 +30,7 @@
 		{id: 'blockmath', cover: 'assets/blockmath.svg', icon: '⛏️'},
 		{id: 'cupball', cover: 'assets/cupball.svg', icon: '🎩'},
 		{id: 'memory', cover: 'assets/memory.svg', icon: '🐾'},
+		{id: 'monkey', cover: 'assets/monkey.svg', icon: '🐒'},
 		{id: 'album', cover: 'assets/album.svg', icon: '📸'},
 		{id: 'board', cover: 'assets/board.svg', icon: '🪄'},
 		{id: 'coloring', cover: 'assets/coloring.svg', icon: '🖍️'},
@@ -67,6 +68,8 @@
 			sec_cupball_sub: 'Watch the cups and find the hidden ball',
 			sec_memory: 'Memory Match',
 			sec_memory_sub: 'Find the matching pairs and win prizes',
+			sec_monkey: 'Monkey Mischief',
+			sec_monkey_sub: 'Grab bananas, steal and slip your friends: up to 4 players',
 			newBadge: 'New',
 			emptyAlbum: 'No photos yet — add one with the ➕ button!',
 			pen: 'Pen',
@@ -122,6 +125,8 @@
 			sec_cupball_sub: 'راقب الأكواب وابحث عن الكرة',
 			sec_memory: 'لعبة الذاكرة',
 			sec_memory_sub: 'جِد الصور المتشابهة واربح الجوائز',
+			sec_monkey: 'قرود مشاغبة',
+			sec_monkey_sub: 'اجمع الموز واخطفه وازلِق أصحابك: حتى ٤ لاعبين',
 			newBadge: 'جديد',
 			emptyAlbum: 'لا توجد صور بعد — أضف صورة بزر ➕',
 			pen: 'قلم',
@@ -417,7 +422,7 @@
 			img.alt = '';
 			cover.appendChild(img);
 
-			if (section.id === 'blockmath' || section.id === 'cupball') {
+			if (section.id === 'blockmath' || section.id === 'cupball' || section.id === 'monkey') {
 				const badge = document.createElement('span');
 				badge.className = 'section-count letters-new';
 				badge.textContent = `✨ ${t('newBadge')}`;
@@ -444,7 +449,7 @@
 				cover.appendChild(badge);
 			}
 
-			const count = ['board', 'letters', 'blockmath', 'cupball', 'memory'].includes(section.id) ? 0 : itemsOf({section: section.id}).length;
+			const count = ['board', 'letters', 'blockmath', 'cupball', 'memory', 'monkey'].includes(section.id) ? 0 : itemsOf({section: section.id}).length;
 			if (count > 0) {
 				const bubble = document.createElement('span');
 				bubble.className = 'section-count';
@@ -484,6 +489,13 @@
 			// the memory card game is its own page too
 			beep({freq: 560, type: 'triangle'});
 			location.href = 'memory-game/index.html';
+
+			return;
+		}
+		if (id === 'monkey') {
+			// the monkey party game (Phaser) is its own page
+			beep({freq: 560, type: 'triangle'});
+			location.href = 'monkey-mischief/index.html';
 
 			return;
 		}
