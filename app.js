@@ -31,6 +31,7 @@
 		{id: 'cupball', cover: 'assets/cupball.svg', icon: '🎩'},
 		{id: 'memory', cover: 'assets/memory.svg', icon: '🐾'},
 		{id: 'monkey', cover: 'assets/monkey.svg', icon: '🐒'},
+		{id: 'puzzle', cover: 'assets/puzzle.svg', icon: '🧩'},
 		{id: 'album', cover: 'assets/album.svg', icon: '📸'},
 		{id: 'board', cover: 'assets/board.svg', icon: '🪄'},
 		{id: 'coloring', cover: 'assets/coloring.svg', icon: '🖍️'},
@@ -70,6 +71,8 @@
 			sec_memory_sub: 'Find the matching pairs and win prizes',
 			sec_monkey: 'Monkey Mischief',
 			sec_monkey_sub: 'Grab bananas, steal and slip your friends: up to 4 players',
+			sec_puzzle: 'Puzzle Time',
+			sec_puzzle_sub: 'Put the pieces together and build animals',
 			newBadge: 'New',
 			emptyAlbum: 'No photos yet — add one with the ➕ button!',
 			pen: 'Pen',
@@ -127,6 +130,8 @@
 			sec_memory_sub: 'جِد الصور المتشابهة واربح الجوائز',
 			sec_monkey: 'قرود مشاغبة',
 			sec_monkey_sub: 'اجمع الموز واخطفه وازلِق أصحابك: حتى ٤ لاعبين',
+			sec_puzzle: 'لعبة التركيب',
+			sec_puzzle_sub: 'ركّب القطع وكوّن الحيوانات',
 			newBadge: 'جديد',
 			emptyAlbum: 'لا توجد صور بعد — أضف صورة بزر ➕',
 			pen: 'قلم',
@@ -441,6 +446,20 @@
 				badge.textContent = stickers ? `🎁 ${stickers}` : `✨ ${t('newBadge')}`;
 				cover.appendChild(badge);
 			}
+			if (section.id === 'puzzle') {
+				// 🧩 = puzzles finished in the puzzle game (saved by puzzle/puzzle.js: one per picture level, one per animal)
+				let done = 0;
+				try {
+					const saved = JSON.parse(localStorage.getItem('puzzle-v1') || '{}');
+					done = Object.values(saved.pics || {}).reduce((sum, levels) => sum + levels.length, 0) + Object.keys(saved.animals || {}).length;
+				} catch (err) {
+					/* nothing saved yet */
+				}
+				const badge = document.createElement('span');
+				badge.className = done ? 'section-count letters-stars' : 'section-count letters-new';
+				badge.textContent = done ? `🧩 ${done}` : `✨ ${t('newBadge')}`;
+				cover.appendChild(badge);
+			}
 			if (section.id === 'letters') {
 				const stars = window.LettersAdventure ? window.LettersAdventure.stars() : 0;
 				const badge = document.createElement('span');
@@ -449,7 +468,7 @@
 				cover.appendChild(badge);
 			}
 
-			const count = ['board', 'letters', 'blockmath', 'cupball', 'memory', 'monkey'].includes(section.id) ? 0 : itemsOf({section: section.id}).length;
+			const count = ['board', 'letters', 'blockmath', 'cupball', 'memory', 'monkey', 'puzzle'].includes(section.id) ? 0 : itemsOf({section: section.id}).length;
 			if (count > 0) {
 				const bubble = document.createElement('span');
 				bubble.className = 'section-count';
@@ -489,6 +508,13 @@
 			// the memory card game is its own page too
 			beep({freq: 560, type: 'triangle'});
 			location.href = 'memory-game/index.html';
+
+			return;
+		}
+		if (id === 'puzzle') {
+			// the puzzle game is its own page too
+			beep({freq: 560, type: 'triangle'});
+			location.href = 'puzzle/index.html';
 
 			return;
 		}

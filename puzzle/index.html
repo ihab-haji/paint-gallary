@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+	<meta name="theme-color" content="#e6f7f4">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
+	<title>لعبة التركيب · Puzzle Time</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧩</text></svg>">
+	<link rel="stylesheet" href="puzzle.css">
+</head>
+<body>
+	<!-- soft colour blobs behind everything -->
+	<div class="bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="blob b4"></span></div>
+
+	<header class="topbar">
+		<button class="round-btn" id="homeBtn" type="button" aria-label="Home">🏠</button>
+		<h1 class="title" id="title"></h1>
+		<div class="counter hidden" id="counter" aria-live="polite"><span class="counter-ico">🧩</span><b id="counterText"></b></div>
+		<span class="spacer"></span>
+		<button class="round-btn hidden" id="hintBtn" type="button" aria-label="Hint">💡</button>
+		<button class="round-btn hidden" id="peekBtn" type="button" aria-label="Guide picture">👁️</button>
+		<button class="round-btn" id="langBtn" type="button" aria-label="Language">🌐</button>
+		<button class="round-btn" id="soundBtn" type="button" aria-label="Sound">🔊</button>
+	</header>
+
+	<!-- ============ MENU: every puzzle, on shelves ============ -->
+	<main class="screen active" id="menu">
+		<section class="shelf">
+			<h2 class="shelf-title"><span class="shelf-ico">🧩</span><span data-t="pictures"></span></h2>
+			<div class="cards" id="pictureCards"></div>
+		</section>
+		<section class="shelf">
+			<h2 class="shelf-title"><span class="shelf-ico">🐶</span><span data-t="animals"></span></h2>
+			<div class="cards animals" id="animalCards"></div>
+		</section>
+	</main>
+
+	<!-- ============ PLAY: the board and the loose pieces ============ -->
+	<main class="screen" id="game">
+		<div class="stage" id="stage">
+			<div class="board" id="board"></div>
+		</div>
+		<div class="finish hidden" id="finish">
+			<button class="big-btn again" id="againBtn" type="button" aria-label="Again"><span>🔁</span></button>
+			<button class="big-btn next" id="nextBtn" type="button" aria-label="Next"><span class="next-thumb" id="nextThumb"></span><span class="next-arrow">➜</span></button>
+			<button class="big-btn menu" id="menuBtn" type="button" aria-label="Menu"><span>🧩</span></button>
+		</div>
+	</main>
+
+	<!-- ============ HOW MANY PIECES? ============ -->
+	<div class="sheet hidden" id="levelSheet" role="dialog" aria-modal="true">
+		<div class="sheet-card">
+			<button class="round-btn sheet-close" id="sheetClose" type="button" aria-label="Close">✖</button>
+			<div class="sheet-preview" id="sheetPreview"></div>
+			<div class="levels" id="levels"></div>
+		</div>
+	</div>
+
+	<script src="../assets/vendor/gsap.min.js"></script>
+	<script src="../assets/vendor/confetti.js"></script>
+	<script src="art.js"></script>
+	<script src="words.js"></script>
+	<script src="audio/ar/index.js"></script>
+	<script src="audio/en/index.js"></script>
+	<script src="puzzle.js"></script>
+</body>
+</html>

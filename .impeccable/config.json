@@ -1,0 +1,29 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "createdAt": "2026-11-08T17:25:06.205Z",
+        "reason": "Claude: the same spring the incumbent games use (cup-ball.css); playful bounce is literal toy motion for 2-6 year olds"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "animation: var(--spring)",
+        "createdAt": "2026-11-08T17:25:06.235Z",
+        "reason": "Claude: same incumbent spring token as above"
+      },
+      {
+        "rule": "icon-tile-stack",
+        "value": "*",
+        "files": [
+          "puzzle/index.html"
+        ],
+        "createdAt": "2026-11-08T17:25:06.265Z",
+        "reason": "Claude: false positive - the h1 is filled by JS and sits beside the home button in the top bar, not under an icon tile"
+      }
+    ]
+  }
+}

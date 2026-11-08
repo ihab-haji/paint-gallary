@@ -1,0 +1,470 @@
+/* ==========================================================
+   Puzzle Time: picture puzzles and build-the-animal, for little kids
+   The same family as the other games (soft colour blobs, frosted glass buttons, Fredoka / Baloo),
+   with its own colour: a calm mint play mat, so the bright pictures are what shines.
+   ========================================================== */
+:root {
+	--ink: #183b46;
+	--ink-soft: #4b6f78;
+	--bg: #e6f7f4;
+	--mint: #12b5a0;
+	--mint-dark: #0a7f71;
+	--sun: #ffc93c;
+	--coral: #ff5d73;
+	--glass: rgba(255, 255, 255, 0.66);
+	--glass-edge: rgba(255, 255, 255, 0.9);
+	--shadow: 0 10px 28px rgba(16, 84, 84, 0.14);
+	--shadow-lg: 0 22px 54px rgba(16, 84, 84, 0.22);
+	--lv1: #2fbf71;
+	--lv2: #2f9bff;
+	--lv3: #ff9f1a;
+	--lv4: #ff5d73;
+	--font: 'Fredoka', 'Baloo Bhaijaan 2', system-ui, sans-serif;
+	--pad: clamp(12px, 2.6vw, 26px);
+	--bar: calc(76px + env(safe-area-inset-top, 0px));
+	--spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+	--out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html[lang='ar'] { --font: 'Baloo Bhaijaan 2', 'Fredoka', system-ui, sans-serif; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
+
+body {
+	font-family: var(--font);
+	color: var(--ink);
+	background: var(--bg);
+	overflow: hidden;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-user-select: none;
+	user-select: none;
+	-webkit-touch-callout: none;
+	touch-action: manipulation;
+}
+
+::selection { background: var(--sun); color: var(--ink); }
+
+button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; touch-action: manipulation; }
+button:focus-visible { outline: 3px solid var(--mint-dark); outline-offset: 3px; }
+.hidden { display: none !important; }
+
+.round-btn, .counter, .sheet-card {
+	background: var(--glass);
+	border: 1.5px solid var(--glass-edge);
+	box-shadow: var(--shadow);
+	-webkit-backdrop-filter: blur(16px) saturate(1.4);
+	backdrop-filter: blur(16px) saturate(1.4);
+}
+
+/* ---------- background ---------- */
+.bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.blob { position: absolute; border-radius: 50%; filter: blur(64px); opacity: 0.55; animation: drift 20s ease-in-out infinite alternate; }
+.b1 { width: 50vmax; height: 50vmax; left: -16vmax; top: -18vmax; background: #9ee8d9; }
+.b2 { width: 42vmax; height: 42vmax; right: -12vmax; top: 2vmax; background: #b9dcff; animation-delay: -6s; animation-duration: 24s; }
+.b3 { width: 38vmax; height: 38vmax; left: 12vmax; bottom: -20vmax; background: #ffe39a; animation-delay: -10s; }
+.b4 { width: 32vmax; height: 32vmax; right: 6vmax; bottom: -12vmax; background: #ffc4cf; animation-delay: -14s; animation-duration: 26s; }
+
+@keyframes drift {
+	0% { transform: translate(0, 0) scale(1); }
+	50% { transform: translate(5vmax, 3vmax) scale(1.1); }
+	100% { transform: translate(-4vmax, 5vmax) scale(0.95); }
+}
+
+/* ---------- top bar ---------- */
+.topbar {
+	position: fixed;
+	inset: 0 0 auto;
+	z-index: 30;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: calc(12px + env(safe-area-inset-top, 0px)) max(var(--pad), env(safe-area-inset-right, 0px)) 0 max(var(--pad), env(safe-area-inset-left, 0px));
+	pointer-events: none;
+}
+
+.topbar > * { pointer-events: auto; }
+.spacer { flex: 1; pointer-events: none !important; }
+
+.round-btn {
+	display: grid;
+	place-items: center;
+	flex: 0 0 auto;
+	width: 56px;
+	height: 56px;
+	border-radius: 20px;
+	font-size: 24px;
+	transition: transform 0.3s var(--spring), box-shadow 0.3s, opacity 0.2s;
+}
+
+.round-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.round-btn:active { transform: scale(0.9); }
+.round-btn.off { filter: grayscale(1); opacity: 0.5; }
+
+.title {
+	font-size: clamp(1.4rem, 3vw, 2rem);
+	font-weight: 700;
+	line-height: 1.1;
+	letter-spacing: -0.01em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding-inline: 6px;
+	text-shadow: 0 2px 0 rgba(255, 255, 255, 0.8);
+}
+
+.counter {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	height: 56px;
+	padding: 0 18px 0 14px;
+	border-radius: 20px;
+	font-size: 22px;
+	font-variant-numeric: tabular-nums;
+}
+
+.counter b { font-weight: 700; min-width: 3.2ch; text-align: center; }
+.counter.pop { animation: pop 0.45s var(--spring); }
+
+@keyframes pop { 40% { transform: scale(1.14); } }
+
+/* ---------- screens ---------- */
+.screen { position: fixed; inset: 0; z-index: 1; display: none; }
+.screen.active { display: block; }
+
+/* ---------- menu ---------- */
+#menu {
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+	padding: calc(var(--bar) + 8px) max(var(--pad), env(safe-area-inset-right, 0px)) calc(40px + env(safe-area-inset-bottom, 0px)) max(var(--pad), env(safe-area-inset-left, 0px));
+	scrollbar-width: none;
+}
+
+#menu::-webkit-scrollbar { display: none; }
+
+.shelf { max-width: 1240px; margin: 0 auto; }
+.shelf + .shelf { margin-top: 36px; }
+
+.shelf-title {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 0 4px 14px;
+	font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+	font-weight: 700;
+	color: var(--mint-dark);
+}
+
+.shelf-ico {
+	display: grid;
+	place-items: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 14px;
+	background: #fff;
+	box-shadow: var(--shadow);
+	font-size: 24px;
+}
+
+.cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(240px, 44vw), 1fr));
+	gap: clamp(14px, 2vw, 22px);
+}
+
+.cards.animals { grid-template-columns: repeat(auto-fill, minmax(min(170px, 28vw), 1fr)); }
+
+.card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	padding: 8px;
+	border-radius: 26px;
+	background: #fff;
+	box-shadow: var(--shadow);
+	text-align: center;
+	opacity: 0;
+	animation: rise 0.6s var(--out) forwards;
+	transition: transform 0.35s var(--spring), box-shadow 0.35s;
+}
+
+.card:hover { transform: translateY(-4px) rotate(-0.6deg); box-shadow: var(--shadow-lg); }
+.card:active { transform: scale(0.95); }
+
+@keyframes rise { from { opacity: 0; transform: translateY(18px) scale(0.97); } to { opacity: 1; transform: none; } }
+
+.card-art {
+	position: relative;
+	aspect-ratio: 3 / 2;
+	border-radius: 19px;
+	overflow: hidden;
+	background: #eef5f4;
+}
+
+
+.card-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+/* the jigsaw lines printed over every picture card */
+.card-art .cut { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.card-name {
+	display: block;
+	padding: 10px 6px 2px;
+	font-size: clamp(1rem, 1.8vw, 1.15rem);
+	font-weight: 600;
+	line-height: 1.2;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* one gem per level won: green, blue, orange, pink */
+.gems { display: flex; justify-content: center; gap: 6px; padding: 6px 0 4px; }
+.gem { width: 14px; height: 14px; border-radius: 4px; transform: rotate(45deg); background: #dbe7e5; }
+.gem.won { box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18); }
+.gem.won.l0 { background: var(--lv1); }
+.gem.won.l1 { background: var(--lv2); }
+.gem.won.l2 { background: var(--lv3); }
+.gem.won.l3 { background: var(--lv4); }
+
+.animal-art {
+	position: relative;
+	aspect-ratio: 1;
+	border-radius: 19px;
+	display: grid;
+	place-items: center;
+}
+
+.animal-art svg { width: 86%; height: 86%; transition: transform 0.4s var(--spring); }
+.card:hover .animal-art svg { transform: rotate(-4deg) scale(1.04); }
+
+.done-star {
+	position: absolute;
+	top: 8px;
+	inset-inline-end: 8px;
+	display: grid;
+	place-items: center;
+	width: 38px;
+	height: 38px;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: var(--shadow);
+	font-size: 20px;
+}
+
+/* ---------- play ---------- */
+#game { touch-action: none; }
+
+.stage { position: absolute; inset: 0; overflow: hidden; touch-action: none; }
+
+.board {
+	position: absolute;
+	left: 0;
+	top: 0;
+	border-radius: 18px;
+	background: #fffdf8;
+	box-shadow: 0 2px 0 #fff inset, 0 18px 44px rgba(16, 84, 84, 0.2), 0 0 0 10px rgba(255, 255, 255, 0.78);
+}
+
+.board canvas { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 18px; }
+
+.board .shine {
+	position: absolute;
+	inset: 0;
+	border-radius: 18px;
+	pointer-events: none;
+	background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.75) 50%, transparent 65%) no-repeat;
+	background-size: 250% 100%;
+	background-position: 150% 0;
+	opacity: 0;
+}
+
+.board.done .shine { animation: shine 1.3s var(--out) 0.15s; }
+
+@keyframes shine {
+	0% { opacity: 1; background-position: 150% 0; }
+	100% { opacity: 1; background-position: -60% 0; }
+}
+
+.board.build { background: none; box-shadow: none; }
+.board.build .plate { position: absolute; inset: 0; border-radius: 50%; }
+.board.build .ghost { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.5; }
+.ghost * { fill: #b7b0cc !important; stroke: #b7b0cc !important; transition: fill 0.25s, stroke 0.25s; }
+.ghost .want * { fill: #6b5fa5 !important; stroke: #6b5fa5 !important; }
+.ghost .want { animation: want 0.9s ease-in-out infinite alternate; }
+
+@keyframes want { to { opacity: 0.55; } }
+
+.hint-glow { position: absolute; pointer-events: none; z-index: 900; }
+
+.piece {
+	position: absolute;
+	left: 0;
+	top: 0;
+	touch-action: none;
+	will-change: transform;
+	transform-origin: 50% 50%;
+}
+
+.piece canvas, .piece svg { display: block; width: 100%; height: 100%; pointer-events: none; }
+.part svg { overflow: visible; filter: drop-shadow(0 4px 4px rgba(30, 50, 60, 0.18)); }
+.part.placed svg { filter: none; }
+.piece.lifted canvas, .part.lifted svg { filter: drop-shadow(0 14px 14px rgba(20, 50, 60, 0.3)); }
+
+.spark {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 16px;
+	height: 16px;
+	margin: -8px 0 0 -8px;
+	pointer-events: none;
+	z-index: 950;
+	clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+}
+
+.ring {
+	position: absolute;
+	left: 0;
+	top: 0;
+	border-radius: 50%;
+	border: 5px solid #fff;
+	pointer-events: none;
+	z-index: 940;
+}
+
+/* ---------- finished: again · next · all puzzles ---------- */
+.finish {
+	position: absolute;
+	left: 50%;
+	bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+	z-index: 960;
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 12px;
+	border-radius: 34px;
+	background: var(--glass);
+	border: 1.5px solid var(--glass-edge);
+	box-shadow: var(--shadow-lg);
+	-webkit-backdrop-filter: blur(16px) saturate(1.4);
+	backdrop-filter: blur(16px) saturate(1.4);
+	transform: translateX(-50%);
+}
+
+.big-btn {
+	display: grid;
+	place-items: center;
+	height: 84px;
+	min-width: 84px;
+	border-radius: 26px;
+	font-size: 36px;
+	background: #fff;
+	box-shadow: 0 6px 16px rgba(16, 84, 84, 0.16);
+	transition: transform 0.3s var(--spring);
+}
+
+.big-btn:active { transform: scale(0.9); }
+
+.big-btn.next {
+	display: flex;
+	gap: 12px;
+	padding: 0 22px 0 10px;
+	min-width: 170px;
+	background: var(--mint);
+	color: #fff;
+	box-shadow: 0 8px 20px rgba(18, 181, 160, 0.4);
+	animation: nudge 1.6s ease-in-out 1s infinite;
+}
+
+.next-thumb { width: 92px; height: 64px; border-radius: 16px; overflow: hidden; background: #fff center / cover no-repeat; border: 3px solid #fff; display: grid; place-items: center; }
+.next-thumb svg { width: 100%; height: 100%; }
+.next-arrow { font-size: 34px; font-weight: 700; }
+html[dir='rtl'] .next-arrow { transform: scaleX(-1); }
+
+@keyframes nudge { 0%, 100% { transform: none; } 50% { transform: translateY(-4px) scale(1.04); } }
+
+/* ---------- how many pieces? ---------- */
+.sheet {
+	position: fixed;
+	inset: 0;
+	z-index: 50;
+	display: grid;
+	place-items: center;
+	padding: var(--pad);
+	background: rgba(15, 60, 66, 0.28);
+	-webkit-backdrop-filter: blur(6px);
+	backdrop-filter: blur(6px);
+}
+
+.sheet-card {
+	position: relative;
+	display: grid;
+	grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+	gap: clamp(16px, 2.4vw, 28px);
+	align-items: center;
+	width: min(980px, 100%);
+	max-height: 100%;
+	padding: clamp(16px, 2.4vw, 28px);
+	border-radius: 34px;
+	background: rgba(255, 255, 255, 0.86);
+}
+
+.sheet-close { position: absolute; top: -14px; inset-inline-end: -14px; width: 52px; height: 52px; font-size: 20px; background: #fff; }
+
+.sheet-preview { display: grid; place-items: center; min-height: 0; }
+.sheet-preview img, .sheet-preview svg { display: block; max-width: 100%; max-height: min(62vh, 520px); border-radius: 22px; box-shadow: var(--shadow-lg); border: 6px solid #fff; }
+
+.levels { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.level {
+	--c: var(--lv1);
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	padding: 16px 10px 12px;
+	border-radius: 24px;
+	background: #fff;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 30%, transparent) inset, 0 8px 18px rgba(16, 84, 84, 0.1);
+	transition: transform 0.3s var(--spring), box-shadow 0.3s;
+	opacity: 0;
+	animation: rise 0.5s var(--out) forwards;
+}
+
+.level:hover { transform: translateY(-3px); box-shadow: 0 0 0 4px var(--c) inset, 0 14px 26px rgba(16, 84, 84, 0.16); }
+.level:active { transform: scale(0.94); }
+.level.l1 { --c: var(--lv2); }
+.level.l2 { --c: var(--lv3); }
+.level.l3 { --c: var(--lv4); }
+
+.level-grid { display: grid; gap: 3px; width: 100%; max-width: 128px; aspect-ratio: var(--ar, 1.5); }
+.level-grid i { border-radius: 4px; background: var(--c); }
+.level-grid i:nth-child(odd) { background: color-mix(in srgb, var(--c) 72%, #fff); }
+
+.level-name { font-size: 1.15rem; font-weight: 700; color: color-mix(in srgb, var(--c) 70%, var(--ink)); line-height: 1.1; }
+.level-count { font-size: 0.95rem; font-weight: 600; color: var(--ink-soft); line-height: 1; font-variant-numeric: tabular-nums; }
+.level .won-mark { position: absolute; top: 8px; inset-inline-end: 8px; font-size: 18px; }
+
+/* ---------- small screens / portrait ---------- */
+@media (max-width: 760px), (orientation: portrait) {
+	.sheet-card { grid-template-columns: 1fr; }
+	.sheet-preview img, .sheet-preview svg { max-height: 30vh; }
+}
+
+@media (max-width: 560px) {
+	.round-btn { width: 48px; height: 48px; border-radius: 16px; font-size: 20px; }
+	.counter { height: 48px; font-size: 18px; }
+	.title { font-size: 1.2rem; }
+	.big-btn { height: 68px; min-width: 68px; font-size: 28px; }
+	.big-btn.next { min-width: 130px; }
+	.next-thumb { width: 64px; height: 46px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.blob, .big-btn.next, .ghost .want { animation: none; }
+	.card, .level { animation-duration: 0.01s; }
+}

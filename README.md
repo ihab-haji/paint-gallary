@@ -17,6 +17,14 @@ The home screen has 4 sections:
 | 🎩 **Find the Ball** | a cup and ball memory game (`cup-ball/`) | — |
 | 🐾 **Memory Match** | a flip-the-cards pairs game (`memory-game/`) | — |
 | 🐒 **Monkey Mischief** | a 1–4 player banana party game on one screen (`monkey-mischief/`) | — |
+| 🧩 **Puzzle Time** | jigsaw picture puzzles (4, 6, 12 or 20 pieces) and build-the-animal puzzles (`puzzle/`) | `puzzle/pictures/` |
+
+## Add a picture puzzle
+
+1. Put the picture in `puzzle/pictures/` (a JPG around 1000–1500 px wide is plenty).
+2. Add a line to `PICTURES` in `puzzle/art.js`, e.g. `{id: 'beach', file: 'pictures/beach.jpg'}`.
+3. Give it a name in `NAMES` in `puzzle/words.js` (Arabic with harakat, and English), add its id to the `scenes`
+   list in `phrases()`, then record the voice: `python3 puzzle/tools/make_voice.py`.
 
 ## Add your pictures
 

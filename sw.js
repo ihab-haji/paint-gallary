@@ -2,13 +2,15 @@
    - The first time it opens online, it saves the whole app: pages, code, every picture, your photos and the fonts.
    - Pages, code and styles: always try the newest version first, fall back to the saved copy when offline.
    - Pictures and fonts: use the saved copy (they rarely change). */
-const CACHE = 'paint-studio-monkey-03';
+const CACHE = 'paint-studio-puzzle-04';
 const CORE = ['./', 'index.html', 'style.css', 'letters.css', 'magic.js', 'letters-art.js', 'letters.js', 'app.js', 'images.js', 'images-list.js', 'manifest.webmanifest',
 	'assets/album.svg', 'assets/board.svg', 'assets/coloring.svg', 'assets/level2.svg', 'assets/letters.svg', 'assets/blockmath.svg', 'block-math/index.html', 'block-math/vendor/three.min.js',
 	'assets/cupball.svg', 'cup-ball/index.html', 'cup-ball/cup-ball.css', 'cup-ball/cup-ball.js', 'cup-ball/words.js', 'cup-ball/audio/ar/index.js', 'cup-ball/audio/en/index.js',
 	'assets/memory.svg', 'memory-game/index.html', 'memory-game/cards.js',
 	'assets/monkey.svg', 'assets/vendor/phaser.min.js', 'monkey-mischief/index.html', 'monkey-mischief/mm.css', 'monkey-mischief/words.js',
 	'monkey-mischief/audio/ar/index.js', 'monkey-mischief/audio/en/index.js',
+	'assets/puzzle.svg', 'puzzle/index.html', 'puzzle/puzzle.css', 'puzzle/puzzle.js', 'puzzle/art.js', 'puzzle/words.js', 'puzzle/audio/ar/index.js', 'puzzle/audio/en/index.js',
+	...['puppy-garden', 'dino-valley', 'sea-turtle', 'farm-friends', 'ocean-friends', 'forest-picnic'].map((f) => `puzzle/pictures/${f}.jpg`),
 	...['sound', 'art', 'layout', 'fx', 'input', 'monkey', 'bananas', 'baskets', 'traps', 'powerups', 'gorilla', 'bot', 'director', 'hud', 'scene', 'main'].map((f) => `monkey-mischief/js/${f}.js`),
 	'assets/players/players.js', 'assets/players/p1.png', 'assets/players/p2.png', 'assets/players/p3.png', 'assets/players/p4.png',
 	'assets/vendor/gsap.min.js', 'assets/vendor/confetti.js',
@@ -31,6 +33,19 @@ try {
 	importScripts('monkey-mischief/audio/ar/index.js', 'monkey-mischief/audio/en/index.js');
 } catch (err) {
 	/* no monkey voice lists: its clips are saved when first played */
+}
+
+try {
+	importScripts('puzzle/audio/ar/index.js', 'puzzle/audio/en/index.js');
+} catch (err) {
+	/* no puzzle voice lists: its clips are saved when first played */
+}
+
+// the puzzle game's recorded voice (puzzle/tools/make_voice.py)
+function puzzleVoice() {
+	const clips = (map, lang) => Object.values(map || {}).map((id) => `puzzle/audio/${lang}/${id}.mp3`);
+
+	return [...clips(self.PUZZLE_VOICE_AR, 'ar'), ...clips(self.PUZZLE_VOICE_EN, 'en')];
 }
 
 // Monkey Mischief's recorded voice (monkey-mischief/tools/make_voice.py): every clip in both languages
@@ -75,7 +90,7 @@ self.addEventListener('install', (event) => {
 			const fresh = (file) => new Request(file, {cache: 'reload'});
 			await cache.addAll(CORE.map(fresh));
 			// one missing picture must not stop the rest from being saved
-			await Promise.all([...allPictures(), ...memoryVoice(), ...monkeyVoice()].map((file) => cache.add(fresh(file)).catch(() => {})));
+			await Promise.all([...allPictures(), ...memoryVoice(), ...monkeyVoice(), ...puzzleVoice()].map((file) => cache.add(fresh(file)).catch(() => {})));
 			await saveFonts(cache);
 			// tell the open page that everything is saved
 			const pages = await self.clients.matchAll({includeUncontrolled: true});
