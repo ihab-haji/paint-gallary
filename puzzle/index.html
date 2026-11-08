@@ -23,7 +23,11 @@
 		<div class="counter hidden" id="counter" aria-live="polite"><span class="counter-ico">🧩</span><b id="counterText"></b></div>
 		<span class="spacer"></span>
 		<button class="round-btn hidden" id="hintBtn" type="button" aria-label="Hint">💡</button>
-		<button class="round-btn hidden" id="peekBtn" type="button" aria-label="Guide picture">👁️</button>
+		<!-- the board behind the pieces: the faded picture, or plain white -->
+		<div class="bg-switch hidden" id="bgSwitch" role="group" aria-label="Board">
+			<button class="bg-opt" id="bgPicture" type="button" aria-label="Faded picture"><span class="bg-thumb" id="bgThumb"></span></button>
+			<button class="bg-opt" id="bgWhite" type="button" aria-label="White board"><span class="bg-thumb white"></span></button>
+		</div>
 		<button class="round-btn" id="langBtn" type="button" aria-label="Language">🌐</button>
 		<button class="round-btn" id="soundBtn" type="button" aria-label="Sound">🔊</button>
 	</header>

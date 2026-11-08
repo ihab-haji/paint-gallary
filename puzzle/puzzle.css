@@ -50,7 +50,7 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 button:focus-visible { outline: 3px solid var(--mint-dark); outline-offset: 3px; }
 .hidden { display: none !important; }
 
-.round-btn, .counter, .sheet-card {
+.round-btn, .counter, .sheet-card, .bg-switch {
 	background: var(--glass);
 	border: 1.5px solid var(--glass-edge);
 	box-shadow: var(--shadow);
@@ -129,6 +129,25 @@ button:focus-visible { outline: 3px solid var(--mint-dark); outline-offset: 3px;
 .counter.pop { animation: pop 0.45s var(--spring); }
 
 @keyframes pop { 40% { transform: scale(1.14); } }
+
+/* the board background: faded picture or white */
+.bg-switch { display: flex; gap: 6px; height: 56px; padding: 5px; border-radius: 20px; }
+
+.bg-opt {
+	position: relative;
+	width: 52px;
+	height: 44px;
+	border-radius: 14px;
+	overflow: hidden;
+	background: #fff;
+	box-shadow: 0 0 0 2px rgba(24, 59, 70, 0.1);
+	transition: transform 0.3s var(--spring), box-shadow 0.25s;
+}
+
+.bg-opt:active { transform: scale(0.9); }
+.bg-opt.on { box-shadow: 0 0 0 3px var(--mint), 0 4px 10px rgba(18, 181, 160, 0.3); }
+.bg-thumb { position: absolute; inset: 0; background: #fff center / cover no-repeat; opacity: 0.5; }
+.bg-thumb.white { opacity: 1; margin: 8px; border: 2px dashed rgba(24, 59, 70, 0.35); border-radius: 6px; }
 
 /* ---------- screens ---------- */
 .screen { position: fixed; inset: 0; z-index: 1; display: none; }
@@ -458,6 +477,8 @@ html[dir='rtl'] .next-arrow { transform: scaleX(-1); }
 @media (max-width: 560px) {
 	.round-btn { width: 48px; height: 48px; border-radius: 16px; font-size: 20px; }
 	.counter { height: 48px; font-size: 18px; }
+	.bg-switch { height: 48px; padding: 4px; }
+	.bg-opt { width: 42px; height: 40px; }
 	.title { font-size: 1.2rem; }
 	.big-btn { height: 68px; min-width: 68px; font-size: 28px; }
 	.big-btn.next { min-width: 130px; }

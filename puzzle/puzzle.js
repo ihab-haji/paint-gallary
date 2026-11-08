@@ -14,7 +14,7 @@
 	const $ = (id) => document.getElementById(id);
 	const els = {
 		title: $('title'), counter: $('counter'), counterText: $('counterText'),
-		homeBtn: $('homeBtn'), hintBtn: $('hintBtn'), peekBtn: $('peekBtn'), langBtn: $('langBtn'), soundBtn: $('soundBtn'),
+		homeBtn: $('homeBtn'), hintBtn: $('hintBtn'), bgSwitch: $('bgSwitch'), bgPicture: $('bgPicture'), bgWhite: $('bgWhite'), bgThumb: $('bgThumb'), langBtn: $('langBtn'), soundBtn: $('soundBtn'),
 		menu: $('menu'), game: $('game'), stage: $('stage'), board: $('board'),
 		pictureCards: $('pictureCards'), animalCards: $('animalCards'),
 		finish: $('finish'), againBtn: $('againBtn'), nextBtn: $('nextBtn'), nextThumb: $('nextThumb'), menuBtn: $('menuBtn'),
@@ -46,7 +46,7 @@
 		lang: localStorage.getItem('paint-lang-v2') || 'ar',
 		sound: localStorage.getItem('paint-sound') !== 'off',
 		save: loadSave(),
-		guide: true
+		guide: localStorage.getItem('puzzle-board') !== 'white' // the faded picture on the board (or plain white)
 	};
 
 	const persist = () => {
@@ -469,8 +469,9 @@
 		els.finish.classList.add('hidden');
 		els.counter.classList.remove('hidden');
 		els.hintBtn.classList.remove('hidden');
-		els.peekBtn.classList.toggle('hidden', game.kind !== 'jigsaw');
-		els.peekBtn.classList.toggle('off', !state.guide);
+		els.bgSwitch.classList.toggle('hidden', game.kind !== 'jigsaw');
+		if (game.kind === 'jigsaw') els.bgThumb.style.backgroundImage = `url("${game.item.src}")`;
+		showBoardChoice();
 	}
 
 	function showMenu() {
@@ -481,7 +482,7 @@
 		stopVoice();
 		els.game.classList.remove('active');
 		els.menu.classList.add('active');
-		[els.counter, els.hintBtn, els.peekBtn].forEach((el) => el.classList.add('hidden'));
+		[els.counter, els.hintBtn, els.bgSwitch].forEach((el) => el.classList.add('hidden'));
 		els.title.textContent = t('title');
 		renderMenu();
 	}
@@ -992,7 +993,7 @@
 	function win() {
 		game.done = true;
 		els.hintBtn.classList.add('hidden');
-		els.peekBtn.classList.add('hidden');
+		els.bgSwitch.classList.add('hidden');
 		if (game.kind === 'jigsaw') {
 			const won = state.save.pics[game.item.id] || [];
 			if (!won.includes(game.level)) won.push(game.level);
@@ -1090,11 +1091,28 @@
 	els.againBtn.addEventListener('click', again);
 	els.nextBtn.addEventListener('click', next);
 	els.hintBtn.addEventListener('click', hint);
-	els.peekBtn.addEventListener('click', () => {
-		state.guide = !state.guide;
-		els.peekBtn.classList.toggle('off', !state.guide);
+	function showBoardChoice() {
+		els.bgPicture.classList.toggle('on', state.guide);
+		els.bgWhite.classList.toggle('on', !state.guide);
+		els.bgPicture.setAttribute('aria-pressed', String(state.guide));
+		els.bgWhite.setAttribute('aria-pressed', String(!state.guide));
+	}
+
+	function setBoard(guide) {
+		tone({freq: guide ? 660 : 520, dur: 0.1, type: 'triangle'});
+		if (state.guide === guide) return;
+		state.guide = guide;
+		try {
+			localStorage.setItem('puzzle-board', guide ? 'picture' : 'white');
+		} catch (err) {
+			/* private mode: the choice lasts for this visit */
+		}
+		showBoardChoice();
 		if (game.kind === 'jigsaw' && game.jig && game.jig.boardCtx) paintBoard(game.done);
-	});
+	}
+
+	els.bgPicture.addEventListener('click', () => setBoard(true));
+	els.bgWhite.addEventListener('click', () => setBoard(false));
 	els.sheetClose.addEventListener('click', closeSheet);
 	els.sheet.addEventListener('click', (event) => {
 		if (event.target === els.sheet) closeSheet();
