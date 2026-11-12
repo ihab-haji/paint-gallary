@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+	<meta name="theme-color" content="#1f86d6">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
+	<title>معركة الماء · Water Blaster Arena</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💦</text></svg>">
+	<link rel="stylesheet" href="wb.css">
+</head>
+<body class="at-start">
+	<!-- the Phaser arena: always running (the splashers play by themselves behind the menus) -->
+	<div id="stage" aria-label="Arena"></div>
+
+	<header class="topbar" id="topbar">
+		<button class="round-btn" id="homeBtn" type="button" aria-label="Home">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11.2 12 4l8.5 7.2"/><path d="M6 9.6V20h4.5v-5.2h3V20H18V9.6"/></svg>
+		</button>
+		<span class="spacer"></span>
+		<button class="round-btn" id="langBtn" type="button" aria-label="Language">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.8 5.2 3.8 8.5s-1.2 6.1-3.8 8.5c-2.6-2.4-3.8-5.2-3.8-8.5S9.4 5.9 12 3.5z"/></svg>
+		</button>
+		<button class="round-btn" id="voiceBtn" type="button" aria-label="Voice">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18.5V16a7 7 0 1 1 9.5 6.5H12"/><circle class="f" cx="12" cy="9.5" r="1.4"/><path d="M17.8 4.5a6.5 6.5 0 0 1 0 9M20.5 2.5a10 10 0 0 1 0 13"/></svg>
+		</button>
+		<button class="round-btn" id="musicBtn" type="button" aria-label="Music">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.6" class="f"/><circle cx="16.5" cy="16" r="2.6" class="f"/></svg>
+		</button>
+		<button class="round-btn" id="soundBtn" type="button" aria-label="Sound">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path class="f" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.8 7.8 0 0 1 0 11"/></svg>
+		</button>
+	</header>
+
+	<!-- ============ START ============ -->
+	<main class="screen active" id="start">
+		<div class="title-wrap">
+			<div class="troop" id="troop" aria-hidden="true"></div>
+			<h1 class="title" data-t="title"></h1>
+			<p class="tagline" data-t="tagline"></p>
+			<button class="big-btn" id="playBtn" type="button">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+				<span data-t="play"></span>
+			</button>
+		</div>
+	</main>
+
+	<!-- ============ SETUP: who plays, which game, which arena ============ -->
+	<main class="screen" id="setup">
+		<div class="setup-card">
+			<section id="players" aria-label="Players"></section>
+			<div class="opt">
+				<span class="opt-label" data-t="mode"></span>
+				<div class="seg" id="modeSeg" role="radiogroup">
+					<button type="button" class="seg-btn" data-mode="dry" role="radio">
+						<svg viewBox="0 0 48 48" aria-hidden="true"><path class="f" d="M24 5c7 9 12 15 12 22a12 12 0 0 1-24 0c0-7 5-13 12-22z"/><path class="o" d="M18 29a6 6 0 0 0 6 6"/></svg>
+						<span data-t="dry"></span>
+					</button>
+					<button type="button" class="seg-btn" data-mode="teams" role="radio">
+						<svg viewBox="0 0 48 48" aria-hidden="true"><circle class="f" cx="15" cy="16" r="6.5"/><circle class="f" cx="33" cy="16" r="6.5"/><path class="o" d="M5 38c1.5-7 5.5-11 10-11s8.5 4 10 11M23 38c1.5-7 5.5-11 10-11s8.5 4 10 11"/></svg>
+						<span data-t="teams"></span>
+					</button>
+				</div>
+			</div>
+			<p class="hint hidden" id="teamsHint" data-t="teamsHint"></p>
+			<div class="opt">
+				<span class="opt-label" data-t="arena"></span>
+				<div class="seg" id="arenaSeg" role="radiogroup">
+					<button type="button" class="seg-btn" data-theme="pool" role="radio">
+						<svg viewBox="0 0 48 48" aria-hidden="true"><rect class="o" x="6" y="12" width="36" height="26" rx="13"/><path class="f" d="M12 27c3-2.5 6-2.5 9 0s6 2.5 9 0 4.5-2.5 6-1.5V30a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7z"/></svg>
+						<span data-t="pool"></span>
+					</button>
+					<button type="button" class="seg-btn" data-theme="beach" role="radio">
+						<svg viewBox="0 0 48 48" aria-hidden="true"><path class="f" d="M24 6a17 17 0 0 1 17 17H7A17 17 0 0 1 24 6z"/><path class="o" d="M24 23v19M5 42c4-3 8-3 12 0s8 3 12 0 8-3 14 0"/></svg>
+						<span data-t="beach"></span>
+					</button>
+				</div>
+			</div>
+			<button class="big-btn" id="nextBtn" type="button">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+				<span data-t="next"></span>
+			</button>
+		</div>
+	</main>
+
+	<!-- ============ PICK: each player's splasher and blaster ============ -->
+	<main class="screen" id="pick">
+		<div class="setup-card pick-card">
+			<h2 class="pick-title" data-t="pickTitle"></h2>
+			<div class="pick-list" id="pickList"></div>
+			<div class="row">
+				<button class="pill-btn" id="backBtn" type="button">
+					<svg class="back-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+					<span data-t="back"></span>
+				</button>
+				<button class="big-btn" id="goBtn" type="button">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+					<span data-t="play"></span>
+				</button>
+			</div>
+		</div>
+	</main>
+
+	<!-- ============ IN GAME ============ -->
+	<div class="side" id="side">
+		<button class="round-btn" id="pauseBtn" type="button" aria-label="Pause">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><rect class="f" x="6" y="5" width="4.5" height="14" rx="1.6"/><rect class="f" x="13.5" y="5" width="4.5" height="14" rx="1.6"/></svg>
+		</button>
+		<button class="pill-btn" id="startNowBtn" type="button"><span data-t="startNow"></span></button>
+	</div>
+
+	<!-- ============ PAUSE ============ -->
+	<div class="overlay hidden" id="pauseOverlay" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+		<div class="card pause-card">
+			<h2 id="pauseTitle" data-t="pause"></h2>
+			<button class="big-btn" id="resumeBtn" type="button">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+				<span data-t="resume"></span>
+			</button>
+			<label class="vol">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path class="f" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.8 7.8 0 0 1 0 11"/></svg>
+				<span class="sr" data-t="volume"></span>
+				<input type="range" id="volume" min="0" max="100" step="5">
+			</label>
+			<div class="row">
+				<button class="pill-btn" id="restartBtn" type="button">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12a7 7 0 1 1-2.05-4.95M19 4.5V9h-4.5"/></svg>
+					<span data-t="restart"></span>
+				</button>
+				<button class="pill-btn" id="menuBtn" type="button">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.5" cy="8.5" r="3"/><circle cx="16" cy="9.5" r="2.4"/><path d="M3.5 19c.8-3.6 2.8-5.5 5-5.5s4.2 1.9 5 5.5M13.5 15.2c.8-1.1 1.7-1.7 2.5-1.7 1.9 0 3.5 1.7 4.2 5.5"/></svg>
+					<span data-t="home"></span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- ============ ROUND WINNER ============ -->
+	<div class="overlay hidden" id="resultOverlay" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+		<div class="card result-card">
+			<div class="waves" aria-hidden="true"></div>
+			<h2 id="resultTitle"></h2>
+			<ol class="podium" id="podium"></ol>
+			<div class="row">
+				<button class="big-btn next-btn" id="againBtn" type="button">
+					<span class="next-ring" id="nextRing" aria-hidden="true"></span>
+					<span id="nextIn"></span>
+				</button>
+				<button class="pill-btn" id="resultMenuBtn" type="button">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.5" cy="8.5" r="3"/><circle cx="16" cy="9.5" r="2.4"/><path d="M3.5 19c.8-3.6 2.8-5.5 5-5.5s4.2 1.9 5 5.5M13.5 15.2c.8-1.1 1.7-1.7 2.5-1.7 1.9 0 3.5 1.7 4.2 5.5"/></svg>
+					<span data-t="home"></span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<script src="../assets/vendor/phaser.min.js"></script>
+	<script src="../assets/vendor/confetti.js"></script>
+	<script src="../assets/players/heroes.js"></script>
+	<script src="../assets/players/players.js"></script>
+	<script src="words.js"></script>
+	<script src="audio/ar/index.js"></script>
+	<script src="audio/en/index.js"></script>
+	<script src="js/sound.js"></script>
+	<script src="js/art.js"></script>
+	<script src="js/layout.js"></script>
+	<script src="js/fx.js"></script>
+	<script src="js/input.js"></script>
+	<script src="js/fighter.js"></script>
+	<script src="js/water.js"></script>
+	<script src="js/pickups.js"></script>
+	<script src="js/events.js"></script>
+	<script src="js/bot.js"></script>
+	<script src="js/hud.js"></script>
+	<script src="js/scene.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>

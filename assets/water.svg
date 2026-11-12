@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+	<!-- Water Blaster Arena cover: two kids soak each other across a pool; a swim ring, splashes and drops -->
+	<defs>
+		<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9f1ff"/><stop offset=".55" stop-color="#8fdcf7"/><stop offset="1" stop-color="#5cc4ee"/></linearGradient>
+		<radialGradient id="pool" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#7fe6ff"/><stop offset=".6" stop-color="#2bb7f0"/><stop offset="1" stop-color="#1488d0"/></radialGradient>
+		<linearGradient id="jet" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e9fbff"/><stop offset="1" stop-color="#7fdcff"/></linearGradient>
+		<filter id="blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="40"/></filter>
+		<path id="drop" d="M0 -14C3 -6 9 0 9 5A9 9 0 0 1 -9 5C-9 0 -3 -6 0 -14Z" fill="#5fd0ff" stroke="#163552" stroke-width="2.4" stroke-linejoin="round"/>
+		<!-- one kid, 120 x 150 units, feet at the bottom; colour and hair change per kid -->
+		<g id="legs">
+			<path d="M49 118 47 142M71 118 73 142" stroke="#163552" stroke-width="13" stroke-linecap="round"/>
+			<path d="M49 118 47 142M71 118 73 142" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+			<path d="M36 116 35 128H57L60 122 63 128H85L84 116Z" fill="#fff" stroke="#163552" stroke-width="3" stroke-linejoin="round"/>
+		</g>
+	</defs>
+	<rect width="800" height="600" fill="url(#bg)"/>
+	<g filter="url(#blur)" opacity=".6">
+		<circle cx="660" cy="90" r="150" fill="#fff6b0"/>
+		<circle cx="120" cy="520" r="160" fill="#ffffff"/>
+	</g>
+	<!-- tiles -->
+	<g stroke="#ffffff" stroke-opacity=".45" stroke-width="3">
+		<path d="M0 120H800M0 200H800M0 480H800M0 560H800M100 0V600M200 0V600M600 0V600M700 0V600"/>
+	</g>
+	<!-- the pool -->
+	<ellipse cx="400" cy="360" rx="250" ry="132" fill="#ffffff" stroke="#9cc9da" stroke-width="5"/>
+	<ellipse cx="400" cy="360" rx="226" ry="112" fill="url(#pool)" stroke="#0f6aa8" stroke-width="5"/>
+	<g fill="none" stroke="#ffffff" stroke-opacity=".5" stroke-width="4" stroke-linecap="round">
+		<path d="M260 330q15-10 30 0t30 0M430 300q15-10 30 0t30 0M480 400q15-10 30 0t30 0M300 410q15-10 30 0t30 0"/>
+	</g>
+	<!-- a swim ring floating -->
+	<g transform="translate(400 372)">
+		<ellipse rx="62" ry="32" fill="#ff5d73" stroke="#163552" stroke-width="4"/>
+		<path d="M-20 -30-8 0M40 -24 18 4M44 22 18 6M-30 28-12 6" stroke="#fff" stroke-width="12"/>
+		<ellipse rx="62" ry="32" fill="none" stroke="#163552" stroke-width="4"/>
+		<ellipse rx="27" ry="13" fill="#1f86d6" stroke="#163552" stroke-width="3.5"/>
+		<ellipse cx="-24" cy="-16" rx="14" ry="5" fill="#fff" opacity=".7"/>
+	</g>
+	<!-- the two water jets cross over the pool -->
+	<path d="M232 300Q400 170 560 262" fill="none" stroke="#163552" stroke-width="26" stroke-linecap="round"/>
+	<path d="M232 300Q400 170 560 262" fill="none" stroke="url(#jet)" stroke-width="18" stroke-linecap="round"/>
+	<path d="M232 300Q400 170 560 262" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-dasharray="14 22"/>
+	<path d="M572 318Q420 228 268 340" fill="none" stroke="#163552" stroke-width="24" stroke-linecap="round"/>
+	<path d="M572 318Q420 228 268 340" fill="none" stroke="#7fdcff" stroke-width="16" stroke-linecap="round"/>
+	<path d="M572 318Q420 228 268 340" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 20"/>
+	<!-- splashes where they land -->
+	<g>
+		<use href="#drop" transform="translate(572 236) rotate(20)"/>
+		<use href="#drop" transform="translate(600 250) rotate(50) scale(.8)"/>
+		<use href="#drop" transform="translate(585 210) rotate(-10) scale(.7)"/>
+		<use href="#drop" transform="translate(250 320) rotate(-30)"/>
+		<use href="#drop" transform="translate(228 340) rotate(-60) scale(.8)"/>
+		<use href="#drop" transform="translate(246 296) rotate(-5) scale(.7)"/>
+		<use href="#drop" transform="translate(400 150) scale(.9)"/>
+		<use href="#drop" transform="translate(470 120) rotate(15) scale(.6)"/>
+		<use href="#drop" transform="translate(340 130) rotate(-15) scale(.7)"/>
+	</g>
+	<!-- kid 1 (pink, pigtails and goggles) on the left, spraying right -->
+	<g transform="translate(70 252) scale(1.5)" style="color:#f7cfa6">
+		<ellipse cx="60" cy="146" rx="38" ry="9" fill="#163552" opacity=".2"/>
+		<use href="#legs"/>
+		<ellipse cx="25" cy="44" rx="17" ry="19" fill="#5a3220" stroke="#163552" stroke-width="3"/>
+		<ellipse cx="95" cy="44" rx="17" ry="19" fill="#5a3220" stroke="#163552" stroke-width="3"/>
+		<path d="M36 84Q32 112 38 122H82Q88 112 84 84Q60 76 36 84Z" fill="#ff5d73" stroke="#163552" stroke-width="3"/>
+		<rect x="34" y="100" width="52" height="7" fill="#fff"/>
+		<circle cx="60" cy="52" r="32" fill="#f7cfa6" stroke="#163552" stroke-width="3"/>
+		<path d="M28 54Q31 18 60 18Q89 18 92 54Q78 34 62 36Q42 32 28 54Z" fill="#5a3220" stroke="#163552" stroke-width="3" stroke-linejoin="round"/>
+		<path d="M28 38H92" stroke="#163552" stroke-width="4"/>
+		<ellipse cx="49" cy="36" rx="10" ry="7" fill="#7fd8f5" stroke="#163552" stroke-width="2.5"/>
+		<ellipse cx="71" cy="36" rx="10" ry="7" fill="#7fd8f5" stroke="#163552" stroke-width="2.5"/>
+		<path d="M42 54A6 6 0 0 1 54 54M66 54A6 6 0 0 1 78 54" fill="none" stroke="#163552" stroke-width="3.2" stroke-linecap="round"/>
+		<path d="M49 64Q60 80 71 64Z" fill="#8a2232" stroke="#163552" stroke-width="2.6" stroke-linejoin="round"/>
+		<ellipse cx="41" cy="64" rx="6" ry="4" fill="#ff6e78" opacity=".4"/><ellipse cx="79" cy="64" rx="6" ry="4" fill="#ff6e78" opacity=".4"/>
+		<g transform="translate(46 90) rotate(-28)">
+			<rect x="0" y="0" width="58" height="18" rx="9" fill="#ff8a9a" stroke="#163552" stroke-width="3"/>
+			<rect x="56" y="3" width="18" height="12" rx="5" fill="#ffd23f" stroke="#163552" stroke-width="3"/>
+			<rect x="12" y="-16" width="30" height="18" rx="8" fill="#7fdcff" stroke="#163552" stroke-width="3"/>
+			<circle cx="8" cy="22" r="7.5" fill="#f7cfa6" stroke="#163552" stroke-width="2.5"/>
+			<circle cx="38" cy="14" r="7" fill="#f7cfa6" stroke="#163552" stroke-width="2.5"/>
+		</g>
+	</g>
+	<!-- kid 2 (purple, spiky hair) on the right, soaked and spraying back -->
+	<g transform="translate(730 300) scale(-1.5 1.5)" style="color:#c68a5c">
+		<ellipse cx="60" cy="146" rx="38" ry="9" fill="#163552" opacity=".2"/>
+		<use href="#legs"/>
+		<path d="M36 84Q32 112 38 122H82Q88 112 84 84Q60 76 36 84Z" fill="#7d55d6" stroke="#163552" stroke-width="3"/>
+		<rect x="34" y="100" width="52" height="7" fill="#fff" opacity=".6"/>
+		<circle cx="60" cy="52" r="32" fill="#c68a5c" stroke="#163552" stroke-width="3"/>
+		<path d="M28 50 22 32 38 30 36 14 52 22 58 6 68 22 82 12 82 30 98 32 92 50Q76 32 60 36Q42 32 28 50Z" fill="#1e1a2e" stroke="#163552" stroke-width="3" stroke-linejoin="round"/>
+		<circle cx="48" cy="52" r="8.5" fill="#fff" stroke="#163552" stroke-width="2.5"/><circle cx="48" cy="54" r="3" fill="#163552"/>
+		<circle cx="72" cy="52" r="8.5" fill="#fff" stroke="#163552" stroke-width="2.5"/><circle cx="72" cy="54" r="3" fill="#163552"/>
+		<path d="M42 40 54 44M78 40 66 44" stroke="#163552" stroke-width="3" stroke-linecap="round"/>
+		<ellipse cx="60" cy="70" rx="9" ry="8" fill="#8a2232" stroke="#163552" stroke-width="2.6"/>
+		<g fill="#bff0ff" stroke="#163552" stroke-width="1.6">
+			<path d="M88 30c2 4 5 7 5 10a5 5 0 0 1-10 0c0-3 3-6 5-10z"/>
+			<path d="M34 76c2 4 5 7 5 10a5 5 0 0 1-10 0c0-3 3-6 5-10z"/>
+			<path d="M70 96c2 4 5 7 5 10a5 5 0 0 1-10 0c0-3 3-6 5-10z"/>
+		</g>
+		<g transform="translate(46 92) rotate(-22)">
+			<rect x="0" y="0" width="60" height="22" rx="11" fill="#b49bff" stroke="#163552" stroke-width="3"/>
+			<path d="M58 -2 80 -8V32L58 26Z" fill="#ffd23f" stroke="#163552" stroke-width="3" stroke-linejoin="round"/>
+			<rect x="10" y="-18" width="34" height="18" rx="8" fill="#7fdcff" stroke="#163552" stroke-width="3"/>
+			<circle cx="8" cy="24" r="7.5" fill="#c68a5c" stroke="#163552" stroke-width="2.5"/>
+			<circle cx="40" cy="16" r="7" fill="#c68a5c" stroke="#163552" stroke-width="2.5"/>
+		</g>
+	</g>
+	<!-- a beach ball and a yellow duck by the edge -->
+	<g transform="translate(150 520)">
+		<circle r="30" fill="#fff" stroke="#163552" stroke-width="4"/>
+		<path d="M0 0 30 0A30 30 0 0 1 -15 26Z" fill="#ff5d73"/>
+		<path d="M0 0-15 26A30 30 0 0 1-15-26Z" fill="#3ec5ff"/>
+		<path d="M0 0-15-26A30 30 0 0 1 30 0Z" fill="#ffd23f"/>
+		<circle r="30" fill="none" stroke="#163552" stroke-width="4"/>
+		<circle r="6" fill="#fff" stroke="#163552" stroke-width="2.5"/>
+	</g>
+	<g transform="translate(640 500)">
+		<ellipse cx="0" cy="22" rx="46" ry="26" fill="#ffd23f" stroke="#163552" stroke-width="4"/>
+		<circle cx="-22" cy="-12" r="22" fill="#ffd23f" stroke="#163552" stroke-width="4"/>
+		<path d="M-42-12Q-58-14-56-4-46 2-38-4Z" fill="#ff9a2e" stroke="#163552" stroke-width="3" stroke-linejoin="round"/>
+		<circle cx="-26" cy="-18" r="4" fill="#163552"/>
+		<ellipse cx="-4" cy="14" rx="16" ry="6" fill="#fff" opacity=".5"/>
+	</g>
+</svg>

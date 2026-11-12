@@ -2,7 +2,7 @@
    Flow of a round: Play → the ball hops under a cup → the cups shuffle → the child taps a cup →
    found: win music, confetti, a star and a surprise prize (5 stars = a golden trophy);
    missed: easy mode gives a second try, otherwise the ball shows where it was hiding.
-   Play together: 2-4 players (the family, ../assets/players/players.js) take turns on one device, a find is a ⭐, the winner gets a gift.
+   Play together: 2-6 players (the family, ../assets/players/players.js) take turns on one device, a find is a ⭐, the winner gets a gift.
    Sounds and music are made with Web Audio (no files). The voice is recorded (ar-SA Zariyah / en-US Ana, audio/<lang>/). */
 (() => {
 	const SAVE_KEY = 'cupball-v1';
@@ -860,9 +860,11 @@
 		game.phase = 'drag';
 		dock.innerHTML = '';
 		dock.classList.remove('hidden');
+		const many = game.players.length > 4;
+		dock.classList.toggle('many', many);
 		tokens = game.players.map((p, i) => {
 			const el = document.createElement('div');
-			el.className = 'token';
+			el.className = `token${many ? ' small' : ''}`;
 			el.style.setProperty('--c', p.color);
 			el.setAttribute('aria-label', PP.nameOf(p, state.lang));
 			el.innerHTML = `<img src="${PP.img(p)}" alt="" draggable="false">`;
@@ -983,6 +985,7 @@
 		await Promise.all(lifted.map((cup) => lift(cup, {high: cup === game.ballCup ? 0.75 : 0.62})));
 		if (run !== game.run) return;
 		tokens.forEach((t) => t.el.classList.add(winners.includes(t) ? 'win' : 'lose'));
+		tokens.forEach((t) => winners.includes(t) || party.react(t.i, 'oops', 1800));
 		if (winners.length) {
 			// music, not the voice: a happy jingle, confetti, the ball jumps and each winner's star flies home
 			sfx.found();

@@ -39,7 +39,10 @@
 			cfg.players.forEach((p) => {
 				const img = MM.faces && MM.faces[p.player.id];
 				const key = `face-${p.player.id}`;
-				if (img && img.complete && img.naturalWidth && !this.textures.exists(key)) this.textures.addImage(key, img);
+				if (!img || !img.complete || !img.naturalWidth) return;
+				// the hero may have changed since the last game: always take the fresh picture
+				if (this.textures.exists(key)) this.textures.remove(key);
+				this.textures.addImage(key, img);
 			});
 			this.add.image(0, 0, 'ground').setOrigin(0).setScale(k).setDepth(-10000);
 			this.fx = new MM.Fx(this, k, Z);

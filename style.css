@@ -410,6 +410,8 @@ button {
 .tile-cupball { --tile: #cdb8ff; --tile-dark: #9478e0; }
 .tile-memory { --tile: #ffb6d3; --tile-dark: #e0769f; }
 .tile-monkey { --tile: #a8e17f; --tile-dark: #62ad3f; }
+.tile-water { --tile: #6cc5f0; --tile-dark: #2a8fd0; }
+.tile-balloon { --tile: #d9a2ff; --tile-dark: #9a52e0; }
 .tile-puzzle { --tile: #ffc670; --tile-dark: #e0902a; }
 .tile-album { --tile: #ffab9e; --tile-dark: #d9685a; }
 .tile-board { --tile: #adb7ff; --tile-dark: #6f7ce0; }

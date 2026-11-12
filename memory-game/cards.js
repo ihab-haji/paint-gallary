@@ -1,4 +1,5 @@
-/* Card pictures for Memory Match (viewBox 0 0 120 120): animals, vehicles and a fairy garden.
+/* Card pictures for Memory Match. Drawn themes (viewBox 0 0 120 120): animals, vehicles and a fairy garden.
+   Picture themes (farm, heroes, dinos, Mario) use cut-out images, at the end of this file.
    Same style as the coloring pages: thick dark outline, soft colors, big head, tiny body.
    No pig on purpose: friendly for every family. */
 (function () {
@@ -367,7 +368,59 @@
 			]
 		}
 	];
+
+	/* ---------- picture themes: art cut from picture sheets (tools/cut_cards.py), saved as cards/<theme>/<name>.webp ----------
+	   look 'photo' = a square painting that fills the card; 'sticker' = a die-cut sticker on a soft pastel card.
+	   Arabic names carry full harakat, like the drawn cards. Again no pig: the farm sheet's two pigs are left out. */
+	const PASTELS = ['#fff1d6', '#e3f1ff', '#ffe6ec', '#e6f6dc', '#f2eaff', '#fff6c9', '#e0f6f3', '#ffe9dc'];
+	const picTheme = (id, look, files) => files.map(([name, ar, en], i) =>
+		({id: `${id}_${name}`, img: `cards/${id}/${name}.webp`, look, tint: PASTELS[i % PASTELS.length], name: {ar, en}}));
+	window.MEMORY_THEMES.push(
+		{
+			id: 'farm', icon: '🐮', edge: '#e47a5c', back: ['#ff9f7a', '#f7c873'],
+			name: {ar: 'أَصْدِقَاءُ الْمَزْرَعَةْ', en: 'Farm Friends'},
+			items: picTheme('farm', 'photo', [
+				['cat', 'قِطَّةْ', 'Cat'], ['bunny', 'أَرْنَبْ', 'Bunny'], ['hen', 'دَجَاجَةْ', 'Hen'], ['horse', 'حِصَانْ', 'Horse'],
+				['pony', 'مُهْرْ', 'Pony'], ['cow', 'بَقَرَةْ', 'Cow'], ['frog', 'ضِفْدَعْ', 'Frog'], ['bird', 'عُصْفُورْ', 'Little bird'],
+				['pigeon', 'حَمَامَةْ', 'Pigeon'], ['sheep', 'خَرُوفْ', 'Sheep'], ['lamb', 'حَمَلْ', 'Lamb'], ['donkey', 'حِمَارْ', 'Donkey']
+			])
+		},
+		{
+			id: 'heroes', icon: '🦸', edge: '#2f5fd0', back: ['#3b6df0', '#e8453c'],
+			name: {ar: 'الْأَبْطَالُ الْخَارِقُونْ', en: 'Super Heroes'},
+			items: picTheme('heroes', 'sticker', [
+				['superman', 'سُوبَرْمَانْ', 'Superman'], ['batman', 'بَاتْمَانْ', 'Batman'], ['spiderman', 'الرَّجُلُ الْعَنْكَبُوتْ', 'Spider-Man'],
+				['hulk', 'هَالْكْ', 'Hulk'], ['flash', 'الْبَرْقْ', 'The Flash'], ['captain', 'كَابْتِنْ أَمْرِيكَا', 'Captain America']
+			])
+		},
+		{
+			id: 'dinos', icon: '🦕', edge: '#2aa58a', back: ['#3cc5a8', '#9ad66a'],
+			name: {ar: 'عَالَمُ الدَّيْنَاصُورَاتْ', en: 'Dino Land'},
+			items: picTheme('dinos', 'sticker', [
+				['rex', 'تِيرَانُوصُورْ', 'T-Rex'], ['tri', 'تِرَايْسِيرَاتُوبْسْ', 'Triceratops'],
+				['longneck', 'دَيْنَاصُورٌ طَوِيلُ الرَّقَبَةْ', 'Long-neck dino'], ['stego', 'سِتِيغُوصُورْ', 'Stegosaurus'],
+				['ptero', 'تِيرُودَاكْتِيلْ', 'Pterodactyl'], ['baby', 'دَيْنَاصُورٌ صَغِيرْ', 'Baby dino'],
+				['sea', 'دَيْنَاصُورُ الْبَحْرْ', 'Sea dino'], ['para', 'بَارَاصُورُولُوفُوسْ', 'Parasaurolophus'],
+				['volcano', 'بُرْكَانْ', 'Volcano'], ['sleepy', 'دَيْنَاصُورٌ نَائِمْ', 'Sleepy dino'],
+				['heart', 'دَيْنَاصُورُ الْقَلْبْ', 'Dino with a heart'], ['flower', 'دَيْنَاصُورُ الزَّهْرَةْ', 'Dino with a flower']
+			])
+		},
+		{
+			id: 'mario', icon: '🍄', edge: '#d8392f', back: ['#e8453c', '#ffb02e'],
+			name: {ar: 'عَالَمُ مَارْيُو', en: 'Mario World'},
+			items: picTheme('mario', 'sticker', [
+				['mario', 'مَارْيُو', 'Mario'], ['luigi', 'لُوِيجِي', 'Luigi'], ['yoshi', 'يُوشِي', 'Yoshi'], ['peach', 'الْأَمِيرَةُ بِيتْشْ', 'Princess Peach'],
+				['mushroom', 'الْفُطْرُ الْعَجِيبْ', 'Super mushroom'], ['star', 'النَّجْمَةْ', 'Super star'], ['flower', 'زَهْرَةُ النَّارْ', 'Fire flower'],
+				['piranha', 'النَّبْتَةُ الْمُفْتَرِسَةْ', 'Piranha plant'], ['egg', 'بَيْضَةُ يُوشِي', 'Yoshi egg'], ['kart', 'سَيَّارَةُ السِّبَاقْ', 'Go-kart'],
+				['pipe', 'مَارْيُو فِي الْأُنْبُوبْ', 'Mario in a pipe'], ['tanooki', 'مَارْيُو الرَّاكُونْ', 'Raccoon Mario'], ['tophat', 'مَارْيُو بِالْقُبَّعَةْ', 'Mario in a top hat']
+			])
+		}
+	);
+
+	const svg = (id) => `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">${ART[id]()}</svg>`;
 	window.MEMORY_ART = {
-		svg: (id) => `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">${ART[id]()}</svg>`
+		svg,
+		// any card picture: drawn SVG, or the cut-out image
+		html: (it) => (it.img ? `<img class="${it.look}" src="${it.img}" alt="" draggable="false" decoding="async">` : svg(it.id))
 	};
 })();

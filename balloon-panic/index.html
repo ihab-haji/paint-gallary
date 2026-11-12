@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+	<meta name="theme-color" content="#2a1470">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
+	<title>فَرْقَعَةُ الْبَالُونِ · Balloon Panic</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><path d=%22M16 3c7 0 11 5 11 11s-5 11-11 12C10 25 5 20 5 14S9 3 16 3z%22 fill=%22%23ffc928%22 stroke=%22%2324124d%22 stroke-width=%222%22/><path d=%22M14 26l-1 4h6l-1-4z%22 fill=%22%23ffc928%22 stroke=%22%2324124d%22 stroke-width=%222%22 stroke-linejoin=%22round%22/></svg>">
+	<link rel="stylesheet" href="bp.css">
+</head>
+<body class="at-start">
+	<!-- the Phaser party: always running (the buddies play by themselves behind the title) -->
+	<div id="stage" aria-label="Balloon Panic"></div>
+
+	<header class="topbar" id="topbar">
+		<button class="round-btn" id="homeBtn" type="button" aria-label="Home">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v9.5h4.2V14h3.6v5.5H18V10"/></svg>
+		</button>
+		<span class="spacer"></span>
+		<button class="round-btn" id="langBtn" type="button" aria-label="Language">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c3 2.6 3 14.4 0 17M12 3.5c-3 2.6-3 14.4 0 17"/></svg>
+		</button>
+		<button class="round-btn" id="voiceBtn" type="button" aria-label="Voice">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18.5V16a7 7 0 1 1 9.5 6.5H12"/><circle cx="12" cy="9.5" r="1.2"/><path d="M17.8 4.5a6.5 6.5 0 0 1 0 9M20.5 2.5a10 10 0 0 1 0 13"/></svg>
+		</button>
+		<button class="round-btn" id="musicBtn" type="button" aria-label="Music">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 17.5V6l9-2v11.5"/><circle cx="7" cy="17.5" r="2.6"/><circle cx="16" cy="15.5" r="2.6"/></svg>
+		</button>
+		<button class="round-btn" id="soundBtn" type="button" aria-label="Sound">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/></svg>
+		</button>
+	</header>
+
+	<!-- ============ TITLE ============ -->
+	<main class="screen" id="start">
+		<div class="title-wrap">
+			<h1 class="title" data-t="title"></h1>
+			<p class="tagline" data-t="tagline"></p>
+			<button class="big-btn" id="playBtn" type="button">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+				<span data-t="play"></span>
+			</button>
+		</div>
+	</main>
+
+	<!-- ============ WHO PLAYS: the buddies stand in the game behind; tap one to join ============ -->
+	<main class="screen lobby" id="lobby">
+		<div class="lobby-head">
+			<h2 data-t="who"></h2>
+			<p id="pickSub"></p>
+		</div>
+		<div class="bar">
+			<div class="seg" id="objSeg" role="radiogroup">
+				<button type="button" class="seg-btn" data-object="balloon" role="radio">
+					<svg viewBox="0 0 32 32" aria-hidden="true"><path class="ink" d="M13.8 23.4 12.5 28h7l-1.3-4.6z" fill="#ffc928"/><path class="ink" d="M16 3.5c6.6 0 10.5 4.6 10.5 10S21.800 23.300 16 24.300C10.200 23.300 5.500 18.900 5.500 13.500S9.4 3.500 16 3.500z" fill="#ffc928"/><path d="M10.500 9c1-2 2.500-2.800 4-3.100" fill="none" stroke="#fff" stroke-width="2.200" stroke-linecap="round"/></svg>
+					<span data-t="balloon"></span>
+				</button>
+				<button type="button" class="seg-btn" data-object="bomb" role="radio">
+					<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M21 8.500c1.500-3.500 4.500-4.500 7-3" fill="none" stroke="#24124d" stroke-width="2.400" stroke-linecap="round"/><path class="ink" d="M17 7.500l5 2.500-2 3.500-5-2.500z" fill="#a99bff"/><circle class="ink" cx="14" cy="19" r="10" fill="#4a4488"/><circle cx="10.500" cy="18" r="2" fill="#fff"/><circle cx="17" cy="18" r="2" fill="#fff"/><path d="M11 23.200c2 1.600 4 1.600 6 0" fill="none" stroke="#fff" stroke-width="1.800" stroke-linecap="round"/><circle cx="28.500" cy="5" r="2.200" fill="#ffd23f"/></svg>
+					<span data-t="bomb"></span>
+				</button>
+			</div>
+			<div class="seg" id="speedSeg" role="radiogroup">
+				<button type="button" class="seg-btn" data-speed="easy" role="radio">
+					<svg viewBox="0 0 32 32" aria-hidden="true"><path class="ink" d="M22 19.500c0-3 2-5 4.500-5s3.500 2 3 4-2.500 3-5 3z" fill="#9be33a"/><path class="ink" d="M5 24v3.500h4.500V24M17.500 24v3.500H22V24" fill="#9be33a"/><path class="ink" d="M2.500 22c0-8 5-13 11.500-13s11.500 5 11.500 13z" fill="#34c77b"/><path d="M9 21.500l2.500-5.500h5l2.500 5.500M11.500 16l-1.500-4M16.500 16l1.500-4" fill="none" stroke="#24124d" stroke-width="1.600" stroke-linejoin="round"/><circle cx="27.200" cy="17.300" r="1.100" fill="#24124d"/></svg>
+					<span data-t="easy"></span>
+				</button>
+				<button type="button" class="seg-btn" data-speed="fast" role="radio">
+					<svg viewBox="0 0 32 32" aria-hidden="true"><path class="ink" d="M17.500 3 7 17.500h7.500L12 29 24.500 13H17z" fill="#ffd23f"/></svg>
+					<span data-t="fast"></span>
+				</button>
+			</div>
+			<button class="big-btn" id="goBtn" type="button">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+				<span data-t="play"></span>
+			</button>
+		</div>
+	</main>
+
+	<!-- ============ IN GAME ============ -->
+	<div class="hud" id="hud">
+		<button class="round-btn" id="pauseBtn" type="button" aria-label="Pause">
+			<svg class="solid" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4.5" height="14" rx="1.6"/><rect x="13.5" y="5" width="4.5" height="14" rx="1.6"/></svg>
+		</button>
+		<div class="pips" id="pips" aria-hidden="true"></div>
+	</div>
+	<div class="banner" id="banner" role="status"></div>
+	<div class="count" id="count" aria-hidden="true"></div>
+
+	<!-- ============ PAUSE ============ -->
+	<div class="overlay hidden" id="pauseOverlay" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+		<div class="card pause-card">
+			<h2 id="pauseTitle" data-t="pause"></h2>
+			<button class="big-btn" id="resumeBtn" type="button">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+				<span data-t="resume"></span>
+			</button>
+			<div class="row">
+				<button class="pill-btn" id="restartBtn" type="button">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12a7 7 0 1 1-2.300-5.200"/><path d="M19.500 4v4.500H15"/></svg>
+					<span data-t="restart"></span>
+				</button>
+				<button class="pill-btn" id="menuBtn" type="button">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.500" cy="9" r="3"/><circle cx="16.500" cy="10" r="2.400"/><path d="M3 19c.500-3.500 2.500-5 5.500-5s5 1.500 5.500 5M15.500 15c2.800 0 4.700 1.300 5.200 4"/></svg>
+					<span data-t="home"></span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- ============ THE AWARDS ============ -->
+	<div class="overlay hidden" id="resultOverlay" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+		<div class="card result-card">
+			<div class="rays" aria-hidden="true"></div>
+			<h2 id="resultTitle"></h2>
+			<ol class="podium" id="podium"></ol>
+			<p class="funniest" id="funniest"><b></b><span></span></p>
+			<div class="row">
+				<button class="big-btn" id="againBtn" type="button">
+					<svg class="line" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12a7 7 0 1 1-2.300-5.200"/><path d="M19.500 4v4.500H15"/></svg>
+					<span data-t="again"></span>
+				</button>
+				<button class="pill-btn" id="resultMenuBtn" type="button">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.500" cy="9" r="3"/><circle cx="16.500" cy="10" r="2.400"/><path d="M3 19c.500-3.500 2.500-5 5.500-5s5 1.500 5.500 5M15.500 15c2.800 0 4.700 1.300 5.200 4"/></svg>
+					<span data-t="home"></span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<script src="../assets/vendor/phaser.min.js"></script>
+	<script src="../assets/vendor/confetti.js"></script>
+	<script src="words.js"></script>
+	<script src="audio/ar/index.js"></script>
+	<script src="audio/en/index.js"></script>
+	<script src="js/config.js"></script>
+	<script src="js/audio.js"></script>
+	<script src="js/art.js"></script>
+	<script src="js/layout.js"></script>
+	<script src="js/effects.js"></script>
+	<script src="js/players.js"></script>
+	<script src="js/hot.js"></script>
+	<script src="js/balloon.js"></script>
+	<script src="js/bomb.js"></script>
+	<script src="js/pass.js"></script>
+	<script src="js/input.js"></script>
+	<script src="js/explosion.js"></script>
+	<script src="js/events.js"></script>
+	<script src="js/score.js"></script>
+	<script src="js/round.js"></script>
+	<script src="js/scene.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>

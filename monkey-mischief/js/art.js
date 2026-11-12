@@ -717,7 +717,7 @@
 	}
 
 	/* ---------- build every texture ---------- */
-	const PLAYER_ACC = {p1: 'bow', p2: 'crown', p3: 'cap', p4: 'band', bot: 'leaf'};
+	const PLAYER_ACC = {p1: 'bow', p2: 'crown', p3: 'cap', p4: 'band', p5: 'cap', p6: 'bow', bot: 'leaf'};
 
 	function add(scene, key, w, h, TS, draw) {
 		const {c, g} = canvas(w, h, TS);

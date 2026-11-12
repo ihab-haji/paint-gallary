@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!-- Draws the home-screen cover (assets/balloon.webp) with the game's own artwork.
+     Open this page, then save the picture (right-click -> Save image as) to assets/balloon.webp. -->
+<meta charset="UTF-8">
+<title>Balloon Panic cover</title>
+<body style="margin:0;background:#1c0d52;display:grid;place-items:center;min-height:100vh">
+<canvas id="cover" width="1200" height="900" style="max-width:100%"></canvas>
+<script>window.BP = {Z: 1};</script>
+<script src="../js/config.js"></script>
+<script src="../js/art.js"></script>
+<script>
+	(async () => {
+		const A = BP.Art;
+		const c = document.getElementById('cover').getContext('2d');
+		const img = (src) => new Promise((done) => {
+			const i = new Image();
+			i.onload = () => done(i);
+			i.src = src;
+		});
+		c.scale(1.5, 1.5); // drawn at 800 x 600
+		c.lineJoin = c.lineCap = 'round';
+		A.draw.room(c, 800, 600, {center: {x: 400, y: 280}});
+		// the buddies, big and close
+		const cast = [['bunny', '#ff5d73', 10, 92, 1.3], ['fox', '#9b6bff', 270, 150, 1.16]];
+		for (const [sp, col, x, y, s] of cast) {
+			const p = await img(A.portrait(sp, col));
+			c.drawImage(p, x, y, 230 * s, 390 * s);
+		}
+		// the balloon, about to pop
+		c.save();
+		c.translate(610, 205);
+		c.rotate(0.14);
+		c.scale(1.3, 1.3);
+		A.draw.balloon(c, A.BALLOONS[0]);
+		c.restore();
+		document.title = 'ready';
+	})();
+</script>
+</body>

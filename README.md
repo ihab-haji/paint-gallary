@@ -17,6 +17,7 @@ The home screen has 4 sections:
 | 🎩 **Find the Ball** | a cup and ball memory game (`cup-ball/`) | — |
 | 🐾 **Memory Match** | a flip-the-cards pairs game (`memory-game/`) | — |
 | 🐒 **Monkey Mischief** | a 1–4 player banana party game on one screen (`monkey-mischief/`) | — |
+| 🎈 **Balloon Panic** | a 1–4 player pass-the-balloon party game on one screen (`balloon-panic/`) | — |
 | 🧩 **Puzzle Time** | jigsaw picture puzzles (4, 6, 12 or 20 pieces) and build-the-animal puzzles (`puzzle/`) | `puzzle/pictures/` |
 
 ## Add a picture puzzle
@@ -54,7 +55,7 @@ where the ball is hiding. Pick a level on the first screen:
 
 All the cups share one color, picked at random every round (`#006199`, `#FCAD38`, `#06D6A0`, `#FFEA88`).
 
-**👥 Play together:** 2–4 players (🦁 🐼 🐸 🐰) take turns on one device, 3 or 5 turns each. The voice calls whose turn it is,
+**👥 Play together:** 2–6 players (the Hero Squad) take turns on one device, 3 or 5 turns each. The voice calls whose turn it is,
 a found ball is a point, and at the end the results card crowns the winner (or everyone, for a tie) and opens a winner's gift.
 
 Every level gets a little harder with each win. Finding the ball plays win music with confetti, adds a ⭐ and opens a
@@ -111,6 +112,35 @@ With 1 player, Coco the computer monkey joins in. Built with Phaser 3 (`assets/v
   P1 WASD + E · P2 arrows + Enter · P3 IJKL + O · P4 TFGH + Y.
 - **Voice:** every announcement is recorded (Arabic Zariyah, English Ana). After changing a spoken line in
   `monkey-mischief/words.js`, run `pip install edge-tts miniaudio lameenc` once, then `python3 monkey-mischief/tools/make_voice.py`.
+
+## 🎈 Balloon Panic (pass-it-before-it-pops party game)
+
+Up to 4 children pass a growing balloon (or a silly toy bomb with a burning fuse) around one screen before it pops.
+Whoever is holding it when it goes gets a funny look for a moment: a face full of paint, hair standing on end,
+a giant wig, a party hat... Nobody is ever out, and the next round starts by itself. Built with Phaser 3.
+
+- **Players:** tap up to 4 buddies (bunny, bear, frog, fox, panda, chick). They are puppets animated in code,
+  not pictures. Each seat keeps its colour (podium, glow and neckerchief). With 1 player, a computer buddy joins in.
+  2 players face each other, 3 make a triangle, 4 stand around the middle; it fits tablets and phones, both ways up.
+- **Passing:** tap another buddy to throw it to them · tap the balloon to pass it to the next buddy (the marching
+  arrows show who) · drag or swipe it to throw it that way (a faster swipe is a faster throw).
+- **Prank button** (the cheeky face beside each podium): a silly face, dance, jump or hide; while you hold the
+  balloon it is a fake throw.
+- **The pop is never predictable:** every round draws a new pop time from a window, and a new way of growing
+  (crawling, stopping, surging). It never pops while it still looks calm, while it is flying, or in the first
+  moment after a catch. All the numbers are in `balloon-panic/js/config.js`.
+- **Twists** (at most one a round, never in the first): Double Trouble, Giant, Tiny, Fake Explosion, Super Speed,
+  Sticky, Reverse, Clone (a fake one), Last Second, Crazy Bounce. Whoever has been popped far more than the others
+  sometimes gets a magic shield that saves them once.
+- **Gentle / Fast:** Gentle (the default) has longer fuses, slower throws and more time after a catch.
+- **The end** (8 or 9 rounds, about 2–3 minutes): fewest pops wins, and everyone gets a title
+  (Lucky Survivor, Panic Master, Fastest Hands, Master Prankster, Explosion Magnet, Party Star) plus the funniest moment.
+- **Keyboard for testing:** `1 2 3 4` throw to that player · `Space` pass to the next ·
+  pass / prank: P1 `A` / `S` · P2 `L` / `K` · P3 `T` / `Y` · P4 `↑` / `↓`.
+- **Sound:** all effects and the party tune are made in code (the tune speeds up as the pop gets close).
+  The announcements are recorded (Arabic Zariyah, English Ana). After changing a spoken line in
+  `balloon-panic/words.js`, run `pip install edge-tts miniaudio lameenc` once, then `python3 balloon-panic/tools/make_voice.py`.
+- **Home-screen cover:** `balloon-panic/tools/cover.html` draws it with the game's own artwork (`assets/balloon.webp`).
 
 ## Tools
 

@@ -46,13 +46,15 @@
 
 	// the family stickers, loaded as plain images (works from a website and from a double-clicked file)
 	MM.faces = {};
-	PP.PEOPLE.forEach((p) => {
+	const loadFaces = () => PP.PEOPLE.forEach((p) => {
 		const img = new Image();
 		img.src = PP.img(p);
 		MM.faces[p.id] = img;
 	});
+	loadFaces();
+	window.addEventListener('pp-hero', loadFaces); // someone changed hero in "Who's playing?"
 
-	MM.attractConfig = () => ({attract: true, players: PP.PEOPLE.map((p, i) => ({player: p, slot: i, bot: true}))});
+	MM.attractConfig = () => ({attract: true, players: PP.PEOPLE.slice(0, 4).map((p, i) => ({player: p, slot: i, bot: true}))});
 
 	/* ---------- words ---------- */
 	const ui = (key) => W.UI[S.state.lang][key] || W.UI.en[key] || '';
@@ -69,6 +71,7 @@
 	function applyToggles() {
 		$('soundBtn').classList.toggle('off', !S.state.sound);
 		$('musicBtn').classList.toggle('off', !S.state.music);
+		$('voiceBtn').classList.toggle('off', !S.state.voice);
 		document.querySelectorAll('#modeSeg .seg-btn').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.mode === settings.mode)));
 		document.querySelectorAll('#lenSeg .seg-btn').forEach((b) => b.setAttribute('aria-checked', String(Number(b.dataset.len) === settings.duration)));
 	}
@@ -97,7 +100,7 @@
 	}
 
 	function buildConfig() {
-		const humans = PP.active();
+		const humans = PP.active(4);
 		const players = humans.map((p, i) => ({player: p, slot: i, bot: false}));
 		if (players.length === 1) players.push({player: BOT, slot: 1, bot: true});
 
@@ -193,6 +196,12 @@
 			applyToggles();
 			S.sfx.tap();
 		});
+		$('voiceBtn').addEventListener('click', () => {
+			S.unlock();
+			S.setVoice(!S.state.voice);
+			applyToggles();
+			S.sfx.tap();
+		});
 		$('musicBtn').addEventListener('click', () => {
 			S.unlock();
 			S.setMusic(!S.state.music);
@@ -267,17 +276,17 @@
 	function boot() {
 		applyLang();
 		applyToggles();
-		picker = PP.picker($('players'), {lang: S.state.lang, tap: (on) => (on ? S.sfx.ready() : S.sfx.tap())});
+		picker = PP.picker($('players'), {lang: S.state.lang, max: 4, tap: (on) => (on ? S.sfx.ready() : S.sfx.tap())});
 		// the shared picker says "take turns"; here everyone plays at once (it re-renders on every tap, so watch it)
 		const fixSub = () => {
 			const sub = $('players').querySelector('.pp-sub');
-			const n = PP.active().length;
+			const n = PP.active(4).length;
 			const text = n > 1 ? ui('together').replace('{n}', S.state.lang === 'ar' ? n.toLocaleString('ar-EG') : n) : ui('solo');
 			if (sub && sub.textContent !== text) sub.textContent = text;
 		};
 		new MutationObserver(fixSub).observe($('players'), {childList: true, subtree: true, characterData: true});
 		fixSub();
-		$('troop').innerHTML = PP.PEOPLE.map((p) => `<img src="${MM.Art.face(p.id, p.color)}" alt="">`).join('');
+		$('troop').innerHTML = PP.PEOPLE.slice(0, 4).map((p) => `<img src="${MM.Art.face(p.id, p.color)}" alt="">`).join('');
 		wire();
 		MM.game = new Phaser.Game({
 			// WebGL online; a page opened as a file can't send images to WebGL, so it draws with canvas

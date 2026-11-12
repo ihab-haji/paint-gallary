@@ -2,17 +2,21 @@
    - The first time it opens online, it saves the whole app: pages, code, every picture, your photos and the fonts.
    - Pages, code and styles: always try the newest version first, fall back to the saved copy when offline.
    - Pictures and fonts: use the saved copy (they rarely change). */
-const CACHE = 'paint-studio-home-09';
+const CACHE = 'paint-studio-memory-cards-01';
 const CORE = ['./', 'index.html', 'style.css', 'magic.js', 'app.js', 'images.js', 'images-list.js', 'manifest.webmanifest',
 	'assets/album.svg', 'assets/board.svg', 'assets/coloring.svg', 'assets/level2.svg', 'assets/blockmath.svg', 'block-math/index.html', 'block-math/vendor/three.min.js',
 	'assets/cupball.svg', 'cup-ball/index.html', 'cup-ball/cup-ball.css', 'cup-ball/cup-ball.js', 'cup-ball/words.js', 'cup-ball/audio/ar/index.js', 'cup-ball/audio/en/index.js',
 	'assets/memory.svg', 'memory-game/index.html', 'memory-game/cards.js',
 	'assets/monkey.svg', 'assets/vendor/phaser.min.js', 'monkey-mischief/index.html', 'monkey-mischief/mm.css', 'monkey-mischief/words.js',
 	'monkey-mischief/audio/ar/index.js', 'monkey-mischief/audio/en/index.js',
+	'assets/water.svg', 'water-blaster/index.html', 'water-blaster/wb.css', 'water-blaster/words.js', 'water-blaster/audio/ar/index.js', 'water-blaster/audio/en/index.js',
+	...['sound', 'art', 'layout', 'fx', 'input', 'fighter', 'water', 'pickups', 'events', 'bot', 'hud', 'scene', 'main'].map((f) => `water-blaster/js/${f}.js`),
+	'assets/balloon.webp', 'balloon-panic/index.html', 'balloon-panic/bp.css', 'balloon-panic/words.js', 'balloon-panic/audio/ar/index.js', 'balloon-panic/audio/en/index.js',
+	...['config', 'audio', 'art', 'layout', 'effects', 'players', 'hot', 'balloon', 'bomb', 'pass', 'input', 'explosion', 'events', 'score', 'round', 'scene', 'main'].map((f) => `balloon-panic/js/${f}.js`),
 	'assets/puzzle.svg', 'puzzle/index.html', 'puzzle/puzzle.css', 'puzzle/puzzle.js', 'puzzle/art.js', 'puzzle/words.js', 'puzzle/audio/ar/index.js', 'puzzle/audio/en/index.js',
 	...['puppy-garden', 'dino-valley', 'sea-turtle', 'farm-friends', 'ocean-friends', 'forest-picnic'].map((f) => `puzzle/pictures/${f}.jpg`),
 	...['sound', 'art', 'layout', 'fx', 'input', 'monkey', 'bananas', 'baskets', 'traps', 'powerups', 'gorilla', 'bot', 'director', 'hud', 'scene', 'main'].map((f) => `monkey-mischief/js/${f}.js`),
-	'assets/players/players.js', 'assets/players/p1.png', 'assets/players/p2.png', 'assets/players/p3.png', 'assets/players/p4.png',
+	'assets/players/players.js', 'assets/players/heroes.js',
 	'assets/vendor/gsap.min.js', 'assets/vendor/confetti.js',
 	'assets/icons/apple-touch-icon.png', 'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/icon-maskable-512.png'];
 const FONTS_CSS = 'https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=Fredoka:wght@500;600;700&display=swap';
@@ -36,6 +40,12 @@ try {
 }
 
 try {
+	importScripts('water-blaster/audio/ar/index.js', 'water-blaster/audio/en/index.js');
+} catch (err) {
+	/* no water battle voice lists: its clips are saved when first played */
+}
+
+try {
 	importScripts('puzzle/audio/ar/index.js', 'puzzle/audio/en/index.js');
 } catch (err) {
 	/* no puzzle voice lists: its clips are saved when first played */
@@ -55,12 +65,37 @@ function monkeyVoice() {
 	return [...clips(self.MM_VOICE_AR, 'ar'), ...clips(self.MM_VOICE_EN, 'en')];
 }
 
+try {
+	importScripts('balloon-panic/audio/ar/index.js', 'balloon-panic/audio/en/index.js');
+} catch (err) {
+	/* no balloon game voice lists: its clips are saved when first played */
+}
+
+// Balloon Panic's recorded voice (balloon-panic/tools/make_voice.py): every clip in both languages
+function balloonVoice() {
+	const clips = (map, lang) => Object.values(map || {}).map((id) => `balloon-panic/audio/${lang}/${id}.mp3`);
+
+	return [...clips(self.BP_VOICE_AR, 'ar'), ...clips(self.BP_VOICE_EN, 'en')];
+}
+
+// Water Blaster Arena's recorded voice (water-blaster/tools/make_voice.py): every clip in both languages
+function waterVoice() {
+	const clips = (map, lang) => Object.values(map || {}).map((id) => `water-blaster/audio/${lang}/${id}.mp3`);
+
+	return [...clips(self.WB_VOICE_AR, 'ar'), ...clips(self.WB_VOICE_EN, 'en')];
+}
+
 // the memory game's recorded voice (memory-game/tools/make_voice.py): every card name and phrase, in both languages
 function memoryVoice() {
 	const keys = ['title', 'look', 'go', 'great1', 'great2', 'great3', 'great4', 'win', 'open', 'prize'];
 	(self.MEMORY_THEMES || []).forEach((theme) => keys.push(`th_${theme.id}`, ...theme.items.map((item) => item.id)));
 
 	return ['ar', 'en'].flatMap((lang) => keys.map((key) => `memory-game/audio/${lang}/${key}.mp3`));
+}
+
+// the memory game's picture cards (memory-game/cards/<theme>/<name>.webp)
+function memoryPictures() {
+	return (self.MEMORY_THEMES || []).flatMap((theme) => theme.items.filter((item) => item.img).map((item) => `memory-game/${item.img}`));
 }
 
 function allPictures() {
@@ -90,7 +125,7 @@ self.addEventListener('install', (event) => {
 			const fresh = (file) => new Request(file, {cache: 'reload'});
 			await cache.addAll(CORE.map(fresh));
 			// one missing picture must not stop the rest from being saved
-			await Promise.all([...allPictures(), ...memoryVoice(), ...monkeyVoice(), ...puzzleVoice()].map((file) => cache.add(fresh(file)).catch(() => {})));
+			await Promise.all([...allPictures(), ...memoryPictures(), ...memoryVoice(), ...monkeyVoice(), ...waterVoice(), ...balloonVoice(), ...puzzleVoice()].map((file) => cache.add(fresh(file)).catch(() => {})));
 			await saveFonts(cache);
 			// tell the open page that everything is saved
 			const pages = await self.clients.matchAll({includeUncontrolled: true});

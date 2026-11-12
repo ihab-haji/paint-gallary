@@ -380,6 +380,11 @@ button:focus-visible { outline: 3px solid var(--violet); outline-offset: 3px; }
 .dock .token:nth-child(2) { animation-delay: -0.45s; }
 .dock .token:nth-child(3) { animation-delay: -0.9s; }
 .dock .token:nth-child(4) { animation-delay: -1.35s; }
+.dock .token:nth-child(5) { animation-delay: -0.2s; }
+.dock .token:nth-child(6) { animation-delay: -1.1s; }
+/* five or six players: the row of pictures still fits a phone */
+.dock.many { gap: clamp(6px, 1.6vw, 24px); }
+.token.small { width: min(76px, 13.5vw); height: min(76px, 13.5vw); }
 .token.dragging { z-index: 80; cursor: grabbing; box-shadow: 0 0 0 5px var(--c), 0 26px 40px rgba(30, 27, 75, 0.35); }
 .seats { position: absolute; left: 50%; bottom: 96%; width: max(120%, 120px); translate: -50% 0; display: flex; flex-wrap: wrap-reverse; justify-content: center; gap: 2px; pointer-events: none; z-index: 2; }
 .seats .token { width: 54px; height: 54px; box-shadow: 0 0 0 3px var(--c), 0 6px 12px rgba(30, 27, 75, 0.25); }

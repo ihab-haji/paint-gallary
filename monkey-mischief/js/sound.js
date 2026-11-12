@@ -10,7 +10,8 @@
 
 	const state = {
 		sound: localStorage.getItem('paint-sound') !== 'off',
-		music: localStorage.getItem('mm-music') !== 'off',
+		music: localStorage.getItem('mm-music') !== 'off', // music is on unless turned off
+		voice: localStorage.getItem('mm-voice') === 'on', // the spoken voice is off unless turned on
 		lang: localStorage.getItem('paint-lang-v2') || 'ar'
 	};
 	const A = {ctx: null, sfx: null, music: null, voice: null, noise: null, timer: 0, step: 0, next: 0, fast: false, playing: false};
@@ -38,16 +39,56 @@
 			const d = A.noise.getChannelData(0);
 			for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
 		}
-		if (A.ctx.state === 'suspended') A.ctx.resume();
+		// 'suspended' (Chrome) or 'interrupted' (iPad Safari after a call, the lock screen or another app): wake it up
+		if (A.ctx.state !== 'running' && A.ctx.state !== 'closed') A.ctx.resume().catch(() => {});
 
 		return A.ctx;
 	}
+
+	/* ---------- keep the sound alive ----------
+	   An iPad pauses web sound when the app is left, the screen locks or something interrupts it, and only lets it
+	   start again from a tap. Most taps in a game land on the play area, not on a button, so EVERY tap or key press
+	   anywhere wakes the sound up (it costs nothing when it is already running). */
+	(function keepAlive() {
+		let primed = false;
+		const wake = () => {
+			const ac = ctx();
+			if (!ac || primed) return;
+			// older iPads only truly unlock after something has played inside a tap: one silent sample
+			primed = true;
+			try {
+				const src = ac.createBufferSource();
+				src.buffer = ac.createBuffer(1, 1, ac.sampleRate);
+				src.connect(ac.destination);
+				src.start(0);
+			} catch (err) {
+				primed = false;
+			}
+		};
+		['pointerdown', 'touchend', 'mousedown', 'keydown'].forEach((type) => document.addEventListener(type, wake, {capture: true, passive: true}));
+		// coming back to the app: try straight away (works on most browsers; the next tap covers the rest)
+		const back = () => {
+			if (!document.hidden && A.ctx && A.ctx.state !== 'running') A.ctx.resume().catch(() => {});
+		};
+		document.addEventListener('visibilitychange', back);
+		window.addEventListener('pageshow', back);
+		window.addEventListener('focus', back);
+		// play even when the iPad's ring/silent switch is on silent (Safari 16.4+)
+		try {
+			if (navigator.audioSession) navigator.audioSession.type = 'playback';
+		} catch (err) {
+			/* not supported */
+		}
+	})();
+
+	// is the sound ready to play right now? (sounds made while it is paused would all burst out at once later)
+	const live = () => A.ctx && A.ctx.state === 'running';
 
 	const midi = (n) => 440 * Math.pow(2, (n - 69) / 12);
 
 	function tone({freq, at = 0, dur = 0.2, type = 'triangle', vol = 0.18, slide = 0, out = 'sfx', vib = 0}) {
 		const ac = A.ctx;
-		if (!ac || (out === 'sfx' && !state.sound)) return;
+		if (!ac || !live() || (out === 'sfx' && !state.sound)) return;
 		const start = ac.currentTime + at;
 		const osc = ac.createOscillator();
 		const gain = ac.createGain();
@@ -73,7 +114,7 @@
 
 	function noise({at = 0, dur = 0.25, vol = 0.15, from = 600, to = 2400, type = 'bandpass', q = 1.4, out = 'sfx'}) {
 		const ac = A.ctx;
-		if (!ac || (out === 'sfx' && !state.sound)) return;
+		if (!ac || !live() || (out === 'sfx' && !state.sound)) return;
 		const start = ac.currentTime + at;
 		const src = ac.createBufferSource();
 		src.buffer = A.noise;
@@ -226,7 +267,7 @@
 		}
 	}
 
-	const musicLevel = () => (state.music && state.sound && A.playing ? 0.075 : 0);
+	const musicLevel = () => (state.music && A.playing ? 0.075 : 0);
 
 	function updateMusic() {
 		const ac = A.ctx;
@@ -298,7 +339,7 @@
 	}
 
 	function say(key) {
-		if (!state.sound) return;
+		if (!state.voice) return; // the voice has its own switch: effects on/off never touches it
 		const text = window.MM_WORDS.SAY[state.lang][key];
 		if (!text) return;
 		stopVoice();
@@ -358,8 +399,12 @@
 		setSound(on) {
 			state.sound = on;
 			localStorage.setItem('paint-sound', on ? 'on' : 'off');
-			if (!on) stopVoice();
 			updateMusic();
+		},
+		setVoice(on) {
+			state.voice = on;
+			localStorage.setItem('mm-voice', on ? 'on' : 'off');
+			if (!on) stopVoice();
 		},
 		setMusic(on) {
 			state.music = on;

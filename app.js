@@ -30,6 +30,8 @@
 		{id: 'cupball', cover: 'assets/cupball.svg', icon: '🎩'},
 		{id: 'memory', cover: 'assets/memory.svg', icon: '🐾'},
 		{id: 'monkey', cover: 'assets/monkey.svg', icon: '🐒'},
+		{id: 'water', cover: 'assets/water.svg', icon: '💦'},
+		{id: 'balloon', cover: 'assets/balloon.webp', icon: '🎈'},
 		{id: 'puzzle', cover: 'assets/puzzle.svg', icon: '🧩'},
 		{id: 'album', cover: 'assets/album.svg', icon: '📸'},
 		{id: 'board', cover: 'assets/board.svg', icon: '🪄'},
@@ -68,6 +70,10 @@
 			sec_memory_sub: 'Find the matching pairs and win prizes',
 			sec_monkey: 'Monkey Mischief',
 			sec_monkey_sub: 'Grab bananas, steal and slip your friends: up to 4 players',
+			sec_water: 'Water Blaster Arena',
+			sec_water_sub: 'Soak your friends and stay dry: up to 4 players',
+			sec_balloon: 'Balloon Panic',
+			sec_balloon_sub: 'Pass it quick before it pops: up to 4 players',
 			sec_puzzle: 'Puzzle Time',
 			sec_puzzle_sub: 'Put the pieces together and build animals',
 			newBadge: 'New',
@@ -125,6 +131,10 @@
 			sec_memory_sub: 'جِد الصور المتشابهة واربح الجوائز',
 			sec_monkey: 'قرود مشاغبة',
 			sec_monkey_sub: 'اجمع الموز واخطفه وازلِق أصحابك: حتى ٤ لاعبين',
+			sec_water: 'معركة الماء',
+			sec_water_sub: 'رُشّ أصحابك وابقَ ناشفًا: حتى ٤ لاعبين',
+			sec_balloon: 'فرقعة البالون',
+			sec_balloon_sub: 'مرِّره بسرعة قبل أن يفرقع: حتى ٤ لاعبين',
 			sec_puzzle: 'لعبة التركيب',
 			sec_puzzle_sub: 'ركّب القطع وكوّن الحيوانات',
 			newBadge: 'جديد',
@@ -428,7 +438,7 @@
 			play.style.animationDelay = `${1200 + i * 600}ms`;
 			cover.appendChild(play);
 
-			if (section.id === 'blockmath' || section.id === 'cupball' || section.id === 'monkey') {
+			if (section.id === 'blockmath' || section.id === 'cupball' || section.id === 'monkey' || section.id === 'water' || section.id === 'balloon') {
 				const badge = document.createElement('span');
 				badge.className = 'section-count letters-new';
 				badge.textContent = `✨ ${t('newBadge')}`;
@@ -462,7 +472,7 @@
 				cover.appendChild(badge);
 			}
 
-			const count = ['board', 'blockmath', 'cupball', 'memory', 'monkey', 'puzzle'].includes(section.id) ? 0 : itemsOf({section: section.id}).length;
+			const count = ['board', 'blockmath', 'cupball', 'memory', 'monkey', 'water', 'balloon', 'puzzle'].includes(section.id) ? 0 : itemsOf({section: section.id}).length;
 			if (count > 0) {
 				const bubble = document.createElement('span');
 				bubble.className = 'section-count';
@@ -509,6 +519,20 @@
 			// the puzzle game is its own page too
 			beep({freq: 560, type: 'triangle'});
 			location.href = 'puzzle/index.html';
+
+			return;
+		}
+		if (id === 'balloon') {
+			// the balloon passing party game (Phaser) is its own page
+			beep({freq: 560, type: 'triangle'});
+			location.href = 'balloon-panic/index.html';
+
+			return;
+		}
+		if (id === 'water') {
+			// the water battle party game (Phaser) is its own page
+			beep({freq: 560, type: 'triangle'});
+			location.href = 'water-blaster/index.html';
 
 			return;
 		}
