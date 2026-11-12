@@ -238,20 +238,19 @@ html[dir='rtl'] .big-btn svg { transform: scaleX(-1); }
 .side {
 	position: fixed;
 	inset-inline-start: max(10px, env(safe-area-inset-left, 0px));
-	top: 50%;
+	top: calc(58% - 28px); /* just under the left palm: it hides no tree, banana or monkey path */
 	z-index: 30;
 	display: none;
 	flex-direction: column;
 	align-items: flex-start;
 	gap: 12px;
-	transform: translateY(-50%);
 }
 
-html[dir='rtl'] .side { inset-inline-start: auto; left: max(10px, env(safe-area-inset-left, 0px)); }
+html[dir='rtl'] .side { inset-inline-start: auto; left: max(10px, env(safe-area-inset-left, 0px)); align-items: flex-end; }
 
 body.playing .side, body.ready .side { display: flex; }
 body.paused .side { display: none; }
-.side .round-btn { width: 52px; height: 52px; border-radius: 18px; }
+.side .round-btn { width: 56px; height: 56px; border-radius: 18px; }
 
 .pill-btn {
 	display: inline-flex;

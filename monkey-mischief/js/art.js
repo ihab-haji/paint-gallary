@@ -101,17 +101,23 @@
 	};
 
 	/* ---------- a banana (used everywhere: ground, hands, baskets, icons) ---------- */
-	function banana(g, x, y, s, rot, gold = false) {
+	function banana(g, x, y, s, rot, gold = false, rim = false) {
 		g.save();
 		g.translate(x, y);
 		g.rotate(rot);
 		g.scale(s, s);
 		g.beginPath();
-		g.moveTo(-17, -9);
-		g.quadraticCurveTo(-4, 14, 18, 2);
-		g.quadraticCurveTo(21, 0, 19, -3);
-		g.quadraticCurveTo(-2, 5, -12, -13);
+		g.moveTo(-17, -10);
+		g.quadraticCurveTo(-8, 19, 18, 4);
+		g.quadraticCurveTo(22, 1, 19, -3);
+		g.quadraticCurveTo(0, 5, -11, -14);
 		g.closePath();
+		if (rim) {
+			// a white rim under the ink line: the banana pops off the grass, the sand and the bridge
+			g.lineWidth = 8;
+			g.strokeStyle = '#ffffff';
+			g.stroke();
+		}
 		g.fillStyle = gold ? linear(g, 0, -12, 0, 12, [[0, '#fff7c2'], [0.45, '#ffd23f'], [1, '#e89a00']]) : linear(g, 0, -12, 0, 12, [[0, '#fff27a'], [0.5, '#ffd84a'], [1, '#f2b318']]);
 		g.fill();
 		g.lineWidth = 2.6;
@@ -119,14 +125,14 @@
 		g.stroke();
 		// a soft shine line along the back
 		g.beginPath();
-		g.moveTo(-10, -4);
-		g.quadraticCurveTo(-1, 7, 12, 2);
-		g.lineWidth = 2;
+		g.moveTo(-11, -3);
+		g.quadraticCurveTo(-3, 9, 12, 4);
+		g.lineWidth = 2.4;
 		g.strokeStyle = '#ffffffb0';
 		g.stroke();
 		// brown tips
-		circle(g, -14.5, -11, 2.6, '#6b4423', null);
-		circle(g, 19.5, -1.2, 2, '#6b4423', null);
+		circle(g, -14.2, -12, 2.8, '#6b4423', null);
+		circle(g, 20, -1, 2.2, '#6b4423', null);
 		g.restore();
 	}
 
@@ -738,7 +744,7 @@
 		if (scene.textures.exists('banana')) return; // the rest never changes
 		add(scene, 'gorilla-chase', 220, 224, TS, (g) => drawGorilla(g, 'chase'));
 		add(scene, 'gorilla-eat', 220, 224, TS, (g) => drawGorilla(g, 'eat'));
-		add(scene, 'banana', 48, 40, TS, (g) => banana(g, 24, 20, 1, -0.2));
+		add(scene, 'banana', 68, 60, TS, (g) => banana(g, 34, 30, 1.3, -0.2, false, true));
 		add(scene, 'banana-gold', 72, 64, TS, (g) => {
 			g.fillStyle = radial(g, 36, 32, 34, [[0, '#fff6b0cc'], [0.5, '#ffd23f55'], [1, '#ffd23f00']]);
 			g.fillRect(0, 0, 72, 64);

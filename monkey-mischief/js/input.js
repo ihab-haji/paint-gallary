@@ -11,6 +11,8 @@
 	const MM = (window.MM = window.MM || {});
 	const JOY_GRAB = 150; // a finger this close to the joystick centre takes it
 	const JOY_MAX = 70; // how far the knob travels
+	const DEAD = 0.14; // of JOY_MAX
+	const FULL = 0.6; // of JOY_MAX: from here outward the monkey runs flat out
 	const BTN_GRAB = 78;
 	const FINGER_GRAB = 120;
 	const KEYS = [
@@ -229,18 +231,20 @@
 			}
 			if (this.mode === 'joy' && p.joyPointer !== null) {
 				const m = Math.hypot(p.knobX, p.knobY) / JOY_MAX;
-				if (m < 0.18) return out; // dead zone: a resting thumb does not creep
+				if (m < DEAD) return out; // dead zone: a resting thumb does not creep
 				const n = Math.hypot(p.knobX, p.knobY);
 
-				return {x: p.knobX / n, y: p.knobY / n, mag: Math.min(1, (m - 0.18) / 0.62)};
+				// full speed from just past half-way: small hands rarely push to the rim. Below that, a gentle ramp for fine steps.
+				return {x: p.knobX / n, y: p.knobY / n, mag: Math.min(1, 0.35 + (0.65 * (m - DEAD)) / (FULL - DEAD))};
 			}
 			if (this.mode === 'finger' && p.target) {
 				const dx = p.target.x - p.monkey.x;
 				const dy = p.target.y - p.monkey.y;
 				const d = Math.hypot(dx, dy);
-				if (d < 14) return out;
+				if (d < 10) return out;
 
-				return {x: dx / d, y: dy / d, mag: Math.min(1, d / 70)};
+				// run flat out until close, then ease in so the monkey lands on the finger without wobbling
+				return {x: dx / d, y: dy / d, mag: Math.min(1, 0.2 + d / 60)};
 			}
 
 			return out;

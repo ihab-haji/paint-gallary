@@ -4,7 +4,10 @@
 (function () {
 	'use strict';
 	const MM = (window.MM = window.MM || {});
-	const BASE_SPEED = 265;
+	const BASE_SPEED = 330;
+	const CARRY_DRAG = 0.02; // a full tower is only a little slower: doing well never feels like a punishment
+	const ACCEL = 20; // how quickly a monkey reaches the speed the stick asks for
+	const BRAKE = 28; // letting go stops almost at once, so it is easy to stop exactly on a banana
 	const CARRY_MAX = 5;
 	const JUMP_TIME = 0.62;
 	const FEET = 14; // from the physics circle's centre down to the feet
@@ -25,7 +28,7 @@
 			this.body = this.zone.body;
 			this.body.setCircle(26);
 			this.body.setCollideWorldBounds(true);
-			this.body.setBounce(0.2);
+			this.body.setBounce(0); // no bouncing off rocks and decks: the monkey slides round them
 			this.zone.monkey = this;
 
 			this.shadow = scene.add.image(x, y, 'shadow').setScale(k * 0.95, k * 0.95);
@@ -37,6 +40,7 @@
 			this.powerIcon = scene.add.image(x, y, 'power-speed').setScale(k * 0.42).setVisible(false);
 			this.powerRing = scene.add.graphics();
 			this.arrow = scene.add.image(x, y, `arrow-${player.id}`).setScale(k * 0.9).setVisible(false);
+			this.lead = scene.add.image(x, y, 'star').setScale(k * 1.2).setVisible(false); // whoever has the most bananas wears a star
 
 			this.reset();
 		}
@@ -61,6 +65,9 @@
 			this.chase = null; // {target, t}: an arrow points at the thief
 			this.spin = 0;
 			this.slickT = 0;
+			this.dustT = 0;
+			this.leader = false;
+			this.lead.setVisible(false);
 			this.speedMul = this.bot ? 0.86 : 1;
 			this.stack.forEach((s) => s.setVisible(false));
 			this.stars.forEach((s) => s.setVisible(false));
@@ -100,12 +107,12 @@
 		move(dt, dir, slow) {
 			const b = this.body;
 			if (this.state === 'ok') {
-				let speed = BASE_SPEED * this.speedMul * (1 - 0.05 * this.carry.length);
+				let speed = BASE_SPEED * this.speedMul * (1 - CARRY_DRAG * this.carry.length);
 				if (this.power && this.power.kind === 'speed') speed *= 1.55;
 				if (slow && !this.air) speed *= 0.62;
 				const tx = dir.x * dir.mag * speed;
 				const ty = dir.y * dir.mag * speed;
-				const a = 1 - Math.exp(-dt * 13);
+				const a = 1 - Math.exp(-dt * (dir.mag > 0.05 ? ACCEL : BRAKE));
 				this.vx += (tx - this.vx) * a;
 				this.vy += (ty - this.vy) * a;
 			} else {
@@ -175,6 +182,14 @@
 			this.scene.fx.burst(this.x, this.y + FEET, 'puff', 6, 0xffffff);
 
 			return true;
+		}
+
+		// a quick squash: "got one!"
+		hop() {
+			const k = this.k;
+			this.scene.tweens.killTweensOf(this.sprite);
+			this.sprite.setScale(k);
+			this.scene.tweens.add({targets: this.sprite, scaleX: k * 1.16, scaleY: k * 0.86, duration: 70, yoyo: true, ease: 'Quad.easeOut'});
 		}
 
 		setExpr(expr, t = 0.6) {
@@ -253,6 +268,12 @@
 			const speed = Math.hypot(this.vx, this.vy);
 			const moving = this.state === 'ok' && speed > 30;
 			if (moving) this.walk += dt * (6 + speed * 0.035);
+			// little dust puffs behind fast feet
+			this.dustT -= dt;
+			if (moving && speed > 220 && !this.air && this.dustT <= 0) {
+				this.dustT = 0.14;
+				this.scene.fx.dust(x - (this.vx / speed) * 14, feet - (this.vy / speed) * 8);
+			}
 			const bob = moving ? Math.abs(Math.sin(this.walk)) * 6 : 0;
 			const z = this.jumpT > 0 ? Math.sin((1 - this.jumpT / JUMP_TIME) * Math.PI) * 70 : 0;
 			const key = `monkey-${this.player.id}-${this.state === 'ok' ? this.expr : 'dizzy'}`;
@@ -286,6 +307,14 @@
 					const tex = from >= 0 && from !== this.idx ? 'mini-banana-stolen' : 'mini-banana';
 					if (s.texture.key !== tex) s.setTexture(tex);
 				}
+			}
+
+			// the leader's star, above the banana tower
+			const showLead = this.leader && this.state === 'ok';
+			this.lead.setVisible(showLead);
+			if (showLead) {
+				this.lead.setPosition(x, top - this.carry.length * 9 - 26 + Math.sin(time * 4) * 4).setRotation(Math.sin(time * 2) * 0.3).setDepth(feet + 12 + (z ? 400 : 0))
+					.setScale(k * (1.2 + Math.sin(time * 6) * 0.08));
 			}
 
 			// dizzy stars
@@ -337,7 +366,7 @@
 		}
 
 		destroy() {
-			[this.zone, this.shadow, this.ring, this.sprite, this.bubble, this.powerIcon, this.powerRing, this.arrow, ...this.stack, ...this.stars].forEach((o) => o.destroy());
+			[this.zone, this.shadow, this.ring, this.sprite, this.bubble, this.powerIcon, this.powerRing, this.arrow, this.lead, ...this.stack, ...this.stars].forEach((o) => o.destroy());
 		}
 	}
 

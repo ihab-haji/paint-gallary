@@ -9,6 +9,9 @@
 	const MM = (window.MM = window.MM || {});
 	const INK = 0x3b2416;
 
+	// Arabic lines are drawn by the browser's own right-to-left layout (Phaser's rtl option draws sharp, zoomed text
+	// off the edge of its box, which cut the first words off on a Retina tablet). The marks keep "!" at the correct end.
+	const line = (text) => (MM.Sound.state.lang === 'ar' ? `\u202B${text}\u202C` : text);
 	const font = () => (MM.Sound.state.lang === 'ar' ? '"Baloo Bhaijaan 2", Fredoka, sans-serif' : 'Fredoka, "Baloo Bhaijaan 2", sans-serif');
 
 	class Hud {
@@ -20,13 +23,13 @@
 			this.monkeys = monkeys;
 			this.top = monkeys.some((m) => m.top);
 			const txt = (size, extra = {}) =>
-				scene.add.text(0, 0, '', {fontFamily: font(), fontSize: `${size}px`, fontStyle: '800', color: '#ffffff', stroke: '#3b2416', strokeThickness: Math.round(size / 5), resolution: Z, rtl: MM.Sound.state.lang === 'ar', ...extra}).setOrigin(0.5);
+				scene.add.text(0, 0, '', {fontFamily: font(), fontSize: `${size}px`, fontStyle: '800', color: '#ffffff', stroke: '#3b2416', strokeThickness: Math.round(size / 5), padding: {x: Math.round(size / 5), y: Math.round(size / 5)}, resolution: Z, ...extra}).setOrigin(0.5);
 			this.txt = txt;
 
 			// the jungle clock
 			const P = L.pond;
 			this.clock = scene.add.graphics().setDepth(P.y + 2);
-			this.clockIcon = scene.add.image(P.x, P.y - 4, 'banana').setScale(k * 1.15).setDepth(P.y + 3);
+			this.clockIcon = scene.add.image(P.x, P.y - 4, 'banana').setScale(k * 0.9).setDepth(P.y + 3);
 			this.clockNums = [txt(56), txt(56)];
 			this.clockNums.forEach((t, i) => t.setPosition(P.x, P.y + (this.top ? (i ? -24 : 24) : 0)).setRotation(i ? Math.PI : 0).setDepth(P.y + 4).setVisible(false));
 
@@ -80,7 +83,7 @@
 				if (m && o.m !== m) return;
 				const s = String(o.m.score);
 				o.num.setText(MM.Sound.state.lang === 'ar' ? Number(s).toLocaleString('ar-EG') : s);
-				const w = Math.max(92, o.num.width / this.Z + 64);
+				const w = Math.max(92, o.num.width + 44); // a text's width is already in game units
 				const {x, y} = o.pillAt;
 				const flip = o.c.top ? -1 : 1;
 				if (!o.pill) o.pill = this.scene.add.graphics().setDepth(9502);
@@ -113,10 +116,11 @@
 			const s = this.scene;
 			this.cards.forEach(({ct, bg, ic, tx}) => {
 				s.tweens.killTweensOf(ct);
-				tx.setFontFamily(font()).setFontSize(46).setText(text);
+				tx.setFontFamily(font()).setFontSize(46).setText(line(text));
 				// long (exciting) lines shrink to fit, so the card never covers the whole arena
-				if (tx.width / this.Z > 760) tx.setFontSize(Math.floor((46 * 760 * this.Z) / tx.width));
-				const tw = tx.width / this.Z;
+				const room = Math.min(760, this.L.W - 560) - (iconKey ? 130 : 70);
+				if (tx.width > room) tx.setFontSize(Math.floor((46 * room) / tx.width));
+				const tw = tx.width;
 				const hasIcon = !!iconKey;
 				if (hasIcon) {
 					ic.setTexture(iconKey).setVisible(true);
@@ -227,7 +231,7 @@
 		countdown(text) {
 			const P = this.L.pond;
 			(this.top ? [false, true] : [false]).forEach((flip) => {
-				const t = this.txt(130).setText(text).setPosition(P.x, flip ? P.y - P.ry - 110 : P.y + P.ry + 110).setDepth(9900).setRotation(flip ? Math.PI : 0).setScale(0.2);
+				const t = this.txt(130).setText(line(text)).setPosition(P.x, flip ? P.y - P.ry - 110 : P.y + P.ry + 110).setDepth(9900).setRotation(flip ? Math.PI : 0).setScale(0.2);
 				this.scene.tweens.add({targets: t, scale: 1, duration: 300, ease: 'Back.easeOut'});
 				this.scene.tweens.add({targets: t, alpha: 0, scale: 1.4, delay: 600, duration: 300, onComplete: () => t.destroy()});
 			});

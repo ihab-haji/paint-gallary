@@ -8,6 +8,8 @@
 	const POOL = 64;
 	const GRAVITY = 1700;
 	const GOLD_LIFE = 9;
+	const SIZE = 1.12; // a banana on the ground, compared with the drawing
+	const REACH = 104; // a banana this close to a monkey with free hands slides to it
 
 	class Bananas {
 		constructor(scene, L, k) {
@@ -39,7 +41,7 @@
 			const b = this.list.find((q) => !q.on);
 			if (!b) return null;
 			Object.assign(b, {on: true, x, y, z, vx, vy, vz});
-			b.img.setVisible(true).setAlpha(1).setScale(this.k);
+			b.img.setVisible(true).setAlpha(1).setScale(this.k * SIZE);
 			b.sh.setVisible(true);
 
 			return b;
@@ -104,6 +106,9 @@
 			const L = this.L;
 			// magnets pull nearby bananas lying on the ground
 			const magnets = monkeys.filter((m) => m.power && m.power.kind === 'magnet' && !m.full);
+			// a banana right next to a monkey slides the last little bit: no pixel-perfect steering needed
+			const st = this.scene.state;
+			const hands = st === 'play' || st === 'attract' ? monkeys.filter((m) => m.canAct && !m.full && !m.air) : [];
 			for (const b of this.list) {
 				if (!b.on) continue;
 				if (b.z > 0 || b.vz > 0) {
@@ -132,7 +137,17 @@
 							}
 						}
 					}
-				} else if (magnets.length) {
+				} else {
+					for (const m of hands) {
+						const dx = m.x - b.x;
+						const dy = m.y + 6 - b.y;
+						const d = Math.hypot(dx, dy);
+						if (d < REACH && d > 1) {
+							const pull = (160 + 260 * (1 - d / REACH)) * dt;
+							b.x += (dx / d) * pull;
+							b.y += (dy / d) * pull;
+						}
+					}
 					for (const m of magnets) {
 						const dx = m.x - b.x;
 						const dy = m.y - b.y;
@@ -148,8 +163,10 @@
 				b.x = Math.max(50, Math.min(L.W - 50, b.x));
 				b.y = Math.max(50, Math.min(L.H - 50, b.y));
 				const bob = b.z > 0 ? 0 : Math.sin(time * 3 + b.phase) * 3;
-				b.img.setPosition(b.x, b.y - 12 - b.z - bob).setDepth(b.y).setRotation(b.z > 0 ? b.vz * 0.004 : Math.sin(time * 2 + b.phase) * 0.12);
-				b.sh.setPosition(b.x, b.y).setDepth(b.y - 3).setScale(this.k * Math.max(0.15, 0.5 - b.z / 1400));
+				b.img.setPosition(b.x, b.y - 14 - b.z - bob).setDepth(b.y).setRotation(b.z > 0 ? b.vz * 0.004 : Math.sin(time * 2 + b.phase) * 0.12);
+				// a slow "look at me" pulse while it waits on the ground
+				b.img.setScale(this.k * SIZE * (b.z > 0 ? 1 : 1 + Math.sin(time * 4 + b.phase) * 0.06));
+				b.sh.setPosition(b.x, b.y).setDepth(b.y - 3).setScale(this.k * Math.max(0.2, 0.72 - b.z / 1100));
 			}
 			const g = this.gold;
 			if (g.on) {

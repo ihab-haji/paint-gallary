@@ -26,7 +26,6 @@
 	const MAGIC_SIZES = [22, 34, 50, 72]; // the 4 size buttons, used by the magic brush
 	const BOARD_FILE = 'magic-board';
 	const SECTIONS = [
-		{id: 'letters', cover: 'assets/letters.svg', icon: '🔤'},
 		{id: 'blockmath', cover: 'assets/blockmath.svg', icon: '⛏️'},
 		{id: 'cupball', cover: 'assets/cupball.svg', icon: '🎩'},
 		{id: 'memory', cover: 'assets/memory.svg', icon: '🐾'},
@@ -61,8 +60,6 @@
 			sec_coloring_sub: 'Color fun pictures',
 			sec_level2: 'Level 2',
 			sec_level2_sub: 'Big pictures for big artists',
-			sec_letters: 'Letters Adventure',
-			sec_letters_sub: 'Learn the Arabic letters on a magic journey',
 			sec_blockmath: 'Block Math Adventure',
 			sec_blockmath_sub: 'Count and add in a world of blocks',
 			sec_cupball: 'Find the Ball',
@@ -120,8 +117,6 @@
 			sec_coloring_sub: 'لوّن صورًا ممتعة',
 			sec_level2: 'المستوى ٢',
 			sec_level2_sub: 'صور كبيرة للفنانين الكبار',
-			sec_letters: 'رحلة الحروف',
-			sec_letters_sub: 'تعلّم الحروف في رحلة سحرية',
 			sec_blockmath: 'مغامرة المكعبات',
 			sec_blockmath_sub: 'عُدّ واجمع في عالم المكعبات',
 			sec_cupball: 'أين الكرة؟',
@@ -426,6 +421,12 @@
 			img.src = section.cover;
 			img.alt = '';
 			cover.appendChild(img);
+			// "tap me" play button: its hop is delayed like the tile, so the hops travel along the row
+			const play = document.createElement('span');
+			play.className = 'section-play';
+			play.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="3" stroke-linejoin="round" aria-hidden="true"><path d="M7 5v14l12-7z"/></svg>';
+			play.style.animationDelay = `${1200 + i * 600}ms`;
+			cover.appendChild(play);
 
 			if (section.id === 'blockmath' || section.id === 'cupball' || section.id === 'monkey') {
 				const badge = document.createElement('span');
@@ -460,15 +461,8 @@
 				badge.textContent = done ? `🧩 ${done}` : `✨ ${t('newBadge')}`;
 				cover.appendChild(badge);
 			}
-			if (section.id === 'letters') {
-				const stars = window.LettersAdventure ? window.LettersAdventure.stars() : 0;
-				const badge = document.createElement('span');
-				badge.className = stars ? 'section-count letters-stars' : 'section-count letters-new';
-				badge.textContent = stars ? `⭐ ${stars}` : `✨ ${t('newBadge')}`;
-				cover.appendChild(badge);
-			}
 
-			const count = ['board', 'letters', 'blockmath', 'cupball', 'memory', 'monkey', 'puzzle'].includes(section.id) ? 0 : itemsOf({section: section.id}).length;
+			const count = ['board', 'blockmath', 'cupball', 'memory', 'monkey', 'puzzle'].includes(section.id) ? 0 : itemsOf({section: section.id}).length;
 			if (count > 0) {
 				const bubble = document.createElement('span');
 				bubble.className = 'section-count';
@@ -485,7 +479,7 @@
 			const label = document.createElement('div');
 			label.className = 'section-label';
 			const name = document.createElement('b');
-			name.textContent = `${section.icon} ${t(`sec_${section.id}`)}`;
+			name.textContent = t(`sec_${section.id}`);
 			const sub = document.createElement('small');
 			sub.textContent = t(`sec_${section.id}_sub`);
 			label.append(name, sub);
@@ -534,22 +528,6 @@
 		}
 		if (id === 'board') {
 			openPicture({item: boardItem()});
-
-			return;
-		}
-		if (id === 'letters') {
-			if (!window.LettersAdventure || !window.gsap) return;
-			beep({freq: 560, type: 'triangle'});
-			showScreen({name: 'adventure'});
-			window.LettersAdventure.open({
-				lang: state.lang,
-				onClose: ({sound}) => {
-					state.sound = sound;
-					renderSoundButton();
-					buildGallery();
-					showScreen({name: 'gallery'});
-				}
-			});
 
 			return;
 		}
@@ -639,7 +617,6 @@
 	function showScreen({name}) {
 		els.gallery.classList.toggle('active', name === 'gallery');
 		els.studio.classList.toggle('active', name === 'studio');
-		if (name !== 'adventure') document.getElementById('adventure').classList.remove('active');
 		if (name === 'studio') requestAnimationFrame(fitCanvas);
 	}
 

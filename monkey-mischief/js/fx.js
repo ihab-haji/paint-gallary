@@ -16,6 +16,7 @@
 				star: mk('star', {lifespan: 800, speed: {min: 120, max: 300}, scale: {start: 0.9 * k, end: 0.1 * k}, rotate: {min: 0, max: 360}, gravityY: 500}),
 				leaf: mk('leaf', {lifespan: 900, speed: {min: 60, max: 180}, scale: {start: 1.1 * k, end: 0.6 * k}, rotate: {min: 0, max: 360}, gravityY: 160, alpha: {start: 1, end: 0}}),
 				drop: mk('drop', {lifespan: 500, speed: {min: 90, max: 220}, angle: {min: 200, max: 340}, scale: {start: 1.1 * k, end: 0.4 * k}, gravityY: 700}),
+				dust: mk('puff', {lifespan: 380, speed: {min: 5, max: 30}, scale: {start: 0.5 * k, end: 0.15 * k}, alpha: {start: 0.55, end: 0}, gravityY: -30}),
 				dot: mk('dot', {lifespan: 420, speed: {min: 10, max: 40}, scale: {start: 0.9 * k, end: 0}, alpha: {start: 0.9, end: 0}})
 			};
 			// floating texts ("+1", "+5"): a small reusable pool
@@ -36,6 +37,12 @@
 			const e = this.em.dot;
 			if (this.canTint) e.particleTint = tint;
 			e.explode(1, x + (Math.random() - 0.5) * 16, y);
+		}
+
+		// one soft puff that stays on the ground (running feet)
+		dust(x, y) {
+			const e = this.em.dust;
+			e.explode(1, x, y);
 		}
 
 		pop(x, y, text, color = '#ffffff', size = 34, flip = false) {

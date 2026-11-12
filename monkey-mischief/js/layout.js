@@ -7,16 +7,22 @@
 (function () {
 	'use strict';
 	const MM = (window.MM = window.MM || {});
-	const W = 1440;
 	const H = 1040;
+	// as wide as the screen, so the jungle fills it edge to edge (never narrower than the 1440 design, which keeps the decks clear of the pond)
+	const wanted = () => Math.round(Math.min(2400, Math.max(1440, H * (innerWidth / Math.max(1, innerHeight)))));
+	let W = wanted();
+	// the middle of the arena moves with the width; things near a corner stay put
+	const mid = (x) => x + (W - 1440) / 2;
 
 	// slot 0 bottom-left, 1 bottom-right, 2 top-left, 3 top-right (2 players sit side by side at the bottom)
-	const CORNERS = [
+	const corners0 = () => [
 		{cx: 0, cy: H, sx: 1, sy: -1, top: false},
 		{cx: W, cy: H, sx: -1, sy: -1, top: false},
 		{cx: 0, cy: 0, sx: 1, sy: 1, top: true},
 		{cx: W, cy: 0, sx: -1, sy: 1, top: true}
 	];
+	// the pause button (a page button over the canvas) sits on the left edge, just under the palm
+	const PAUSE = {x: 120, y: 604, h: 50};
 	const DECK_R = 290;
 	const JUNGLE_R = 230;
 	// where things sit on a deck, in corner-local units
@@ -29,7 +35,7 @@
 			{x: pond.x - pond.rx - 22, y: pond.y, w: pond.rx - island + 34, h: 64},
 			{x: pond.x + island - 12, y: pond.y, w: pond.rx - island + 34, h: 64}
 		];
-		const corners = CORNERS.map((c, i) => {
+		const corners = corners0().map((c, i) => {
 			const player = slotPlayers[i] || null;
 			const at = ([lx, ly]) => ({x: c.cx + c.sx * lx, y: c.cy + c.sy * ly});
 
@@ -37,29 +43,29 @@
 		});
 		// rocks block; bushes rustle; trees block at the trunk
 		const obstacles = [
-			{x: 440, y: 255, r: 30, kind: 'rock-a'},
-			{x: 1000, y: 255, r: 30, kind: 'rock-b'},
-			{x: 440, y: 790, r: 30, kind: 'rock-b'},
-			{x: 1000, y: 790, r: 30, kind: 'rock-a'},
-			{x: 720, y: 178, r: 20, kind: 'banana-tree'},
-			{x: 720, y: 918, r: 20, kind: 'banana-tree'},
+			{x: mid(440), y: 255, r: 30, kind: 'rock-a'},
+			{x: mid(1000), y: 255, r: 30, kind: 'rock-b'},
+			{x: mid(440), y: 790, r: 30, kind: 'rock-b'},
+			{x: mid(1000), y: 790, r: 30, kind: 'rock-a'},
+			{x: mid(720), y: 178, r: 20, kind: 'banana-tree'},
+			{x: mid(720), y: 918, r: 20, kind: 'banana-tree'},
 			{x: 96, y: 520, r: 18, kind: 'palm'},
 			{x: W - 96, y: 520, r: 18, kind: 'palm'}
 		];
 		const bushes = [
-			{x: 572, y: 262, kind: 'bush-a'}, {x: 868, y: 262, kind: 'bush-b'},
-			{x: 572, y: 800, kind: 'bush-b'}, {x: 868, y: 800, kind: 'bush-a'},
+			{x: mid(572), y: 262, kind: 'bush-a'}, {x: mid(868), y: 262, kind: 'bush-b'},
+			{x: mid(572), y: 800, kind: 'bush-b'}, {x: mid(868), y: 800, kind: 'bush-a'},
 			{x: 236, y: 640, kind: 'bush-a'}, {x: W - 236, y: 400, kind: 'bush-b'}
 		];
-		const puddles = [{x: 352, y: 392, r: 42}, {x: W - 352, y: H - 392, r: 42}, {x: 1080, y: 392, r: 34}, {x: 360, y: H - 392, r: 34}];
+		const puddles = [{x: 352, y: 392, r: 42}, {x: W - 352, y: H - 392, r: 42}, {x: mid(1080), y: 392, r: 34}, {x: 360, y: H - 392, r: 34}];
 		const lilies = [[pond.x - 150, pond.y - 70, 18], [pond.x + 160, pond.y + 66, 16], [pond.x + 120, pond.y - 84, 13], [pond.x - 120, pond.y + 92, 14]];
 		const paths = [
 			[206, H - 206, 270, 720, 330, 580, bridges[0].x - 10, pond.y],
 			[206, 206, 270, 320, 330, 460, bridges[0].x - 10, pond.y],
 			[W - 206, H - 206, W - 270, 720, W - 330, 580, bridges[1].x + bridges[1].w + 10, pond.y],
 			[W - 206, 206, W - 270, 320, W - 330, 460, bridges[1].x + bridges[1].w + 10, pond.y],
-			[300, H - 70, 560, H - 150, 880, H - 150, W - 300, H - 70],
-			[300, 70, 560, 150, 880, 150, W - 300, 70]
+			[300, H - 70, mid(560), H - 150, mid(880), H - 150, W - 300, H - 70],
+			[300, 70, mid(560), 150, mid(880), 150, W - 300, 70]
 		];
 
 		const inPond = (x, y, pad = 0) => ((x - pond.x) / (pond.rx + pad)) ** 2 + ((y - pond.y) / (pond.ry + pad)) ** 2 < 1;
@@ -72,6 +78,7 @@
 		// a free spot: inside the arena, dry, not on a deck, rock or trunk
 		function isFree(x, y, r = 30) {
 			if (x < 40 + r || y < 40 + r || x > W - 40 - r || y > H - 40 - r) return false;
+			if (x < PAUSE.x + r && Math.abs(y - PAUSE.y) < PAUSE.h + r) return false; // the pause button covers this bit of grass
 			if (inPond(x, y, r + 10) && !onIsland(x, y, -r)) return false;
 			if (corners.some((c) => Math.hypot(x - c.cx, y - c.cy) < c.r + r + 10)) return false;
 			if (obstacles.some((o) => Math.hypot(x - o.x, y - o.y) < o.r + r + 8)) return false;
@@ -106,5 +113,15 @@
 		return {W, H, pond, island, bridges, corners, obstacles, bushes, puddles, lilies, paths, inPond, onIsland, onBridge, inWater, isFree, randomFree, nearestFree};
 	}
 
-	MM.Layout = {W, H, make, CORNERS, LOCAL};
+	MM.Layout = {
+		W, H, make, LOCAL,
+		// the screen changed shape: true when the arena should be rebuilt at the new width
+		refit() {
+			const w = wanted();
+			if (Math.abs(w - W) < 24) return false;
+			W = MM.Layout.W = w;
+
+			return true;
+		}
+	};
 })();

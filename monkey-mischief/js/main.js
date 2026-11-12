@@ -13,7 +13,18 @@
 
 	// pixels per game unit: sharp on a Retina iPad, never more than 2× (keeps the GPU happy)
 	const dpr = window.devicePixelRatio || 1;
-	MM.Z = Math.max(1, Math.min(2, Math.round(Math.min((innerWidth * dpr) / 1440, (innerHeight * dpr) / 1040) * 10) / 10));
+	const zoom = () => Math.max(1, Math.min(2, Math.round(Math.min((innerWidth * dpr) / MM.Layout.W, (innerHeight * dpr) / MM.Layout.H) * 10) / 10));
+	MM.Z = zoom();
+
+	// the screen changed shape (rotated, window resized, toolbar hid): widen or narrow the jungle to fill it again.
+	// Only between matches; during one the arena keeps its size and just scales to fit.
+	function refit() {
+		if (!MM.game || !MM.Layout.refit()) return false;
+		MM.Z = zoom();
+		MM.game.scale.resize(Math.round(MM.Layout.W * MM.Z), Math.round(MM.Layout.H * MM.Z));
+
+		return true;
+	}
 
 	const BOT = {id: 'bot', color: '#22c55e', name: {ar: 'كُوكُو', en: 'Coco'}};
 	const KEY = 'mm-settings-v1';
@@ -79,6 +90,7 @@
 		$('resultOverlay').classList.add('hidden');
 		phase('ready');
 		S.preload();
+		refit();
 		const sc = scene();
 		if (MM.game.scene.isPaused('game')) MM.game.scene.resume('game');
 		sc.scene.restart(cfg);
@@ -97,6 +109,7 @@
 		$('resultOverlay').classList.add('hidden');
 		S.music(false);
 		S.stopVoice();
+		refit();
 		if (MM.game.scene.isPaused('game')) MM.game.scene.resume('game');
 		scene().scene.restart(MM.attractConfig());
 		phase('at-setup');
@@ -236,6 +249,15 @@
 			if (document.hidden && document.body.classList.contains('playing')) pause();
 		});
 
+		let resizeT = 0;
+		addEventListener('resize', () => {
+			clearTimeout(resizeT);
+			resizeT = setTimeout(() => {
+				const b = document.body.classList;
+				if ((b.contains('at-start') || b.contains('at-setup')) && scene() && refit()) scene().scene.restart(MM.attractConfig());
+			}, 250);
+		});
+
 		MM.events.on('counting', () => document.body.classList.remove('ready'));
 		MM.events.on('playing', () => phase('playing'));
 		MM.events.on('over', (list) => setTimeout(() => showResults(list), 600));
@@ -266,7 +288,8 @@
 			backgroundColor: '#2e7d35',
 			banner: false,
 			scale: {mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH},
-			physics: {default: 'arcade', arcade: {gravity: {x: 0, y: 0}}},
+			// physics steps with every drawn frame (not a fixed 60 a second), so running is just as smooth on a 120 Hz iPad
+			physics: {default: 'arcade', arcade: {gravity: {x: 0, y: 0}, fixedStep: false}},
 			audio: {noAudio: true},
 			input: {activePointers: 6},
 			render: {antialias: true, powerPreference: 'high-performance'},

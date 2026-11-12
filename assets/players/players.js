@@ -14,7 +14,7 @@
 		{id: 'p2', color: '#9b6bff', name: {ar: 'قَمَر', en: 'Moon'}},
 		{id: 'p3', color: '#1fa8ff', name: {ar: 'إِيهَاب', en: 'Ihab'}},
 		{id: 'p4', color: '#ff9417', name: {ar: 'بَطَل', en: 'Hero'}}
-	];
+	].filter((p) => !p.hidden); // hidden players don't appear anywhere
 	const TEXT = {
 		ar: {
 			who: 'مَنْ يَلْعَبُ؟', solo: 'لَاعِبٌ وَاحِدٌ · اِخْتَرْ أَكْثَرَ لِلَّعِبِ مَعًا', many: '{n} لَاعِبِين · كُلُّ وَاحِدٍ فِي دَوْرِهِ',
@@ -39,7 +39,8 @@
 			return {};
 		}
 	})();
-	const S = {on: Array.isArray(saved.on) && saved.on.length ? saved.on : ['p1'], names: saved.names || {}};
+	const savedOn = Array.isArray(saved.on) ? saved.on.filter((id) => PEOPLE.some((p) => p.id === id)) : [];
+	const S = {on: savedOn.length ? savedOn : [PEOPLE[0].id], names: saved.names || {}};
 	function persist() {
 		try {
 			localStorage.setItem(KEY, JSON.stringify(S));
@@ -62,7 +63,7 @@
   -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);text-align:center;animation:pp-in .55s cubic-bezier(.3,1.6,.5,1) both}
 .pp-pick h3{margin:0;font-size:clamp(22px,4.6vw,30px);font-weight:800;line-height:1.25}
 .pp-pick .pp-sub{margin:0 0 8px;font-size:clamp(14px,3vw,17px);font-weight:700;opacity:.65}
-.pp-row{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,2vw,14px)}
+.pp-row{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:clamp(6px,2vw,14px)}
 .pp-tile{position:relative;border:3px solid transparent;border-radius:24px;background:#ffffff80;padding:6px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;
   font:inherit;color:inherit;cursor:pointer;transition:transform .3s cubic-bezier(.3,1.6,.5,1),background .25s,border-color .25s,box-shadow .25s;-webkit-tap-highlight-color:transparent}
 .pp-tile .pp-img{width:100%;max-width:120px;aspect-ratio:1;object-fit:contain;filter:grayscale(.85) opacity(.55) drop-shadow(0 4px 4px #0002);transition:filter .3s,transform .3s}
@@ -158,6 +159,7 @@
 			el.className = 'pp-pick';
 			el.innerHTML = `<h3>👨‍👩‍👦‍👦 ${T.who}</h3><p class="pp-sub">${n > 1 ? T.many.replace('{n}', num(n, L)) : T.solo}</p><div class="pp-row"></div>`;
 			const row = el.querySelector('.pp-row');
+			row.style.setProperty('--n', PEOPLE.length);
 			PEOPLE.forEach((p) => {
 				const on = S.on.includes(p.id);
 				const tile = document.createElement('button');

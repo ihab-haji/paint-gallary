@@ -7,7 +7,7 @@
 (function () {
 	'use strict';
 	const MM = (window.MM = window.MM || {});
-	const REACH = 82; // how close to a basket counts as "at the basket"
+	const REACH = 96; // how close to a basket counts as "at the basket"
 	const STEAL_WAIT = 0.55;
 	const STEAL_MAX = 2;
 	const STEAL_COOL = 4.5;
@@ -28,6 +28,7 @@
 					alert: scene.add.image(c.basket.x, c.basket.y - 70, 'alert').setScale(k).setDepth(c.basket.y + 200).setVisible(false),
 					visits: new Map(), // thief idx -> {wait, taken, cool}
 					depositT: 0,
+					run: 0, // bananas dropped off in this visit
 					alertT: 0,
 					shown: 0
 				};
@@ -65,14 +66,32 @@
 
 		addScore(m, n, fromX, fromY) {
 			const b = this.of(m);
-			for (let i = 0; i < n; i++) {
-				this.fly(fromX, fromY, b.x, b.y - 46, () => {
-					m.score++;
-					MM.Sound.sfx.deposit(m.score);
-					this.bump(b);
-					this.scene.hud.score(m);
-				}, i * 70);
+			for (let i = 0; i < n; i++) this.fly(fromX, fromY, b.x, b.y - 46, () => this.scored(m, b), i * 70);
+		}
+
+		// one banana just landed in m's basket
+		scored(m, b) {
+			m.score++;
+			MM.Sound.sfx.deposit(m.score);
+			this.bump(b);
+			this.scene.hud.score(m);
+			// every 10 bananas: a big gold number and stars over the basket
+			if (m.score % 10 === 0 && this.scene.state === 'play') {
+				const s = this.scene;
+				s.fx.burst(b.x, b.y - 60, 'star', 18, 0xffd23f);
+				s.fx.pop(b.x, b.y - 46 + (m.top ? 110 : -110), s.num(m.score), '#ffd23f', 60, m.top);
+				MM.Sound.sfx.power();
+				m.setExpr('happy', 1.5);
 			}
+		}
+
+		// the whole tower is home: show how many went in
+		banked(m, b, n) {
+			const s = this.scene;
+			s.fx.burst(b.x, b.y - 50, n >= 5 ? 'star' : 'sparkle', n >= 5 ? 14 : 10, m.color);
+			if (n > 1 && m.score % 10 !== 0) s.fx.pop(b.x, b.y - 46 + (m.top ? 100 : -100), `+${s.num(n)}`, '#ffffff', n >= 5 ? 50 : 40, m.top);
+			if (n >= 5) s.fx.shake(0.003, 140);
+			MM.Sound.sfx.monkey(m.pitch, 2);
 		}
 
 		bump(b) {
@@ -125,19 +144,18 @@
 								b.depositT = 0.1;
 								m.carry.pop();
 								m.setExpr('happy', 0.8);
+								b.run++;
+								const last = !m.carry.length;
+								const run = b.run;
+								if (last) b.run = 0;
 								this.fly(m.x, m.y - 110, b.x, b.y - 46, () => {
-									m.score++;
-									MM.Sound.sfx.deposit(m.score);
-									this.bump(b);
-									this.scene.hud.score(m);
-									if (!m.carry.length) {
-										this.scene.fx.burst(b.x, b.y - 50, 'sparkle', 10, m.color);
-										MM.Sound.sfx.monkey(m.pitch, 2);
-									}
+									this.scored(m, b);
+									if (last) this.banked(m, b, run);
 								});
 							}
 						} else {
 							b.depositT = 0;
+							if (d >= REACH) b.run = 0;
 						}
 						continue;
 					}

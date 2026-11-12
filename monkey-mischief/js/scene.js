@@ -163,6 +163,25 @@
 		}
 
 		/* ---------- helpers the systems call ---------- */
+		// a number in the digits of the language being played
+		num(n) {
+			return MM.Sound.state.lang === 'ar' ? Number(n).toLocaleString('ar-EG') : String(n);
+		}
+
+		// the star goes to whoever is ahead (nobody while it is a tie); taking the lead gets a little cheer
+		crown() {
+			const best = Math.max(...this.monkeys.map((m) => m.score));
+			const top = this.monkeys.filter((m) => m.score === best);
+			const leader = best > 0 && top.length === 1 ? top[0] : null;
+			for (const m of this.monkeys) {
+				if (m === leader && !m.leader && this.state === 'play') {
+					this.fx.burst(m.x, m.y - 150, 'star', 8, 0xffd23f);
+					MM.Sound.sfx.ready();
+				}
+				m.leader = m === leader;
+			}
+		}
+
 		say(key, low = false) {
 			const now = this.time.now / 1000;
 			if (low && now - this.voiceAt < 2.2) return;
@@ -331,6 +350,7 @@
 			this.powerups.update(dt, t, this.monkeys);
 			this.gorilla.update(dt, t, this.monkeys);
 
+			this.crown();
 			for (const m of this.monkeys) m.render(dt, t);
 			this.sceneryLife(dt);
 			this.updateButtons(t);
@@ -372,9 +392,34 @@
 
 				return;
 			}
-			const nx = m.x + m.vx * dt * 1.5;
-			const ny = m.y + m.vy * dt * 1.5;
+			let nx = m.x + m.vx * dt * 1.5;
+			let ny = m.y + m.vy * dt * 1.5;
 			let changed = false;
+			// about to step into the water: keep the part of the run that goes along the bank, so the monkey
+			// slides round the pond (and along a bridge) instead of stopping dead
+			if (L.inWater(nx, ny) || L.inWater(nx, m.y) || L.inWater(m.x, ny)) {
+				const P = L.pond;
+				let ax = (m.x - P.x) / (P.rx * P.rx);
+				let ay = (m.y - P.y) / (P.ry * P.ry);
+				if (L.onIsland(m.x, m.y, 6)) {
+					ax = P.x - m.x;
+					ay = P.y - m.y;
+				} else if (L.onBridge(m.x, m.y) && L.inPond(m.x, m.y, -8)) {
+					ax = 0; // on a bridge: the water is above and below
+					ay = P.y - m.y;
+				}
+				const al = Math.hypot(ax, ay);
+				if (al > 0.0001) {
+					const into = (m.vx * ax + m.vy * ay) / al;
+					if (into < 0) {
+						m.vx -= (into * ax) / al;
+						m.vy -= (into * ay) / al;
+						changed = true;
+						nx = m.x + m.vx * dt * 1.5;
+						ny = m.y + m.vy * dt * 1.5;
+					}
+				}
+			}
 			if (L.inWater(nx, m.y)) {
 				m.vx = 0;
 				changed = true;
@@ -406,16 +451,20 @@
 					m.setExpr('happy', 1.5);
 				}
 				if (m.full) continue;
-				const near = this.bananas.near(m.x, m.y + 6, 46);
+				const near = this.bananas.near(m.x, m.y + 6, 54);
 				for (const b of near) {
 					if (!m.addCarry(-1)) break;
 					this.bananas.remove(b);
 					MM.Sound.sfx.pick(m.carry.length);
-					this.fx.burst(b.x, b.y - 14, 'sparkle', 4, 0xffe14d);
-					m.setExpr('happy', 0.4);
+					this.fx.burst(b.x, b.y - 14, 'sparkle', 6, 0xffe14d);
+					this.baskets.fly(b.x, b.y - 14, m.x, m.y - 100 - m.carry.length * 9); // it hops up onto the tower
+					m.hop();
+					m.setExpr('happy', 0.5);
 					if (m.full) {
+						// hands full: a happy shout and a ring of stars (the arrow then points home)
 						MM.Sound.sfx.monkey(m.pitch, 1);
-						this.fx.pop(m.x, m.y - 175, '5', '#ffe14d', 40, m.top);
+						this.fx.burst(m.x, m.y - 120, 'star', 8, m.color);
+						this.fx.pop(m.x, m.y - 175, this.num(5), '#ffe14d', 44, m.top);
 					}
 				}
 			}
